@@ -1,6 +1,6 @@
 # chords-viewer
 
-> View chords generated with chords generator
+View chords.json generated with [chords-parser](https://github.com/popstas/chords-parser).
 
 ## Build Setup
 
