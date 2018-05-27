@@ -1,12 +1,18 @@
 <template>
   <div>
     <SearchInput v-model="q"></SearchInput>
-    total: {{ count }}
+    <el-switch v-model="withChords" active-text="chords"></el-switch>
+    <el-switch v-model="withTexts" active-text="texts"></el-switch>
+    <div class="search-total">total: {{ count }}</div>
     <el-collapse accordion>
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url"></SongItem>
     </el-collapse>
   </div>
 </template>
+
+<style>
+.el-switch{ margin: 15px 15px 15px 0; }
+</style>
 
 <script>
 import SearchInput from '~/components/SearchInput'
@@ -20,6 +26,8 @@ export default {
   data(){
     return {
       q: '',
+      withChords: false,
+      withTexts: false,
       filteredSongs: [],
     }
   },
@@ -47,11 +55,16 @@ export default {
   watch: {
     q(){
       this.filterSongs()
-    }
+    },
+    withChords(){
+      this.filterSongs()
+    },
+    withTexts(){
+      this.filterSongs()
+    },
   },
   methods: {
     filterSongs(){
-      console.log('filterSongs')
       const q = this.q.toLowerCase()
       let result = songs
       if (q) {
@@ -62,7 +75,12 @@ export default {
           )
         })
       }
-      console.log(result);
+      if(this.withChords){
+        result = result.filter(song => song.details.chords)
+      }
+      if(this.withTexts){
+        result = result.filter(song => song.text)
+      }
       this.filteredSongs = result
     }
   },
