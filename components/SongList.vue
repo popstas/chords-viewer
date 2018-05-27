@@ -2,7 +2,7 @@
   <div>
     <SearchInput v-model="q"></SearchInput>
     total: {{ count }}
-    <el-collapse>
+    <el-collapse accordion>
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url"></SongItem>
     </el-collapse>
   </div>
