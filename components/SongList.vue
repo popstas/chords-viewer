@@ -3,6 +3,7 @@
     <SearchInput v-model="q"></SearchInput>
     <el-switch v-model="withChords" active-text="chords"></el-switch>
     <el-switch v-model="withTexts" active-text="texts"></el-switch>
+    <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
     <div class="search-total">total: {{ count }}</div>
     <el-collapse accordion>
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url"></SongItem>
@@ -28,6 +29,8 @@ export default {
       q: '',
       withChords: false,
       withTexts: false,
+      autoScroll: false,
+      scrollInterval: false,
       filteredSongs: [],
     }
   },
@@ -62,6 +65,9 @@ export default {
     withTexts(){
       this.filterSongs()
     },
+    autoScroll(){
+      this.changeAutoScroll()
+    },
   },
   methods: {
     filterSongs(){
@@ -82,6 +88,16 @@ export default {
         result = result.filter(song => song.text)
       }
       this.filteredSongs = result
+    },
+    changeAutoScroll(){
+      if(this.scrollInterval){
+        clearInterval(this.scrollInterval)
+      }
+      if(this.autoScroll){
+        this.scrollInterval = setInterval(() => {
+          window.scrollBy(0,1);
+        }, 300)
+      }
     }
   },
   created: function() {
