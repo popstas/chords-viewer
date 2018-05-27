@@ -1,7 +1,6 @@
 <template>
   <el-container>
     <el-header>
-      {{ $store.state.title }}
     </el-header>
     <el-main>
       <nuxt/>
