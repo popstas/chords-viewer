@@ -14,13 +14,16 @@ export default {
       default: ""
     }
   },
+
   data() {
     return { q: this.value };
   },
+
   watch: {
     value(val) {
       this.q = val;
     },
+
     q(val) {
       this.$emit("input", val);
     }

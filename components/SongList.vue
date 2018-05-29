@@ -41,6 +41,7 @@ export default {
     SongItem,
     SearchInput
   },
+
   data() {
     return {
       q: "",
@@ -54,6 +55,7 @@ export default {
       lastScrollTop: 0
     };
   },
+
   /* async asyncData({app, store, params, query, error}) {
     let asyncData;
     try {
@@ -69,30 +71,37 @@ export default {
     console.log('got songs');
     return asyncData;
   }, */
+
   computed: {
     count() {
       console.log("count");
       return this.filteredSongs.length;
     }
   },
+
   watch: {
     q() {
       this.filterSongs();
     },
+
     withChords() {
       this.filterSongs();
     },
+
     withTexts() {
       this.filterSongs();
     },
+
     autoScroll() {
       this.changeAutoScroll();
     }
   },
+
   methods: {
     filterSongs() {
       const q = this.q.toLowerCase();
       let result = songs;
+
       if (q) {
         result = result.filter(song => {
           return (
@@ -101,38 +110,48 @@ export default {
           );
         });
       }
+
       if (this.withChords) {
         result = result.filter(song => song.details.chords);
       }
+
       if (this.withTexts) {
         result = result.filter(song => song.text);
       }
+
       this.filteredSongs = result;
     },
+
     changeAutoScroll() {
       if (this.scrollInterval) {
         clearInterval(this.scrollInterval);
       }
+
       if (this.autoScroll) {
         this.scrollInterval = setInterval(() => {
           window.scrollBy(0, 1);
         }, 300);
       }
     },
+
     handleScroll(event) {
-      let delta = window.scrollY - this.lastScrollTop;
+      const delta = window.scrollY - this.lastScrollTop;
       this.lastScrollTop = window.scrollY;
       this.toolbarFixed = window.scrollY > 90;
+
       if (delta == 1) {
         return; // ignore autoscroll
       }
+
       this.toolbarHidden = this.toolbarFixed && delta > 0;
     }
   },
+
   created() {
     this.filterSongs();
     window.addEventListener("scroll", this.handleScroll);
   },
+
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
   }

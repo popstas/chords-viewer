@@ -44,10 +44,12 @@ export default {
       title = title.trim(",");
       return title;
     },
+
     textHtml() {
       if (!this.song.text) {
         return "";
       }
+
       let html = this.song.text
         .split("\n")
         .map(line => {
