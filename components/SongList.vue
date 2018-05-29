@@ -1,9 +1,11 @@
 <template>
   <div>
-    <SearchInput v-model="q"></SearchInput>
-    <el-switch v-model="withChords" active-text="chords"></el-switch>
-    <el-switch v-model="withTexts" active-text="texts"></el-switch>
-    <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
+    <div :class="{toolbar: true, toolbar__fixed: toolbarFixed, toolbar__hidden: toolbarHidden}">
+      <SearchInput v-model="q"></SearchInput>
+      <el-switch v-model="withChords" active-text="chords"></el-switch>
+      <el-switch v-model="withTexts" active-text="texts"></el-switch>
+      <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
+    </div>
     <div class="search-total">total: {{ count }}</div>
     <el-collapse accordion>
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url"></SongItem>
@@ -13,6 +15,9 @@
 
 <style>
 .el-switch{ margin: 15px 15px 15px 0; }
+.toolbar{ background: #fff; }
+.toolbar__fixed{ position: fixed; top: 0; left: 0; right: 0; padding: 5px; }
+.toolbar__hidden{ display: none; }
 </style>
 
 <script>
@@ -32,6 +37,9 @@ export default {
       autoScroll: false,
       scrollInterval: false,
       filteredSongs: [],
+      toolbarFixed: false,
+      toolbarHidden: false,
+      lastScrollTop: 0,
     }
   },
   /* async asyncData({app, store, params, query, error}) {
@@ -95,13 +103,26 @@ export default {
       }
       if(this.autoScroll){
         this.scrollInterval = setInterval(() => {
-          window.scrollBy(0,1);
+          window.scrollBy(0, 1)
         }, 300)
       }
-    }
+    },
+    handleScroll (event) {
+      let delta = window.scrollY - this.lastScrollTop
+      this.lastScrollTop = window.scrollY
+      this.toolbarFixed = window.scrollY > 90
+      if(delta == 1){
+        return // ignore autoscroll
+      }
+      this.toolbarHidden = this.toolbarFixed && delta > 0
+    },
   },
   created: function() {
     this.filterSongs()
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>

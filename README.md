@@ -2,6 +2,17 @@
 
 View chords.json generated with [chords-parser](https://github.com/popstas/chords-parser).
 
+## Features
+- Single Page Application
+- Static site, hosted anywhere
+- PWA (offline access, when deployed to https domain)
+- Fixed chords while scroll
+- Search by title and lyrics
+- Autoscroll
+
+## Requirements
+`chords.json` should be placed in project root.
+
 ## Build Setup
 
 ``` bash
