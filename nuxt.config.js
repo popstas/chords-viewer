@@ -2,6 +2,7 @@ module.exports = {
   mode: 'spa',
   modules: [
     '@nuxtjs/axios',
+    ['@nuxtjs/pwa', { icon: false }]
   ],
 
   css: [

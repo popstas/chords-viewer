@@ -11,3 +11,6 @@ npm-debug.log
 dist
 
 chords.json
+
+# service worker
+sw.*
