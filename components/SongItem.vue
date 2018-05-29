@@ -14,38 +14,54 @@
 </template>
 
 <style>
-.el-collapse-item{ overflow: hidden; }
-.chords{
-  position: fixed; top: 0; left: 0; right: 0;
-  text-align: center; background: #fff; padding: 5px; box-shadow: 0 0 2px #ccc;
+.el-collapse-item {
+  overflow: hidden;
 }
-.chords-line{ color: #999; }
+.chords {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  background: #fff;
+  padding: 5px;
+  box-shadow: 0 0 2px #ccc;
+}
+.chords-line {
+  color: #999;
+}
 </style>
 
 <script>
 export default {
-  props: ['song'],
+  props: ["song"],
   computed: {
-    title(){
-      let title = this.song.title
-      if(this.song.details.title){
-        title = this.song.details.artist + ' - ' + this.song.details.title
+    title() {
+      let title = this.song.title;
+      if (this.song.details.title) {
+        title = this.song.details.artist + " - " + this.song.details.title;
       }
-      title = title.trim(',');
-      return title
+      title = title.trim(",");
+      return title;
     },
-    textHtml(){
-      if(!this.song.text){
-        return ''
+    textHtml() {
+      if (!this.song.text) {
+        return "";
       }
-      let html = this.song.text.split('\n').map(line => {
-        if(!line.match(/[а-яА-Я]/)){
-          line = '<span class="chords-line">' + line.split(' ').join('&nbsp;') + '</span>'
-        }
-        return line
-      }).join('<br>')
-      return html
+      let html = this.song.text
+        .split("\n")
+        .map(line => {
+          if (!line.match(/[а-яА-Я]/)) {
+            line =
+              '<span class="chords-line">' +
+              line.split(" ").join("&nbsp;") +
+              "</span>";
+          }
+          return line;
+        })
+        .join("<br>");
+      return html;
     }
   }
-}
+};
 </script>

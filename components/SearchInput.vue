@@ -11,19 +11,19 @@
 export default {
   props: {
     value: {
-      default: ''
-    },
+      default: ""
+    }
   },
   data() {
-    return { q: this.value }
+    return { q: this.value };
   },
   watch: {
     value(val) {
-      this.q = val
+      this.q = val;
     },
-    q(val){
-      this.$emit('input', val)
+    q(val) {
+      this.$emit("input", val);
     }
-  },
-}
+  }
+};
 </script>
