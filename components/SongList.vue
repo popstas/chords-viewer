@@ -5,7 +5,7 @@
       <el-switch v-model="withChords" active-text="chords"></el-switch>
       <el-switch v-model="withTexts" active-text="texts"></el-switch>
       <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
-      <el-button icon="el-icon-close" size="mini" circle @click="toolbarHidden = true"></el-button>
+      <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
       <el-slider v-model="autoScrollDelay" :min="1" :max="10"></el-slider>
     </div>
     <div class="search-total">total: {{ count }}</div>
@@ -16,6 +16,11 @@
 </template>
 
 <style>
+.el-container,
+.toolbar {
+  margin: 0 auto;
+  max-width: 640px;
+}
 .el-switch {
   margin: 15px 15px 15px 0;
 }
@@ -29,6 +34,7 @@
 }
 .toolbar {
   background: #fff;
+  text-align: center;
 }
 .toolbar__fixed {
   position: fixed;
@@ -57,7 +63,7 @@ const speedMapping = {
   7: 90,
   8: 80,
   9: 70,
-  10: 50,
+  10: 50
 };
 
 export default {
@@ -77,7 +83,7 @@ export default {
       filteredSongs: [],
       toolbarFixed: false,
       toolbarHidden: false,
-      lastScrollTop: 0,
+      lastScrollTop: 0
     };
   },
 
@@ -156,7 +162,6 @@ export default {
         clearInterval(this.scrollInterval);
       }
 
-
       if (this.autoScroll) {
         this.scrollInterval = setInterval(() => {
           window.scrollBy(0, 1);
@@ -173,7 +178,12 @@ export default {
         return; // ignore autoscroll
       }
 
-      this.toolbarHidden = this.toolbarFixed && delta > 1;
+      if (delta < 0) {
+        this.toolbarHidden = false;
+      }
+      if (delta > 1 && this.toolbarFixed) {
+        this.toolbarHidden = true;
+      }
     }
   },
 
