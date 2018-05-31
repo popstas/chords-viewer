@@ -5,6 +5,7 @@
       <el-switch v-model="withChords" active-text="chords"></el-switch>
       <el-switch v-model="withTexts" active-text="texts"></el-switch>
       <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
+      <el-button icon="el-icon-close" size="mini" circle @click="toolbarHidden = true"></el-button>
       <el-slider v-model="autoScrollDelay" :min="1" :max="10"></el-slider>
     </div>
     <div class="search-total">total: {{ count }}</div>
@@ -20,6 +21,11 @@
 }
 .el-slider {
   margin: 0 8px;
+}
+.el-button {
+  border: none;
+  padding: 7px;
+  float: right;
 }
 .toolbar {
   background: #fff;
