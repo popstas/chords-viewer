@@ -8,7 +8,8 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - PWA (offline access, when deployed to https domain)
 - Fixed chords while scroll
 - Search by title and lyrics
-- Autoscroll
+- Quick search by first letter of title
+- Autoscroll with speed control
 
 ## Requirements
 `chords.json` should be placed in project root.

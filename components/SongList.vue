@@ -7,6 +7,13 @@
       <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
       <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
       <el-slider v-model="autoScrollDelay" :min="1" :max="10"></el-slider>
+      <ul class="search-letters">
+        <li
+          :class="{'search-letter': true, active: q == '^' + letter}"
+          v-for="letter in letters" :key="letter"
+          @click="q = '^' + letter"
+        >{{ letter }}</li>
+      </ul>
     </div>
     <div class="search-total">total: {{ count }}</div>
     <el-collapse accordion>
@@ -43,8 +50,30 @@
   right: 0;
   padding: 5px;
 }
+.toolbar__fixed .search-letters {
+  display: none;
+}
 .toolbar__hidden {
   display: none;
+}
+.search-letters {
+  list-style: none;
+  padding: 0;
+}
+.search-letters li {
+  padding: 0;
+  display: inline-block;
+  font-size: 13px;
+  min-width: 23px;
+  height: 28px;
+  line-height: 28px;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-align: center;
+  margin: 0;
+}
+.search-letters li.active {
+  color: #409eff;
 }
 </style>
 
@@ -138,10 +167,11 @@ export default {
       let result = songs;
 
       if (q) {
+        let isLetter = q.match(/\^.$/);
         result = result.filter(song => {
           return (
             song.title.toLowerCase().search(q) >= 0 ||
-            (song.text && song.text.toLowerCase().search(q) >= 0)
+            (!isLetter && song.text && song.text.toLowerCase().search(q) >= 0)
           );
         });
       }
@@ -169,6 +199,18 @@ export default {
       }
     },
 
+    buildLetters() {
+      let letters = songs.map(song => {
+        return song.title[0];
+      });
+      letters.sort();
+      letters = letters.filter((letter, pos, arr) => {
+        return arr.indexOf(letter) == pos;
+      });
+      this.letters = letters;
+      console.log(letters);
+    },
+
     handleScroll(event) {
       const delta = window.scrollY - this.lastScrollTop;
       this.lastScrollTop = window.scrollY;
@@ -189,6 +231,7 @@ export default {
 
   created() {
     this.filterSongs();
+    this.buildLetters();
     window.addEventListener("scroll", this.handleScroll);
   },
 
