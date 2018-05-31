@@ -5,6 +5,7 @@
       <el-switch v-model="withChords" active-text="chords"></el-switch>
       <el-switch v-model="withTexts" active-text="texts"></el-switch>
       <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
+      <el-slider v-model="autoScrollDelay" :min="1" :max="10"></el-slider>
     </div>
     <div class="search-total">total: {{ count }}</div>
     <el-collapse accordion>
@@ -16,6 +17,9 @@
 <style>
 .el-switch {
   margin: 15px 15px 15px 0;
+}
+.el-slider {
+  margin: 0 8px;
 }
 .toolbar {
   background: #fff;
@@ -36,6 +40,20 @@
 import SearchInput from "~/components/SearchInput";
 import SongItem from "~/components/SongItem";
 import songs from "~/chords.json";
+
+const speedMapping = {
+  1: 1000,
+  2: 500,
+  3: 400,
+  4: 300,
+  5: 200,
+  6: 100,
+  7: 90,
+  8: 80,
+  9: 70,
+  10: 50,
+};
+
 export default {
   components: {
     SongItem,
@@ -48,11 +66,12 @@ export default {
       withChords: false,
       withTexts: false,
       autoScroll: false,
+      autoScrollDelay: 5,
       scrollInterval: false,
       filteredSongs: [],
       toolbarFixed: false,
       toolbarHidden: false,
-      lastScrollTop: 0
+      lastScrollTop: 0,
     };
   },
 
@@ -94,6 +113,10 @@ export default {
 
     autoScroll() {
       this.changeAutoScroll();
+    },
+
+    autoScrollDelay() {
+      this.changeAutoScroll();
     }
   },
 
@@ -127,23 +150,24 @@ export default {
         clearInterval(this.scrollInterval);
       }
 
+
       if (this.autoScroll) {
         this.scrollInterval = setInterval(() => {
           window.scrollBy(0, 1);
-        }, 300);
+        }, speedMapping[this.autoScrollDelay]);
       }
     },
 
     handleScroll(event) {
       const delta = window.scrollY - this.lastScrollTop;
       this.lastScrollTop = window.scrollY;
-      this.toolbarFixed = window.scrollY > 90;
+      this.toolbarFixed = window.scrollY > 0;
 
       if (delta == 1) {
         return; // ignore autoscroll
       }
 
-      this.toolbarHidden = this.toolbarFixed && delta > 0;
+      this.toolbarHidden = this.toolbarFixed && delta > 1;
     }
   },
 
