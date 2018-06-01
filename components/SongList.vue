@@ -134,7 +134,6 @@ export default {
 
   computed: {
     count() {
-      console.log("count");
       return this.filteredSongs.length;
     }
   },
@@ -208,7 +207,6 @@ export default {
         return arr.indexOf(letter) == pos;
       });
       this.letters = letters;
-      console.log(letters);
     },
 
     handleScroll(event) {
@@ -237,6 +235,7 @@ export default {
 
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
+    clearInterval(this.scrollInterval);
   }
 };
 </script>
