@@ -11,6 +11,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Quick search by first letter of title
 - Autoscroll with speed control
 - Transpose chords
+- Links to chord images
 
 ## Requirements
 `chords.json` should be placed in project root.

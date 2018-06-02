@@ -12,9 +12,8 @@
       <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
     </div>
 
-    <div v-if="chords" class="text item chords">
-      {{ chords }}
-    </div>
+    <div v-if="chords" class="text item chords" v-html="chords"></div>
+
     <div class="sont-text" v-html="textHtml"></div>
     <a target="_blank" :href="song.url">link</a>
   </el-collapse-item>
@@ -34,6 +33,24 @@
   padding: 5px;
   box-shadow: 0 0 2px #ccc;
 }
+.chords a {
+  display: inline-block;
+  color: #000;
+  text-decoration: none;
+  padding: 0 3px;
+  margin: 2px 0;
+  border: 1px solid #ededed;
+  background: #f9f9f9;
+  min-width: 25px;
+}
+.chords a:hover,
+.chords a:focus {
+  background: #ededed;
+}
+.chord-sequence{
+  white-space: nowrap;
+}
+
 .chords-line {
   color: #999;
 }
@@ -95,15 +112,38 @@ export default {
     },
 
     chords() {
-      return this.song.details.chords
-        ? this.chordsTranspose(this.song.details.chords)
-        : "";
+      if (!this.song.details) return "";
+      let chords = this.chordsTranspose(this.song.details.chords);
+      console.log(chords);
+      chords = chords
+        .split(" ")
+        .map(
+          chord => {
+            if(chord.match(/^\(/) || chord == '-' || chord == '..') return chord;
+            let chordUrl = this.getChordImageUrl(chord);
+            return `<a target="_blank" href="${chordUrl}">${chord}</a>`;
+          }
+        )
+        .join(" ");
+
+      chords = '<span class="chord-sequence">' + chords.split('..').join('</span> .. <span class="chord-sequence">') + '</span>';
+      chords = chords.split(' - ').join(' - <br />');
+      return chords;
     }
   },
 
   methods: {
     replaceChord(chord) {
       return chord.replace("B", "H");
+    },
+
+    getChordImageUrl(chord) {
+      chord = chord
+        .split("#")
+        .join("w")
+        .split("+")
+        .join("p");
+      return `https://amdm.ru/images/chords/${chord}_0.gif`;
     },
 
     chordsTranspose(line) {
