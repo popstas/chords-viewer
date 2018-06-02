@@ -5,7 +5,8 @@
 
       <div class="toolbar-filters">
         <el-switch v-model="withChords" active-text="chords"></el-switch>
-        <el-switch v-model="withTexts" active-text="texts"></el-switch>
+        <el-switch v-model="withTexts" class="hidden-xs-only" active-text="texts"></el-switch>
+        <el-switch v-model="sortByDate" active-text="by date"></el-switch>
         <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
         <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
 
@@ -27,7 +28,8 @@
         >{{ letter }}</li>
       </ul>
     </div>
-    <div class="search-total">total: {{ count }}</div>
+
+    <div class="search-total">total: {{ count }}, updated: {{ lastUpdated }}</div>
     <el-collapse accordion @change="changeSong">
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url" :active="song.url == activeSong.url" @active="scrollTo"></SongItem>
     </el-collapse>
@@ -116,6 +118,7 @@ import SearchInput from "~/components/SearchInput";
 import SongItem from "~/components/SongItem";
 import songs from "~/chords.json";
 import NoSleep from "nosleep.js";
+import dateformat from "dateformat";
 
 const nosleep = new NoSleep();
 
@@ -139,6 +142,7 @@ export default {
       q: "",
       withChords: false,
       withTexts: false,
+      sortByDate: false,
       autoScroll: false,
       autoScrollDelay: 3,
       scrollInterval: false,
@@ -154,6 +158,14 @@ export default {
   computed: {
     count() {
       return this.filteredSongs.length;
+    },
+
+    lastUpdated() {
+      let date = Math.max.apply(
+        Math,
+        songs.map(song => new Date(song.created))
+      );
+      return dateformat(new Date(date), "dd.mm.yyyy");
     }
   },
 
@@ -167,6 +179,10 @@ export default {
     },
 
     withTexts() {
+      this.filterSongs();
+    },
+
+    sortByDate() {
       this.filterSongs();
     },
 
@@ -184,6 +200,15 @@ export default {
   },
 
   methods: {
+    sortSongs(result) {
+      if (this.sortByDate) {
+        result = result
+          .slice()
+          .sort((a, b) => new Date(b.created) - new Date(a.created));
+      }
+      return result;
+    },
+
     filterSongs() {
       const q = this.q.toLowerCase();
       let result = songs;
@@ -206,6 +231,7 @@ export default {
         result = result.filter(song => song.text);
       }
 
+      result = this.sortSongs(result);
       this.filteredSongs = result;
     },
 
