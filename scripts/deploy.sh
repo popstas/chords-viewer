@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eu
+
 rm -rf dist
 npm run generate
 cd dist
