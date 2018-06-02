@@ -56,6 +56,11 @@ $max_width: 640px;
     left: 0;
     right: 0;
     padding: 5px;
+    box-shadow: 0 0 1px #ccc;
+
+    .search-letters {
+      display: none;
+    }
   }
 
   &__hidden {
@@ -81,10 +86,6 @@ $max_width: 640px;
   .search-letters {
     list-style: none;
     padding: 0;
-
-    &__fixed {
-      display: none;
-    }
 
     li {
       padding: 0;
