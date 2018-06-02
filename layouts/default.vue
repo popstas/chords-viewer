@@ -1,8 +1,10 @@
 <template>
   <el-container>
+    <el-header></el-header>
     <el-main>
       <nuxt/>
     </el-main>
+    <Footer></Footer>
   </el-container>
 </template>
 
@@ -29,3 +31,10 @@ html {
   margin: 0;
 }
 </style>
+
+<script>
+import Footer from "~/components/Footer";
+export default {
+  components: { Footer }
+};
+</script>

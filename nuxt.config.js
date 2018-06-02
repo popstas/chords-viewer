@@ -11,7 +11,8 @@ module.exports = {
   ],
 
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/vue-awesome'
   ],
 
   /*

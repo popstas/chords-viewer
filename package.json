@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "View chords generated with chords generator",
   "author": "Stanislav Popov <popstas@gmail.com>",
+  "homepage": "https://github.com/popstas/chords-viewer",
   "private": true,
   "scripts": {
     "dev": "cross-env HOST=0.0.0.0 PORT=3001 nuxt",
@@ -23,7 +24,8 @@
     "axios": "^0.18.0",
     "element-ui": "^2.3.9",
     "nosleep.js": "^0.7.0",
-    "nuxt": "^1.0.0"
+    "nuxt": "^1.0.0",
+    "vue-awesome": "^3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
