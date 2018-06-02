@@ -43,7 +43,8 @@
       border: 1px solid #ededed;
       background: #f9f9f9;
       min-width: 25px;
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         background: #ededed;
       }
     }
@@ -104,7 +105,7 @@ export default {
           if (!line.match(/[а-яА-Я]/)) {
             line =
               '<span class="chords-line">' +
-              this.chordsTranspose(line)
+              this.chordsRender(line)
                 .split(" ")
                 .join("&nbsp;") +
               "</span>";
@@ -117,7 +118,7 @@ export default {
 
     chords() {
       if (!this.song.details) return "";
-      let chords = this.chordsTranspose(this.song.details.chords);
+      let chords = this.chordsRender(this.song.details.chords);
       chords = chords
         .split(" ")
         .map(chord => {
@@ -137,10 +138,6 @@ export default {
   },
 
   methods: {
-    replaceChord(chord) {
-      return chord.replace("B", "H");
-    },
-
     getChordImageUrl(chord) {
       chord = chord
         .split("#")
@@ -150,28 +147,36 @@ export default {
       return `https://amdm.ru/images/chords/${chord}_0.gif`;
     },
 
-    chordsTranspose(line) {
+    chordsRender(line) {
       let chords = line.split(" ");
-      chords = chords.map(chord => this.replaceChord(chord));
+      chords = this.chordsReplace(chords);
+      chords = this.chordsTranspose(chords);
+      return chords.join(" ");
+    },
 
+    chordsReplace(chords) {
+      return chords.map(chord => chord.replace("B", "H").replace("m#", "#m"));
+    },
+
+    chordsTranspose(chords) {
       if (this.transposeLevel == 0) {
-        return line;
+        return chords;
       }
 
       const transposeMap = [
         [
           "Am",
-          "Am#",
+          "A#m",
           "Hm",
           "Cm",
-          "Cm#",
+          "C#m",
           "Dm",
-          "Dm#",
+          "D#m",
           "Em",
           "Fm",
-          "Fm#",
+          "F#m",
           "Gm",
-          "Gm#"
+          "G#m"
         ],
         ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"],
         [
@@ -204,12 +209,14 @@ export default {
         ]
       ];
 
-      let transposedChords = chords.map(chord => {
+      return chords.map(chord => {
         if (!chord) return chord;
 
         // find chain
         let chain = transposeMap.find(chain => chain.indexOf(chord) != -1);
-        if (!chain) return chord;
+        if (!chain) {
+          return chord;
+        }
 
         // iterate over chain at transposeLevel
         let currentIndex = chain.indexOf(chord);
@@ -224,7 +231,6 @@ export default {
         }
         return chain[currentIndex];
       });
-      return transposedChords.join(" ");
     }
   }
 };
