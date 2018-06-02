@@ -217,7 +217,7 @@ export default {
               currentIndex + 1 >= chain.length ? 0 : currentIndex + 1;
           } else {
             currentIndex =
-              currentIndex - 1 <= 0 ? chain.length - 1 : currentIndex - 1;
+              currentIndex - 1 < 0 ? chain.length - 1 : currentIndex - 1;
           }
         }
         return chain[currentIndex];
