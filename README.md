@@ -10,6 +10,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Search by title and lyrics
 - Quick search by first letter of title
 - Autoscroll with speed control
+- Transpose chords
 
 ## Requirements
 `chords.json` should be placed in project root.

@@ -16,8 +16,8 @@
       </ul>
     </div>
     <div class="search-total">total: {{ count }}</div>
-    <el-collapse accordion>
-      <SongItem v-for="song in filteredSongs" :song="song" :key="song.url"></SongItem>
+    <el-collapse accordion @change="changeSong">
+      <SongItem v-for="song in filteredSongs" :song="song" :key="song.url" :active="song.url == activeSong.url" @active="scrollTo"></SongItem>
     </el-collapse>
   </div>
 </template>
@@ -33,11 +33,6 @@
 }
 .el-slider {
   margin: 0 8px;
-}
-.el-button {
-  border: none;
-  padding: 7px;
-  float: right;
 }
 .toolbar {
   background: #fff;
@@ -55,6 +50,11 @@
 }
 .toolbar__hidden {
   display: none;
+}
+.toolbar .el-button {
+  border: none;
+  padding: 7px;
+  float: right;
 }
 .search-letters {
   list-style: none;
@@ -112,25 +112,10 @@ export default {
       filteredSongs: [],
       toolbarFixed: false,
       toolbarHidden: false,
-      lastScrollTop: 0
+      lastScrollTop: 0,
+      activeSong: {},
     };
   },
-
-  /* async asyncData({app, store, params, query, error}) {
-    let asyncData;
-    try {
-      asyncData = {
-        songs: await app.$axios.$get('http://test.home.popstas.ru/chords.json'),
-      };
-      // store.commit('songs', asyncData.songs);
-    }
-    catch (e) {
-      console.log('error while get data');
-      throw Error(e)
-    }
-    console.log('got songs');
-    return asyncData;
-  }, */
 
   computed: {
     count() {
@@ -198,6 +183,17 @@ export default {
       }
     },
 
+
+    changeSong(activeName){
+      // console.log(activeName);
+      this.activeSong = songs.find(song => song.url == activeName) || {};
+    },
+
+    scrollTo(offset){
+      // console.log('scrollTo', offset);
+      // window.scrollTo(0, offset);
+    },
+
     buildLetters() {
       let letters = songs.map(song => {
         return song.title[0];
@@ -214,11 +210,18 @@ export default {
       this.lastScrollTop = window.scrollY;
       this.toolbarFixed = window.scrollY > 0;
 
+      // console.log('window.scrollY:', window.scrollY);
+      // console.log('delta:', delta);
       if (delta == 1) {
         return; // ignore autoscroll
       }
 
-      if (delta < 0) {
+      // too fast for human
+      if(Math.abs(delta) > 20){
+        return;
+      }
+
+if (delta < 0) {
         this.toolbarHidden = false;
       }
       if (delta > 1 && this.toolbarFixed) {
@@ -236,6 +239,6 @@ export default {
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
     clearInterval(this.scrollInterval);
-  }
+  },
 };
 </script>
