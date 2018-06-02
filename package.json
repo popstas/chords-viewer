@@ -9,6 +9,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
+    "update-data": "curl https://raw.githubusercontent.com/popstas/chords-data/master/chords.json > chords.json",
     "version": "npm run changelog && git add CHANGELOG.md README.md",
     "postversion": "git push && npm run release && npm publish .",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",

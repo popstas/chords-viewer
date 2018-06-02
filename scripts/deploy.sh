@@ -2,6 +2,7 @@
 set -eu
 
 rm -rf dist
+npm run update-data
 npm run generate
 cd dist
 git init
