@@ -15,7 +15,7 @@
             <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
           </el-col>
           <el-col :span="16">
-            <el-slider v-model="autoScrollDelay" :min="1" :max="6"></el-slider>
+            <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
           </el-col>
         </el-row>
       </div>
@@ -144,7 +144,7 @@ export default {
       withTexts: false,
       sortByDate: false,
       autoScroll: false,
-      autoScrollDelay: 3,
+      autoScrollSpeed: 4,
       scrollInterval: false,
       filteredSongs: [],
       toolbarFixed: false,
@@ -190,7 +190,7 @@ export default {
       this.changeAutoScroll();
     },
 
-    autoScrollDelay() {
+    autoScrollSpeed() {
       this.changeAutoScroll();
     },
 
@@ -243,7 +243,7 @@ export default {
       if (this.autoScroll) {
         this.scrollInterval = setInterval(() => {
           window.scrollBy(0, 1);
-        }, speedMapping[this.autoScrollDelay]);
+        }, speedMapping[this.autoScrollSpeed]);
       }
     },
 
