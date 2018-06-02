@@ -17,6 +17,7 @@
     "@nuxtjs/pwa": "^2.0.8",
     "axios": "^0.18.0",
     "element-ui": "^2.3.9",
+    "nosleep.js": "^0.7.0",
     "nuxt": "^1.0.0"
   },
   "devDependencies": {

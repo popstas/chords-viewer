@@ -12,6 +12,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Autoscroll with speed control
 - Transpose chords
 - Links to chord images
+- No sleep mode for phones
 
 ## Requirements
 `chords.json` should be placed in project root.

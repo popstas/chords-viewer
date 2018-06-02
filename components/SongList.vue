@@ -5,6 +5,7 @@
       <el-switch v-model="withChords" active-text="chords"></el-switch>
       <el-switch v-model="withTexts" active-text="texts"></el-switch>
       <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
+      <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
       <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
       <el-slider v-model="autoScrollDelay" :min="1" :max="10"></el-slider>
       <ul class="search-letters">
@@ -81,6 +82,9 @@
 import SearchInput from "~/components/SearchInput";
 import SongItem from "~/components/SongItem";
 import songs from "~/chords.json";
+import NoSleep from "nosleep.js";
+
+const nosleep = new NoSleep();
 
 const speedMapping = {
   1: 1000,
@@ -114,6 +118,7 @@ export default {
       toolbarHidden: false,
       lastScrollTop: 0,
       activeSong: {},
+      noSleep: false
     };
   },
 
@@ -142,6 +147,10 @@ export default {
 
     autoScrollDelay() {
       this.changeAutoScroll();
+    },
+
+    noSleep(val) {
+      val ? nosleep.enable() : nosleep.disable();
     }
   },
 
@@ -183,13 +192,12 @@ export default {
       }
     },
 
-
-    changeSong(activeName){
+    changeSong(activeName) {
       // console.log(activeName);
       this.activeSong = songs.find(song => song.url == activeName) || {};
     },
 
-    scrollTo(offset){
+    scrollTo(offset) {
       // console.log('scrollTo', offset);
       // window.scrollTo(0, offset);
     },
@@ -217,11 +225,11 @@ export default {
       }
 
       // too fast for human
-      if(Math.abs(delta) > 20){
+      if (Math.abs(delta) > 20) {
         return;
       }
 
-if (delta < 0) {
+      if (delta < 0) {
         this.toolbarHidden = false;
       }
       if (delta > 1 && this.toolbarFixed) {
@@ -239,6 +247,6 @@ if (delta < 0) {
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
     clearInterval(this.scrollInterval);
-  },
+  }
 };
 </script>
