@@ -26,7 +26,7 @@
 <style lang="scss">
 $max_width: 640px;
 
-.el-container{
+.el-container {
   margin: 0 auto;
   max-width: $max_width;
 }
@@ -36,7 +36,6 @@ $max_width: 640px;
   text-align: center;
   margin: 0 auto;
   max-width: $max_width;
-
 
   &__fixed {
     position: fixed;
@@ -65,7 +64,7 @@ $max_width: 640px;
     list-style: none;
     padding: 0;
 
-    &__fixed{
+    &__fixed {
       display: none;
     }
 
@@ -110,7 +109,7 @@ const speedMapping = {
   3: 256,
   4: 128,
   5: 64,
-  6: 32,
+  6: 32
 };
 
 export default {

@@ -21,7 +21,9 @@
 
 <style lang="scss">
 .el-collapse-item {
-  overflow: hidden;
+  [role="tab"] {
+    overflow: hidden;
+  }
 
   .chords {
     position: fixed;
