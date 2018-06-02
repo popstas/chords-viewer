@@ -1,6 +1,6 @@
 {
   "name": "chords-viewer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "View chords generated with chords generator",
   "author": "Stanislav Popov <popstas@gmail.com>",
   "homepage": "https://github.com/popstas/chords-viewer",
@@ -11,7 +11,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "update-data": "curl https://raw.githubusercontent.com/popstas/chords-data/master/chords.json > chords.json",
-    "version": "npm run changelog && git add CHANGELOG.md README.md",
+    "version": "npm run changelog && git add CHANGELOG.md",
     "postversion": "git push && npm run release && npm publish .",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "release": "conventional-github-releaser -p angular && bash scripts/deploy.sh",
