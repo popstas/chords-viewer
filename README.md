@@ -8,6 +8,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Quick search by first letter of title
 - Autoscroll with speed control
 - Transpose chords
+- Chords images
 - Links to chord images
 - No sleep mode for phones
 - Single Page Application
@@ -15,15 +16,16 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - PWA (offline access, when deployed to https domain)
 
 ## Requirements
-`chords.json` should be placed in project root.
+`chords.json` should be placed in project root. You can download my data with command `npm run update-data`.
 
 ## Build Setup
 
 ``` bash
 # install dependencies
-$ npm install # Or yarn install
+npm install
+npm run update-data
 
-# serve with hot reload at localhost:3000
+# serve with hot reload at localhost:3001
 $ npm run dev
 
 # build for production and launch server

@@ -12,7 +12,13 @@
       <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
     </div>
 
-    <div v-if="chords" class="text item chords" v-html="chords"></div>
+    <div v-if="chords" class="text item chords">
+      <span class="chords-section" v-for="(sec, secKey) in chords" :key="secKey">
+        <span class="chords-sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
+          <Chord v-for="(chord, key) in sequence" :chord="chord" :key="key"></Chord>
+        </span>
+      </span>
+    </div>
 
     <div class="sont-text" v-html="textHtml"></div>
     <a target="_blank" :href="song.url">link</a>
@@ -34,24 +40,19 @@
     background: #fff;
     padding: 5px;
     box-shadow: 0 0 2px #ccc;
-    a {
-      display: inline-block;
-      color: #000;
-      text-decoration: none;
-      padding: 0 3px;
-      margin: 2px 0;
-      border: 1px solid #ededed;
-      background: #f9f9f9;
-      min-width: 25px;
-      &:hover,
-      &:focus {
-        background: #ededed;
+
+    &-section {
+      display: block;
+    }
+    &-sequence {
+      white-space: nowrap;
+      &:after {
+        content: " .. ";
+      }
+      &:last-child:after {
+        content: "";
       }
     }
-  }
-
-  .chord-sequence {
-    white-space: nowrap;
   }
 
   .chords-line {
@@ -65,7 +66,12 @@
 </style>
 
 <script>
+import { Popover } from "element-ui";
+import Chord from "~/components/Chord";
+import { transposeMap } from "~/store";
+
 export default {
+  components: { Chord },
   props: ["song", "active"],
 
   data() {
@@ -117,12 +123,20 @@ export default {
     },
 
     chords() {
-      if (!this.song.details) return "";
+      if (!this.song.details) return [];
       let chords = this.chordsRender(this.song.details.chords);
-      chords = chords
+      return chords
+        .split(" - ")
+        .map(section =>
+          section.split(" .. ").map(subsection => subsection.split(" "))
+        );
+
+      /* chords = chords
         .split(" ")
         .map(chord => {
           if (chord.match(/^\(/) || chord == "-" || chord == "..") return chord;
+          if (!this.isKnownChord(chord)) return chord;
+
           let chordUrl = this.getChordImageUrl(chord);
           return `<a target="_blank" href="${chordUrl}">${chord}</a>`;
         })
@@ -132,21 +146,13 @@ export default {
         '<span class="chord-sequence">' +
         chords.split("..").join('</span> .. <span class="chord-sequence">') +
         "</span>";
-      chords = chords.split(" - ").join(" - <br />");
+      chords = chords.split(" - ").join(" - <br />"); */
+
       return chords;
     }
   },
 
   methods: {
-    getChordImageUrl(chord) {
-      chord = chord
-        .split("#")
-        .join("w")
-        .split("+")
-        .join("p");
-      return `https://amdm.ru/images/chords/${chord}_0.gif`;
-    },
-
     chordsRender(line) {
       let chords = line.split(" ");
       chords = this.chordsReplace(chords);
@@ -162,52 +168,6 @@ export default {
       if (this.transposeLevel == 0) {
         return chords;
       }
-
-      const transposeMap = [
-        [
-          "Am",
-          "A#m",
-          "Hm",
-          "Cm",
-          "C#m",
-          "Dm",
-          "D#m",
-          "Em",
-          "Fm",
-          "F#m",
-          "Gm",
-          "G#m"
-        ],
-        ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"],
-        [
-          "A7",
-          "A#7",
-          "H7",
-          "C7",
-          "C#7",
-          "D7",
-          "D#7",
-          "E7",
-          "F7",
-          "F#7",
-          "G7",
-          "G#7"
-        ],
-        [
-          "Am7",
-          "A#m7",
-          "Hm7",
-          "Cm7",
-          "C#m7",
-          "Dm7",
-          "D#m7",
-          "Em7",
-          "Fm7",
-          "F#m7",
-          "Gm7",
-          "G#m7"
-        ]
-      ];
 
       return chords.map(chord => {
         if (!chord) return chord;
