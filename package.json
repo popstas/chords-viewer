@@ -17,8 +17,11 @@
     "@nuxtjs/pwa": "^2.0.8",
     "axios": "^0.18.0",
     "element-ui": "^2.3.9",
+    "node-sass": "^4.9.0",
     "nosleep.js": "^0.7.0",
-    "nuxt": "^1.0.0"
+    "nuxt": "^1.0.0",
+    "sass-loader": "^7.0.2",
+    "style-loader": "^0.21.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

@@ -23,58 +23,76 @@
   </div>
 </template>
 
-<style>
-.el-container,
-.toolbar {
+<style lang="scss">
+$max_width: 640px;
+
+.el-container{
   margin: 0 auto;
-  max-width: 640px;
+  max-width: $max_width;
 }
-.el-switch {
-  margin: 15px 15px 15px 0;
-}
-.el-slider {
-  margin: 0 8px;
-}
+
 .toolbar {
   background: #fff;
   text-align: center;
-}
-.toolbar__fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 5px;
-}
-.toolbar__fixed .search-letters {
-  display: none;
-}
-.toolbar__hidden {
-  display: none;
-}
-.toolbar .el-button {
-  border: none;
-  padding: 7px;
-  float: right;
-}
-.search-letters {
-  list-style: none;
-  padding: 0;
-}
-.search-letters li {
-  padding: 0;
-  display: inline-block;
-  font-size: 13px;
-  min-width: 23px;
-  height: 28px;
-  line-height: 28px;
-  cursor: pointer;
-  box-sizing: border-box;
-  text-align: center;
-  margin: 0;
-}
-.search-letters li.active {
-  color: #409eff;
+  margin: 0 auto;
+  max-width: $max_width;
+
+
+  &__fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 5px;
+  }
+
+  &__hidden {
+    display: none;
+  }
+
+  // switches
+  .el-switch {
+    margin: 15px 15px 15px 0;
+  }
+
+  // autoscroll speed
+  .el-slider {
+    margin: 0 8px;
+  }
+
+  // search letters
+  .search-letters {
+    list-style: none;
+    padding: 0;
+
+    &__fixed{
+      display: none;
+    }
+
+    li {
+      padding: 0;
+      display: inline-block;
+      font-size: 13px;
+      min-width: 23px;
+      height: 28px;
+      line-height: 28px;
+      cursor: pointer;
+      box-sizing: border-box;
+      text-align: center;
+      margin: 0;
+
+      &.active {
+        color: #409eff;
+      }
+    }
+  }
+
+  // close button
+  .el-button {
+    border: none;
+    padding: 7px;
+    float: right;
+  }
 }
 </style>
 
