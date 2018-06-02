@@ -7,7 +7,7 @@
       <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
       <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
-      <el-slider v-model="autoScrollDelay" :min="1" :max="10"></el-slider>
+      <el-slider v-model="autoScrollDelay" :min="1" :max="6"></el-slider>
       <ul class="search-letters">
         <li
           :class="{'search-letter': true, active: q == '^' + letter}"
@@ -105,16 +105,12 @@ import NoSleep from "nosleep.js";
 const nosleep = new NoSleep();
 
 const speedMapping = {
-  1: 1000,
-  2: 500,
-  3: 400,
-  4: 300,
-  5: 200,
-  6: 100,
-  7: 90,
-  8: 80,
-  9: 70,
-  10: 50
+  1: 1024,
+  2: 512,
+  3: 256,
+  4: 128,
+  5: 64,
+  6: 32,
 };
 
 export default {
@@ -129,7 +125,7 @@ export default {
       withChords: false,
       withTexts: false,
       autoScroll: false,
-      autoScrollDelay: 5,
+      autoScrollDelay: 3,
       scrollInterval: false,
       filteredSongs: [],
       toolbarFixed: false,
