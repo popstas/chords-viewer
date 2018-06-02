@@ -1,10 +1,5 @@
 <template>
-  <el-input
-    popper-class="my-input"
-    v-model="q"
-  >
-    <i class="el-icon-search el-input__icon" slot="suffix"></i>
-  </el-input>
+  <el-input popper-class="my-input" v-model="q" clearable></el-input>
 </template>
 
 <script>
