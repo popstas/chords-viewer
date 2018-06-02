@@ -3,9 +3,6 @@
 View chords.json generated with [chords-parser](https://github.com/popstas/chords-parser).
 
 ## Features
-- Single Page Application
-- Static site, hosted anywhere
-- PWA (offline access, when deployed to https domain)
 - Fixed chords while scroll
 - Search by title and lyrics
 - Quick search by first letter of title
@@ -13,6 +10,9 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Transpose chords
 - Links to chord images
 - No sleep mode for phones
+- Single Page Application
+- Static site, hosted anywhere
+- PWA (offline access, when deployed to https domain)
 
 ## Requirements
 `chords.json` should be placed in project root.

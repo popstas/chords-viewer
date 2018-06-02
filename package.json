@@ -1,6 +1,6 @@
 {
   "name": "chords-viewer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "View chords generated with chords generator",
   "author": "Stanislav Popov <popstas@gmail.com>",
   "private": true,
