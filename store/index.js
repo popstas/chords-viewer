@@ -1,3 +1,7 @@
+import pjson from "~/package.json";
+import dateformat from "dateformat";
+import songs from "~/chords.json";
+
 export const transposeMap = [
   ["Am", "A#m", "Hm", "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m"],
   ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"],
@@ -19,17 +23,34 @@ export const transposeMap = [
 ];
 
 export const state = () => ({
-  songs: [],
-  title: 'chords-viewer',
+  songs: songs,
+  name: pjson.name,
+  version: pjson.version,
+  description: pjson.description,
+  homepage: pjson.homepage,
+  activeSong: {}
 });
+
+export const getters = {
+  lastUpdated(state) {
+    let date = Math.max.apply(
+      Math,
+      state.songs.map(song => new Date(song.created))
+    );
+    console.log(dateformat(new Date(date), "dd.mm.yyyy"));
+    return dateformat(new Date(date), "dd.mm.yyyy");
+  }
+};
 
 export const mutations = {
   songs: (state, newValue) => {
-    state.songs = newValue
+    state.songs = newValue;
   },
+  activeSong: (state, newValue) => {
+    state.activeSong = newValue;
+  }
 };
 
-export const actions = {
-};
+export const actions = {};
 
 export const strict = false;

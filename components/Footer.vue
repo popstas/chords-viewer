@@ -1,33 +1,42 @@
 <template>
-  <el-footer>
-    <div class="app-version">{{ name }} version: {{ version }}</div>
-    <a class="app-link" :href="homepage" target="_blank"><icon name="brands/github"></icon> Github</a>
+  <el-footer class="footer">
+    <a class="footer__link" :href="$store.state.homepage" target="_blank">
+      <icon name="brands/github"></icon>
+      {{ $store.state.name }} {{ $store.state.version }}
+    </a>
+    <a class="footer__link" href="https://github.com/popstas/chords-data" target="_blank">
+      <icon name="calendar-alt"></icon>
+      songs updated: {{ $store.getters.lastUpdated }}
+    </a>
   </el-footer>
 </template>
 
-<style>
-.el-footer {
-  padding: 0 5px;
-}
-.app-link {
-  text-decoration: none;
-  color: #000;
+<style lang="scss">
+.footer {
+  padding: 30px 5px 0;
+  &__link {
+    display: inline-block;
+    margin-right: 15px;
+    text-decoration: none;
+    color: #333;
+    &:hover {
+      color: #666;
+    }
+  }
+  .app-updated {
+    margin-left: 20px;
+  }
 }
 </style>
 
 <script>
-import pjson from "~/package.json";
 import "vue-awesome/icons/brands/github";
+import "vue-awesome/icons/calendar-alt";
 import Icon from "vue-awesome/components/Icon";
 
 export default {
   data() {
-    return {
-      version: pjson.version,
-      name: pjson.name,
-      description: pjson.description,
-      homepage: pjson.homepage
-    };
+    return {};
   }
 };
 </script>

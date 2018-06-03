@@ -29,8 +29,8 @@
       </ul>
     </div>
 
-    <div class="search-total">total: {{ count }}, updated: {{ lastUpdated }}</div>
-    <el-collapse accordion @change="changeSong">
+    <div class="search-total">total: {{ count }}</div>
+    <el-collapse accordion @change="changeSong" :value="activeSong.url">
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url" :active="song.url == activeSong.url" @active="scrollTo"></SongItem>
     </el-collapse>
   </div>
@@ -117,9 +117,8 @@ $max_width: 640px;
 <script>
 import SearchInput from "~/components/SearchInput";
 import SongItem from "~/components/SongItem";
-import songs from "~/chords.json";
 import NoSleep from "nosleep.js";
-import dateformat from "dateformat";
+import mapState from "vuex";
 
 const nosleep = new NoSleep();
 
@@ -151,7 +150,6 @@ export default {
       toolbarFixed: false,
       toolbarHidden: false,
       lastScrollTop: 0,
-      activeSong: {},
       noSleep: false
     };
   },
@@ -161,13 +159,15 @@ export default {
       return this.filteredSongs.length;
     },
 
-    lastUpdated() {
-      let date = Math.max.apply(
-        Math,
-        songs.map(song => new Date(song.created))
-      );
-      return dateformat(new Date(date), "dd.mm.yyyy");
+    songs() {
+      return this.$store.state.songs;
+    },
+
+    activeSong() {
+      return this.$store.state.activeSong;
     }
+
+    //...mapState(['songs', 'activeSong'])
   },
 
   watch: {
@@ -212,7 +212,7 @@ export default {
 
     filterSongs() {
       const q = this.q.toLowerCase();
-      let result = songs;
+      let result = this.songs;
 
       if (q) {
         let isLetter = q.match(/\^.$/);
@@ -250,7 +250,8 @@ export default {
 
     changeSong(activeName) {
       // console.log(activeName);
-      this.activeSong = songs.find(song => song.url == activeName) || {};
+      let activeSong = this.songs.find(song => song.url == activeName) || {};
+      this.$store.commit("activeSong", activeSong);
     },
 
     scrollTo(offset) {
@@ -259,7 +260,7 @@ export default {
     },
 
     buildLetters() {
-      let letters = songs.map(song => {
+      let letters = this.songs.map(song => {
         return song.title[0];
       });
       letters.sort();
