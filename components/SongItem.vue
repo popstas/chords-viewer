@@ -1,32 +1,34 @@
 <template>
-  <el-collapse-item :title="title" :name="song.url" :class="{active: active}">
+  <el-collapse-item :title="title" :name="song.url" :class="{'song-item': true, active: active}">
     <template slot="title">
       {{ title }}
       <i v-if="song.text" class="el-icon-tickets"></i>
       <i v-if="song.details.chords" class="el-icon-check"></i>
     </template>
 
-    <div v-if="active" class="song-transpose">
-      <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
-      <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
-      <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
-    </div>
+    <div class="song-item__content" v-if="active">
+      <div v-if="active" class="song-transpose">
+        <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
+        <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
+        <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+      </div>
 
-    <div v-if="chords" class="text item chords">
-      <span class="chords-section" v-for="(sec, secKey) in chords" :key="secKey">
-        <span class="chords-sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
-          <Chord v-for="(chord, key) in sequence" :chord="chord" :key="key"></Chord>
+      <div v-if="chords" class="text item chords">
+        <span class="chords-section" v-for="(sec, secKey) in chords" :key="secKey">
+          <span class="chords-sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
+            <Chord v-for="(chord, key) in sequence" :chord="chord" :key="key"></Chord>
+          </span>
         </span>
-      </span>
-    </div>
+      </div>
 
-    <div class="sont-text" v-html="textHtml"></div>
-    <a target="_blank" :href="song.url">link</a>
+      <div class="sont-text" v-html="textHtml"></div>
+      <a target="_blank" :href="song.url">link</a>
+    </div>
   </el-collapse-item>
 </template>
 
 <style lang="scss">
-.el-collapse-item {
+.song-item {
   [role="tab"] {
     overflow: hidden;
   }
@@ -66,7 +68,6 @@
 </style>
 
 <script>
-import { Popover } from "element-ui";
 import Chord from "~/components/Chord";
 import { transposeMap } from "~/store";
 
