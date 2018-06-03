@@ -35,6 +35,16 @@ html {
 <script>
 import Footer from "~/components/Footer";
 export default {
-  components: { Footer }
+  components: { Footer },
+  computed: {
+    title(){
+      return (this.$store.state.activeSong.title ? this.$store.state.activeSong.title + ' - ' : '') + this.$store.state.name
+    }
+  },
+  head() {
+    return {
+      title: this.title
+    };
+  }
 };
 </script>
