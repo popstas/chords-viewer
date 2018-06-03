@@ -16,12 +16,25 @@
       <div v-if="chords" class="text item chords">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
-            <Chord v-for="(chord, key) in sequence" :chord="chord" :key="key"></Chord>
+            <Chord v-for="(chord, key) in sequence" :chord="chord" :transposeLevel="transposeLevel" :key="key"></Chord>
           </span>
         </span>
       </div>
 
-      <div class="sont-text" v-html="textHtml"></div>
+      <div v-if="song.text" class="song-text">
+        <template class="song-text__line" v-for="(line, lineKey) in textLines">
+          <div v-if="line.type == 'chords'" class="song-item__line_chords" :key="lineKey">
+            <template v-for="(chord, chordKey) in line.data">
+              <template v-if="chord != ''">
+                <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
+              </template>
+              <template v-else>&nbsp;</template>
+            </template>
+          </div>
+          <div v-if="line.type == 'text'" class="song-item__line_text" v-html="line.data" :key="lineKey"></div>
+        </template>
+      </div>
+
       <a target="_blank" :href="song.url">link</a>
     </div>
   </el-collapse-item>
@@ -58,8 +71,12 @@
     }
   }
 
-  .chords-line {
-    color: #999;
+  &__line_chords {
+    .chord_known .el-button {
+      color: #999;
+      border: none;
+      background: none;
+    }
   }
 
   .song-transpose .el-button {
@@ -102,32 +119,20 @@ export default {
       return title;
     },
 
-    textHtml() {
-      if (!this.song.text) {
-        return "";
-      }
-
-      let html = this.song.text
-        .split("\n")
-        .map(line => {
-          if (!line.match(/[а-яА-Я]/)) {
-            line =
-              '<span class="chords-line">' +
-              this.chordsRender(line)
-                .split(" ")
-                .join("&nbsp;") +
-              "</span>";
-          }
-          return line;
-        })
-        .join("<br>");
-      return html;
+    textLines() {
+      if (!this.song.text) return "";
+      return this.song.text.split("\n").map(line => {
+        if (!line.match(/[а-яА-Я]/)) {
+          return { type: "chords", data: line.split(" ") };
+        }
+        return { type: "text", data: line };
+      });
     },
 
     chords() {
       if (!this.song.details) return [];
-      let chords = this.chordsRender(this.song.details.chords);
-      return chords
+      // split by ' - ', then by ' .. ', then by ' '
+      return this.song.details.chords
         .split(" - ")
         .map(section =>
           section.split(" .. ").map(subsection => subsection.split(" "))
@@ -135,46 +140,6 @@ export default {
     }
   },
 
-  methods: {
-    chordsRender(line) {
-      let chords = line.split(" ");
-      chords = this.chordsReplace(chords);
-      chords = this.chordsTranspose(chords);
-      return chords.join(" ");
-    },
-
-    chordsReplace(chords) {
-      return chords.map(chord => chord.replace("B", "H").replace("m#", "#m"));
-    },
-
-    chordsTranspose(chords) {
-      if (this.transposeLevel == 0) {
-        return chords;
-      }
-
-      return chords.map(chord => {
-        if (!chord) return chord;
-
-        // find chain
-        let chain = transposeMap.find(chain => chain.indexOf(chord) != -1);
-        if (!chain) {
-          return chord;
-        }
-
-        // iterate over chain at transposeLevel
-        let currentIndex = chain.indexOf(chord);
-        for (let i = 0; i < Math.abs(this.transposeLevel); i++) {
-          if (this.transposeLevel > 0) {
-            currentIndex =
-              currentIndex + 1 >= chain.length ? 0 : currentIndex + 1;
-          } else {
-            currentIndex =
-              currentIndex - 1 < 0 ? chain.length - 1 : currentIndex - 1;
-          }
-        }
-        return chain[currentIndex];
-      });
-    }
-  }
+  methods: {}
 };
 </script>
