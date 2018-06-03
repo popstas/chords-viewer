@@ -14,8 +14,8 @@
       </div>
 
       <div v-if="chords" class="text item chords">
-        <span class="chords-section" v-for="(sec, secKey) in chords" :key="secKey">
-          <span class="chords-sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
+        <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
+          <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
             <Chord v-for="(chord, key) in sequence" :chord="chord" :key="key"></Chord>
           </span>
         </span>
@@ -43,10 +43,11 @@
     padding: 5px;
     box-shadow: 0 0 2px #ccc;
 
-    &-section {
+    &__section {
       display: block;
     }
-    &-sequence {
+
+    &__sequence {
       white-space: nowrap;
       &:after {
         content: " .. ";
@@ -131,25 +132,6 @@ export default {
         .map(section =>
           section.split(" .. ").map(subsection => subsection.split(" "))
         );
-
-      /* chords = chords
-        .split(" ")
-        .map(chord => {
-          if (chord.match(/^\(/) || chord == "-" || chord == "..") return chord;
-          if (!this.isKnownChord(chord)) return chord;
-
-          let chordUrl = this.getChordImageUrl(chord);
-          return `<a target="_blank" href="${chordUrl}">${chord}</a>`;
-        })
-        .join(" ");
-
-      chords =
-        '<span class="chord-sequence">' +
-        chords.split("..").join('</span> .. <span class="chord-sequence">') +
-        "</span>";
-      chords = chords.split(" - ").join(" - <br />"); */
-
-      return chords;
     }
   },
 

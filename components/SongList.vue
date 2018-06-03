@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div :class="{toolbar: true, toolbar__fixed: toolbarFixed, toolbar__hidden: toolbarHidden}">
+    <div :class="{toolbar: true, toolbar_fixed: toolbarFixed, toolbar_hidden: toolbarHidden}">
       <SearchInput v-model="q"></SearchInput>
 
-      <div class="toolbar-filters">
+      <div class="toolbar__filters">
         <el-switch v-model="withChords" active-text="chords"></el-switch>
         <el-switch v-model="withTexts" class="hidden-xs-only" active-text="texts"></el-switch>
         <el-switch v-model="sortByDate" active-text="by date"></el-switch>
         <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
         <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
 
-        <el-row class="toolbar-autoscroll" :gutter="20">
+        <el-row class="toolbar__autoscroll" :gutter="20">
           <el-col :span="8">
             <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
           </el-col>
@@ -20,9 +20,9 @@
         </el-row>
       </div>
 
-      <ul class="search-letters">
+      <ul class="toolbar__search-letters search-letters">
         <li
-          :class="{'search-letter': true, active: q == '^' + letter}"
+          :class="{'search-letters__letter': true, active: q == '^' + letter}"
           v-for="letter in letters" :key="letter"
           @click="q = '^' + letter"
         >{{ letter }}</li>
@@ -50,7 +50,7 @@ $max_width: 640px;
   margin: 0 auto;
   max-width: $max_width;
 
-  &__fixed {
+  &_fixed {
     position: fixed;
     top: 0;
     left: 0;
@@ -63,7 +63,7 @@ $max_width: 640px;
     }
   }
 
-  &__hidden {
+  &_hidden {
     display: none;
   }
 
@@ -72,7 +72,7 @@ $max_width: 640px;
     margin: 15px 15px 15px 0;
   }
 
-  &-autoscroll {
+  &__autoscroll {
     display: flex;
     align-items: center;
 
@@ -87,7 +87,7 @@ $max_width: 640px;
     list-style: none;
     padding: 0;
 
-    li {
+    &__letter {
       padding: 0;
       display: inline-block;
       font-size: 13px;
