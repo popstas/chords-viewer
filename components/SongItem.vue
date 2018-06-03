@@ -13,7 +13,7 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
-      <div v-if="chords" class="text item chords">
+      <div v-if="active && chords" class="text item chords">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
             <Chord v-for="(chord, key) in sequence" :chord="chord" :transposeLevel="transposeLevel" :key="key"></Chord>
@@ -21,7 +21,7 @@
         </span>
       </div>
 
-      <div v-if="song.text" class="song-text">
+      <div v-if="active && song.text" class="song-text">
         <template class="song-text__line" v-for="(line, lineKey) in textLines">
           <div v-if="line.type == 'chords'" class="song-item__line_chords" :key="lineKey">
             <template v-for="(chord, chordKey) in line.data">

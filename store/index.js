@@ -23,12 +23,25 @@ export const transposeMap = [
 ];
 
 export const state = () => ({
+  // data
   songs: songs,
+
+  // constants
   name: pjson.name,
   version: pjson.version,
   description: pjson.description,
   homepage: pjson.homepage,
-  activeSong: {}
+
+  // app state
+  activeSong: {},
+
+  // filters
+  filter: {
+    q: "",
+    withChords: false,
+    withTexts: false,
+    sortByDate: false
+  }
 });
 
 export const getters = {
@@ -37,7 +50,6 @@ export const getters = {
       Math,
       state.songs.map(song => new Date(song.created))
     );
-    console.log(dateformat(new Date(date), "dd.mm.yyyy"));
     return dateformat(new Date(date), "dd.mm.yyyy");
   }
 };
@@ -48,9 +60,15 @@ export const mutations = {
   },
   activeSong: (state, newValue) => {
     state.activeSong = newValue;
+  },
+
+  // q, withChords, withTexts, sortByDate
+  changeFilter(state, options) {
+    console.log("mutation filter:", options);
+    state.filter[options.name] = options.value;
   }
 };
 
 export const actions = {};
 
-export const strict = false;
+export const strict = true;
