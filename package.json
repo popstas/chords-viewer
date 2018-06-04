@@ -1,6 +1,6 @@
 {
   "name": "chords-viewer",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "View chords generated with chords generator",
   "author": "Stanislav Popov <popstas@gmail.com>",
   "homepage": "https://github.com/popstas/chords-viewer",
@@ -27,7 +27,8 @@
     "fuse.js": "^3.2.0",
     "nosleep.js": "^0.7.0",
     "nuxt": "^1.0.0",
-    "vue-awesome": "^3.0.0"
+    "vue-awesome": "^3.0.0",
+    "vue-fullscreen": "^2.1.3"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

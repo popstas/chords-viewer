@@ -1,3 +1,22 @@
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/popstas/chords-viewer/compare/v1.1.0...v1.2.0) (2018-06-04)
+
+
+### Bug Fixes
+
+* render song on openIt decreased rendered page size from 3.5M to 0.8Mand dramatically decreased cpu time on app create ([6723392](https://github.com/popstas/chords-viewer/commit/6723392))
+
+
+### Features
+
+* display current song in page title ([797b09a](https://github.com/popstas/chords-viewer/commit/797b09a))
+* fuzzy search ([d6fd6c7](https://github.com/popstas/chords-viewer/commit/d6fd6c7))
+* interactive chords in text ([d230af2](https://github.com/popstas/chords-viewer/commit/d230af2))
+* open single filtered song ([846e6da](https://github.com/popstas/chords-viewer/commit/846e6da))
+* voice search with SpeechRecognition ([3bbc990](https://github.com/popstas/chords-viewer/commit/3bbc990))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/popstas/chords-viewer/compare/v1.0.0...v1.1.0) (2018-06-02)
 
