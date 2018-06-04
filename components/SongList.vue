@@ -20,6 +20,7 @@ $max_width: 640px;
 <script>
 import SongItem from "~/components/SongItem";
 import Toolbar from "~/components/Toolbar";
+import Fuse from "fuse.js";
 // import mapState from "vuex";
 
 export default {
@@ -30,22 +31,30 @@ export default {
 
   data() {
     return {
-      filteredSongs: [],
+      filteredSongs: []
     };
   },
 
   computed: {
-    filter(){ return this.$store.state.filter; },
-    songs(){ return this.$store.state.songs; },
-    activeSong(){ return this.$store.state.activeSong; },
+    filter() {
+      return this.$store.state.filter;
+    },
+    songs() {
+      return this.$store.state.songs;
+    },
+    activeSong() {
+      return this.$store.state.activeSong;
+    },
 
-    count(){ return this.filteredSongs.length; },
+    count() {
+      return this.filteredSongs.length;
+    }
     //...mapState(['songs', 'activeSong']) // TODO
   },
 
   watch: {
-    filteredSongs(val){
-      if(val.length == 1){
+    filteredSongs(val) {
+      if (val.length == 1) {
         this.changeSong(val[0].url);
       }
     }
@@ -67,12 +76,31 @@ export default {
 
       if (q) {
         let isLetter = q.match(/\^.$/);
-        result = result.filter(song => {
-          return (
-            song.title.toLowerCase().search(q) >= 0 ||
-            (!isLetter && song.text && song.text.toLowerCase().search(q) >= 0)
+        if (isLetter) {
+          result = result.filter(
+            song => song.title.toLowerCase().search(q) >= 0
           );
-        });
+        } else {
+          let fuse = new Fuse(result, {
+            keys: [
+              {
+                name: "title",
+                weight: 0.7
+              },
+              {
+                name: "text",
+                weight: 0.3
+              }
+            ]
+          });
+          result = fuse.search(q);
+          /* result = result.filter(song => {
+            return (
+              song.title.toLowerCase().search(q) >= 0 ||
+              (!isLetter && song.text && song.text.toLowerCase().search(q) >= 0)
+            );
+          }); */
+        }
       }
 
       if (this.$store.state.filter.withChords) {
@@ -96,11 +124,11 @@ export default {
     scrollTo(offset) {
       // console.log('scrollTo', offset);
       // window.scrollTo(0, offset);
-    },
+    }
   },
 
   created() {
     this.filterSongs();
-  },
+  }
 };
 </script>
