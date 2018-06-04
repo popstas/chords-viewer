@@ -44,6 +44,11 @@ export default {
   },
 
   watch: {
+    filteredSongs(val){
+      if(val.length == 1){
+        this.changeSong(val[0].url);
+      }
+    }
   },
 
   methods: {
