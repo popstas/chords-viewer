@@ -6,6 +6,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Fixed chords while scroll
 - Search by title and lyrics
 - Quick search by first letter of title
+- Voice search
 - Autoscroll with speed control
 - Transpose chords
 - Chords images
