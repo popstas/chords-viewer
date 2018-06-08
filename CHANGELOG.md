@@ -1,3 +1,13 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/popstas/chords-viewer/compare/v1.2.0...v1.3.0) (2018-06-08)
+
+
+### Features
+
+* add sidebar with filters ([dc4b28a](https://github.com/popstas/chords-viewer/commit/dc4b28a))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/popstas/chords-viewer/compare/v1.1.0...v1.2.0) (2018-06-04)
 
