@@ -35,8 +35,5 @@ import "vue-awesome/icons/calendar-alt";
 import Icon from "vue-awesome/components/Icon";
 
 export default {
-  data() {
-    return {};
-  }
 };
 </script>

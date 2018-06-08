@@ -3,10 +3,6 @@
     <SearchInput v-model="q"></SearchInput>
 
     <div class="toolbar__filters">
-      <el-switch v-model="withChords" active-text="chords"></el-switch>
-      <el-switch v-model="withTexts" class="hidden-xs-only" active-text="texts"></el-switch>
-      <el-switch v-model="sortByDate" active-text="by date"></el-switch>
-      <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
       <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
 
       <el-row class="toolbar__autoscroll" :gutter="20">
@@ -104,7 +100,6 @@ $max_width: 640px;
 
 <script>
 import SearchInput from "~/components/SearchInput";
-import NoSleep from "nosleep.js";
 
 const speedMapping = {
   1: 1024,
@@ -115,7 +110,6 @@ const speedMapping = {
   6: 32
 };
 
-const nosleep = new NoSleep();
 
 export default {
   components: {
@@ -131,12 +125,8 @@ export default {
       toolbarFixed: false,
       toolbarHidden: false,
       lastScrollTop: 0,
-      noSleep: false,
 
       q: "",
-      withChords: false,
-      withTexts: false,
-      sortByDate: false
     };
   },
 
@@ -146,15 +136,6 @@ export default {
     q(val) {
       this.changeFilter("q", val);
     },
-    withChords(val) {
-      this.changeFilter("withChords", val);
-    },
-    withTexts(val) {
-      this.changeFilter("withTexts", val);
-    },
-    sortByDate(val) {
-      this.changeFilter("sortByDate", val);
-    },
 
     autoScroll() {
       this.changeAutoScroll();
@@ -163,10 +144,6 @@ export default {
     autoScrollSpeed() {
       this.changeAutoScroll();
     },
-
-    noSleep(val) {
-      val ? nosleep.enable() : nosleep.disable();
-    }
   },
 
   methods: {

@@ -28,7 +28,7 @@
     "nosleep.js": "^0.7.0",
     "nuxt": "^1.0.0",
     "vue-awesome": "^3.0.0",
-    "vue-fullscreen": "^2.1.3"
+    "vue-slideout": "^1.7.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
