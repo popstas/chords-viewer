@@ -22,11 +22,11 @@
 </template>
 
 <style lang="scss">
-$max_width: 640px;
+$container_width: 640px;
 
 .container-wrap {
   margin: 0 auto;
-  max-width: $max_width;
+  max-width: $container_width;
   background: #fff;
   position: relative;
 }
@@ -91,6 +91,9 @@ html {
   // will-change: transform; - it breaks position: fixed
   min-height: 100vh;
   background: #fff;
+  @media(min-width: $container_width){
+    min-width: $container_width;
+  }
 
   .slideout-open & {
     overflow: hidden;
