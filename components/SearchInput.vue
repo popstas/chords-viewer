@@ -72,6 +72,15 @@ export default {
       return this.isSpeechRunning ? this.speechStop() : this.speechStart();
     },
 
+    onSpeechEnd() {
+      // console.log("speech end");
+      this.speechStop();
+      if (this.runtimeTranscription === "") return;
+
+      this.transcription.push(this.runtimeTranscription);
+      this.q = this.runtimeTranscription;
+    },
+
     checkSpeechApi() {
       window.SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,15 +100,7 @@ export default {
           .join("");
         this.runtimeTranscription = text;
       });
-      recognition.addEventListener("end", () => {
-        // console.log("speech end");
-        this.speechStop();
-        if (this.runtimeTranscription !== "") {
-          this.transcription.push(this.runtimeTranscription);
-          this.q = this.runtimeTranscription;
-        }
-        this.runtimeTranscription = "";
-      });
+      recognition.addEventListener("end", this.onSpeechEnd);
       this.recognition = recognition;
     }
   },

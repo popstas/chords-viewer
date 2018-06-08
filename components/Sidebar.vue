@@ -53,7 +53,6 @@ export default {
 
   methods: {
     changeFilter(name, value) {
-      console.log(name, value);
       this.$store.commit("changeFilter", { name, value });
       this.$emit("changeFilter", { name, value });
     }
