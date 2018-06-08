@@ -1,6 +1,7 @@
 import pjson from "~/package.json";
 import dateformat from "dateformat";
 import songs from "~/chords.json";
+import Fuse from "fuse.js";
 
 export const transposeMap = [
   ["Am", "A#m", "Hm", "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m"],
@@ -25,6 +26,7 @@ export const transposeMap = [
 export const state = () => ({
   // data
   songs: songs,
+  filteredSongs: [],
 
   // constants
   name: pjson.name,
@@ -55,20 +57,70 @@ export const getters = {
 };
 
 export const mutations = {
-  songs: (state, newValue) => {
+  songs(state, newValue) {
     state.songs = newValue;
   },
-  activeSong: (state, newValue) => {
+  activeSong(state, newValue) {
     state.activeSong = newValue;
   },
-
+  setFilteredSongs(state, newValue) {
+    state.filteredSongs = newValue;
+  },
   // q, withChords, withTexts, sortByDate
   changeFilter(state, options) {
-    console.log("mutation filter:", options);
     state.filter[options.name] = options.value;
   }
 };
 
-export const actions = {};
+export const actions = {
+  filterSongs({ commit, state }, payload) {
+    const q = state.filter.q.toLowerCase();
+    let result = state.songs;
+
+    if (q) {
+      let isLetter = q.match(/\^.$/);
+      if (isLetter) {
+        result = result.filter(song => song.title.toLowerCase().search(q) >= 0);
+      } else {
+        let fuse = new Fuse(result, {
+          keys: [
+            {
+              name: "title",
+              weight: 0.7
+            },
+            {
+              name: "text",
+              weight: 0.3
+            }
+          ]
+        });
+        result = fuse.search(q);
+        /* // without fuse
+        result = result.filter(song => {
+          return (
+            song.title.toLowerCase().search(q) >= 0 ||
+            (!isLetter && song.text && song.text.toLowerCase().search(q) >= 0)
+          );
+        }); */
+      }
+    }
+
+    if (state.filter.withChords) {
+      result = result.filter(song => song.details.chords);
+    }
+
+    if (state.filter.withTexts) {
+      result = result.filter(song => song.text);
+    }
+
+    if (state.filter.sortByDate) {
+      result = result
+        .slice()
+        .sort((a, b) => new Date(b.created) - new Date(a.created));
+    }
+
+    commit("setFilteredSongs", result);
+  }
+};
 
 export const strict = true;
