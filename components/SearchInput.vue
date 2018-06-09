@@ -1,27 +1,60 @@
 <template>
-  <el-input v-model="q" clearable autofocus>
-    <button :class="{'speech-toggle':true, active: isSpeechRunning}" @click="speechToggle" slot="suffix">
+  <el-input v-model="q" autofocus>
+    <button :class="{'search-input__speech-toggle':true, active: isSpeechRunning}" @click="speechToggle" slot="suffix">
       <icon v-if="recognition" name="microphone" class="el-icon-speech el-input__icon"></icon>
     </button>
+    <a :class="{'search-input__amdm-search':true}" v-if="q"
+       :href="'https://amdm.ru/search/?q=' + encodeURIComponent(q)"
+       slot="suffix" target="_blank"
+     >
+      <span class="search-input__amdm-search-text">amdm.ru</span>
+    </a>
   </el-input>
 </template>
 
 <style lang="scss">
-.speech-toggle {
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 6px 0;
-  width: 30px;
-  height: 100%;
-  color: #dcdfe6;
-  outline: none;
+.search-input {
+  &__speech-toggle {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 6px 0;
+    width: 30px;
+    height: 100%;
+    color: #dcdfe6;
+    outline: none;
 
-  &:hover {
-    color: #666;
+    &:hover {
+      color: #666;
+    }
+    &.active {
+      color: #409eff;
+    }
   }
-  &.active {
-    color: #409eff;
+
+  &__amdm-search {
+    border: none;
+    background: none;
+    position: absolute;
+    right: 37px;
+    top: 0;
+    bottom: 0;
+    line-height: 40px;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover .search-input__amdm-search-text {
+      background: #3f9de1;
+    }
+
+    &-text {
+      padding: 2px 4px;
+      background: #ccc;
+      border-radius: 2px;
+      color: #fff;
+      font-size: 10px;
+    }
   }
 }
 </style>

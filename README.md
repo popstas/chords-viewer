@@ -7,6 +7,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Search by title and lyrics
 - Quick search by first letter of title
 - Voice search
+- Search on amdm.ru
 - Autoscroll with speed control
 - Transpose chords
 - Chords images
@@ -36,5 +37,3 @@ $ npm start
 # generate static project
 $ npm run generate
 ```
-
-For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
