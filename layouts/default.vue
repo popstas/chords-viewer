@@ -91,7 +91,7 @@ html {
   // will-change: transform; - it breaks position: fixed
   min-height: 100vh;
   background: #fff;
-  @media(min-width: $container_width){
+  @media (min-width: $container_width) {
     min-width: $container_width;
   }
 
@@ -119,11 +119,14 @@ export default {
   },
   head() {
     return {
-      title: this.title
-      /* meta: {
-        name: "mobile-web-app-capable",
-        content: "yes"
-      } */
+      title: this.title,
+      link: [
+        { rel: 'manifest', href: '/site.webmanifest' },
+        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
+        { rel: 'apple-touch-icon', type: 'image/png', sizes: '180x180', href: '/apple-touch-icon.png' },
+        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
+      ]
     };
   }
 };
