@@ -59,6 +59,8 @@ $max_width: 640px;
   &__autoscroll {
     display: flex;
     align-items: center;
+    margin-left: -5px !important;
+    margin-right: -5px !important;
 
     // autoscroll speed
     .el-slider {
