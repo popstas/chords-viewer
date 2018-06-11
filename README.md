@@ -1,8 +1,32 @@
 # chords-viewer
 
+## Russian
+Смотрелка для chords.json, сгенерированного через [chords-parser](https://github.com/popstas/chords-parser).
+
+Мои аккорды: https://chords.popstas.ru
+
+### Возможности
+- Аккорды фиксируются при промотке песни и всегда видны
+- Поиск по названию или словам из песни
+- Быстрый переход по первой букве имени исполнителя
+- Голосовой поиск
+- Поиск на amdm.ru
+- Автопрокрутка текста с настройкой скорости
+- Транспонирование аккордов
+- При наведении на аккорд показывается аппликатура
+- Режим "не спать" для телефонов
+- Сайт может работать без интернета, если хоть раз на него зайти
+
+### Требования
+Чтобы собрать, нужно положить `chords.json` в корень проекта.
+Данные моих аккордов лежат на github и могут быть скачаны через `npm run update-data`.
+
+
+
+## English
 View chords.json generated with [chords-parser](https://github.com/popstas/chords-parser).
 
-## Features
+### Features
 - Fixed chords while scroll
 - Search by title and lyrics
 - Quick search by first letter of title
@@ -11,14 +35,15 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Autoscroll with speed control
 - Transpose chords
 - Chords images
-- Links to chord images
 - No sleep mode for phones
 - Single Page Application
 - Static site, hosted anywhere
 - PWA (offline access, when deployed to https domain)
 
-## Requirements
+### Requirements
 `chords.json` should be placed in project root. You can download my data with command `npm run update-data`.
+
+
 
 ## Build Setup
 
@@ -33,7 +58,26 @@ $ npm run dev
 # build for production and launch server
 $ npm run build
 $ npm start
+```
 
-# generate static project
-$ npm run generate
+## Full build of chords.popstas.ru
+
+``` bash
+git clone https://github.com/popstas/chords-parser.git
+cd chords-parser
+npm install
+npm start
+npm deploy
+
+cd ..
+git clone https://github.com/popstas/chords-viewer.git
+npm install
+npm update-data
+npm deploy
+```
+
+## New version
+
+``` bash
+npm version
 ```
