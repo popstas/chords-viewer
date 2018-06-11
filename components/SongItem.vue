@@ -13,7 +13,7 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
-      <div v-if="active && chords" class="text item chords">
+      <div v-if="active && chords && toolbarHidden" class="text item chords">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
             <Chord v-for="(chord, key) in sequence" :chord="chord" :transposeLevel="transposeLevel" :key="key"></Chord>
@@ -137,6 +137,10 @@ export default {
         .map(section =>
           section.split(" .. ").map(subsection => subsection.split(" "))
         );
+    },
+
+    toolbarHidden() {
+      return this.$store.state.toolbarHidden;
     }
   },
 

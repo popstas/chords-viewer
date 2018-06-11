@@ -125,14 +125,17 @@ export default {
       scrollInterval: false,
 
       toolbarFixed: false,
-      toolbarHidden: false,
       lastScrollTop: 0,
 
       q: "",
     };
   },
 
-  computed: {},
+  computed: {
+    toolbarHidden() {
+      return this.$store.state.toolbarHidden;
+    }
+  },
 
   watch: {
     q(val) {
@@ -183,10 +186,10 @@ export default {
       }
 
       if (delta < 0) {
-        this.toolbarHidden = false;
+        this.$store.commit('setToolbarHidden', false);
       }
       if (delta > 1 && this.toolbarFixed) {
-        this.toolbarHidden = true;
+        this.$store.commit('setToolbarHidden', true);
       }
     },
 

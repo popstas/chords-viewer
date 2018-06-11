@@ -36,6 +36,7 @@ export const state = () => ({
 
   // app state
   activeSong: {},
+  toolbarHidden: false,
 
   // filters
   filter: {
@@ -69,6 +70,9 @@ export const mutations = {
   // q, withChords, withTexts, sortByDate
   changeFilter(state, options) {
     state.filter[options.name] = options.value;
+  },
+  setToolbarHidden(state, newValue) {
+    state.toolbarHidden = newValue;
   }
 };
 
