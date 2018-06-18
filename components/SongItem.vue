@@ -42,7 +42,7 @@
 
 <style lang="scss">
 .song-item {
-  [role="tab"] {
+  [role='tab'] {
     overflow: hidden;
   }
 
@@ -63,10 +63,10 @@
     &__sequence {
       white-space: nowrap;
       &:after {
-        content: " .. ";
+        content: ' .. ';
       }
       &:last-child:after {
-        content: "";
+        content: '';
       }
     }
   }
@@ -86,12 +86,12 @@
 </style>
 
 <script>
-import Chord from "~/components/Chord";
-import { transposeMap } from "~/store";
+import Chord from '~/components/Chord';
+import { transposeMap } from '~/store';
 
 export default {
   components: { Chord },
-  props: ["song", "active"],
+  props: ['song', 'active'],
 
   data() {
     return {
@@ -101,7 +101,7 @@ export default {
 
   watch: {
     active(val) {
-      if (val) this.$emit("active", this.$el.offsetTop);
+      if (val) this.$emit('active', this.$el.offsetTop);
     },
     transposeLevel(val) {
       // cycle transpose
@@ -113,19 +113,19 @@ export default {
     title() {
       let title = this.song.title;
       if (this.song.details.title) {
-        title = this.song.details.artist + " - " + this.song.details.title;
+        title = this.song.details.artist + ' - ' + this.song.details.title;
       }
-      title = title.trim(",");
+      title = title.trim(',');
       return title;
     },
 
     textLines() {
-      if (!this.song.text) return "";
-      return this.song.text.split("\n").map(line => {
+      if (!this.song.text) return '';
+      return this.song.text.split('\n').map(line => {
         if (!line.match(/[а-яА-Я]/)) {
-          return { type: "chords", data: line.split(" ") };
+          return { type: 'chords', data: line.split(' ') };
         }
-        return { type: "text", data: line };
+        return { type: 'text', data: line };
       });
     },
 
@@ -133,10 +133,8 @@ export default {
       if (!this.song.details) return [];
       // split by ' - ', then by ' .. ', then by ' '
       return this.song.details.chords
-        .split(" - ")
-        .map(section =>
-          section.split(" .. ").map(subsection => subsection.split(" "))
-        );
+        .split(' - ')
+        .map(section => section.split(' .. ').map(subsection => subsection.split(' ')));
     },
 
     toolbarHidden() {

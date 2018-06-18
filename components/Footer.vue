@@ -30,10 +30,9 @@
 </style>
 
 <script>
-import "vue-awesome/icons/brands/github";
-import "vue-awesome/icons/calendar-alt";
-import Icon from "vue-awesome/components/Icon";
+import 'vue-awesome/icons/brands/github';
+import 'vue-awesome/icons/calendar-alt';
+import Icon from 'vue-awesome/components/Icon';
 
-export default {
-};
+export default {};
 </script>

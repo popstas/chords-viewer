@@ -12,8 +12,8 @@
 </style>
 
 <script>
-import SongItem from "~/components/SongItem";
-import Toolbar from "~/components/Toolbar";
+import SongItem from '~/components/SongItem';
+import Toolbar from '~/components/Toolbar';
 // import mapState from "vuex";
 
 export default {
@@ -54,7 +54,7 @@ export default {
   methods: {
     changeSong(activeName) {
       let activeSong = this.songs.find(song => song.url == activeName) || {};
-      this.$store.commit("activeSong", activeSong);
+      this.$store.commit('activeSong', activeSong);
     },
 
     scrollTo(offset) {
@@ -63,7 +63,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("filterSongs");
+    this.$store.dispatch('filterSongs');
   }
 };
 </script>

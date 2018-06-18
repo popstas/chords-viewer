@@ -101,7 +101,7 @@ $max_width: 640px;
 </style>
 
 <script>
-import SearchInput from "~/components/SearchInput";
+import SearchInput from '~/components/SearchInput';
 
 const speedMapping = {
   1: 1024,
@@ -111,7 +111,6 @@ const speedMapping = {
   5: 64,
   6: 32
 };
-
 
 export default {
   components: {
@@ -127,7 +126,7 @@ export default {
       toolbarFixed: false,
       lastScrollTop: 0,
 
-      q: "",
+      q: ''
     };
   },
 
@@ -139,7 +138,7 @@ export default {
 
   watch: {
     q(val) {
-      this.changeFilter("q", val);
+      this.changeFilter('q', val);
     },
 
     autoScroll() {
@@ -148,13 +147,13 @@ export default {
 
     autoScrollSpeed() {
       this.changeAutoScroll();
-    },
+    }
   },
 
   methods: {
     changeFilter(name, value) {
-      this.$store.commit("changeFilter", { name, value });
-      this.$emit("changeFilter", { name, value });
+      this.$store.commit('changeFilter', { name, value });
+      this.$emit('changeFilter', { name, value });
     },
 
     changeAutoScroll() {
@@ -207,11 +206,11 @@ export default {
 
   created() {
     this.buildLetters();
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener('scroll', this.handleScroll);
   },
 
   destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener('scroll', this.handleScroll);
     clearInterval(this.scrollInterval);
   }
 };

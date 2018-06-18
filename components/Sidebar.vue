@@ -11,14 +11,14 @@
 .sidebar {
   padding: 10px;
 
-  .el-row{
+  .el-row {
     margin-bottom: 10px;
   }
 }
 </style>
 
 <script>
-import NoSleep from "nosleep.js";
+import NoSleep from 'nosleep.js';
 const nosleep = new NoSleep();
 
 export default {
@@ -37,13 +37,13 @@ export default {
 
   watch: {
     withChords(val) {
-      this.changeFilter("withChords", val);
+      this.changeFilter('withChords', val);
     },
     withTexts(val) {
-      this.changeFilter("withTexts", val);
+      this.changeFilter('withTexts', val);
     },
     sortByDate(val) {
-      this.changeFilter("sortByDate", val);
+      this.changeFilter('sortByDate', val);
     },
 
     noSleep(val) {
@@ -53,8 +53,8 @@ export default {
 
   methods: {
     changeFilter(name, value) {
-      this.$store.commit("changeFilter", { name, value });
-      this.$emit("changeFilter", { name, value });
+      this.$store.commit('changeFilter', { name, value });
+      this.$emit('changeFilter', { name, value });
     }
   }
 };

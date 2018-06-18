@@ -32,8 +32,8 @@ $container_width: 640px;
 }
 
 html {
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
   font-size: 14px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -102,18 +102,16 @@ html {
 </style>
 
 <script>
-import Footer from "~/components/Footer";
-import Sidebar from "~/components/Sidebar";
-import Slideout from "vue-slideout";
+import Footer from '~/components/Footer';
+import Sidebar from '~/components/Sidebar';
+import Slideout from 'vue-slideout';
 
 export default {
   components: { Footer, Slideout, Sidebar },
   computed: {
     title() {
       return (
-        (this.$store.state.activeSong.title
-          ? this.$store.state.activeSong.title + " - "
-          : "") + this.$store.state.name
+        (this.$store.state.activeSong.title ? this.$store.state.activeSong.title + ' - ' : '') + this.$store.state.name
       );
     }
   },
@@ -125,7 +123,7 @@ export default {
         { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
         { rel: 'apple-touch-icon', type: 'image/png', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
-        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }
       ]
     };
   }

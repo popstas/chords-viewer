@@ -1,26 +1,13 @@
-import pjson from "~/package.json";
-import dateformat from "dateformat";
-import songs from "~/chords.json";
-import Fuse from "fuse.js";
+import pjson from '~/package.json';
+import dateformat from 'dateformat';
+import songs from '~/chords.json';
+import Fuse from 'fuse.js';
 
 export const transposeMap = [
-  ["Am", "A#m", "Hm", "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m"],
-  ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"],
-  ["A7", "A#7", "H7", "C7", "C#7", "D7", "D#7", "E7", "F7", "F#7", "G7", "G#7"],
-  [
-    "Am7",
-    "A#m7",
-    "Hm7",
-    "Cm7",
-    "C#m7",
-    "Dm7",
-    "D#m7",
-    "Em7",
-    "Fm7",
-    "F#m7",
-    "Gm7",
-    "G#m7"
-  ]
+  ['Am', 'A#m', 'Hm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'],
+  ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'H'],
+  ['A7', 'A#7', 'H7', 'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7'],
+  ['Am7', 'A#m7', 'Hm7', 'Cm7', 'C#m7', 'Dm7', 'D#m7', 'Em7', 'Fm7', 'F#m7', 'Gm7', 'G#m7']
 ];
 
 export const state = () => ({
@@ -40,7 +27,7 @@ export const state = () => ({
 
   // filters
   filter: {
-    q: "",
+    q: '',
     withChords: false,
     withTexts: false,
     sortByDate: false
@@ -49,11 +36,8 @@ export const state = () => ({
 
 export const getters = {
   lastUpdated(state) {
-    let date = Math.max.apply(
-      Math,
-      state.songs.map(song => new Date(song.created))
-    );
-    return dateformat(new Date(date), "dd.mm.yyyy");
+    let date = Math.max.apply(Math, state.songs.map(song => new Date(song.created)));
+    return dateformat(new Date(date), 'dd.mm.yyyy');
   }
 };
 
@@ -89,11 +73,11 @@ export const actions = {
         let fuse = new Fuse(result, {
           keys: [
             {
-              name: "title",
+              name: 'title',
               weight: 0.7
             },
             {
-              name: "text",
+              name: 'text',
               weight: 0.3
             }
           ]
@@ -118,12 +102,10 @@ export const actions = {
     }
 
     if (state.filter.sortByDate) {
-      result = result
-        .slice()
-        .sort((a, b) => new Date(b.created) - new Date(a.created));
+      result = result.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
     }
 
-    commit("setFilteredSongs", result);
+    commit('setFilteredSongs', result);
   }
 };
 

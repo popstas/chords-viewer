@@ -17,7 +17,7 @@
 .chord {
   white-space: nowrap;
   &:after {
-    content: " ";
+    content: ' ';
   }
   &_known .el-button {
     display: inline-block;
@@ -36,26 +36,23 @@
 </style>
 
 <script>
-import { transposeMap } from "~/store";
+import { transposeMap } from '~/store';
 export default {
-  name: "chord",
-  props: ["chord", "transposeLevel"],
+  name: 'chord',
+  props: ['chord', 'transposeLevel'],
 
   computed: {
     imageUrl() {
       let chord = this.transposedChord
-        .split("#")
-        .join("w")
-        .split("+")
-        .join("p");
+        .split('#')
+        .join('w')
+        .split('+')
+        .join('p');
       return `https://amdm.ru/images/chords/${chord}_0.gif`;
     },
 
     isKnown() {
-      return (
-        transposeMap.find(chain => chain.indexOf(this.replacedChord) != -1) ||
-        false
-      );
+      return transposeMap.find(chain => chain.indexOf(this.replacedChord) != -1) || false;
     },
 
     html() {
@@ -65,12 +62,11 @@ export default {
     },
 
     replacedChord() {
-      return this.chord.replace("B", "H").replace("m#", "#m");
+      return this.chord.replace('B', 'H').replace('m#', '#m');
     },
 
     transposedChord() {
-      if (!this.replacedChord || this.transposeLevel == 0)
-        return this.replacedChord;
+      if (!this.replacedChord || this.transposeLevel == 0) return this.replacedChord;
       let chord = this.replacedChord;
 
       // find chain
@@ -83,11 +79,9 @@ export default {
       let currentIndex = chain.indexOf(chord);
       for (let i = 0; i < Math.abs(this.transposeLevel); i++) {
         if (this.transposeLevel > 0) {
-          currentIndex =
-            currentIndex + 1 >= chain.length ? 0 : currentIndex + 1;
+          currentIndex = currentIndex + 1 >= chain.length ? 0 : currentIndex + 1;
         } else {
-          currentIndex =
-            currentIndex - 1 < 0 ? chain.length - 1 : currentIndex - 1;
+          currentIndex = currentIndex - 1 < 0 ? chain.length - 1 : currentIndex - 1;
         }
       }
       return chain[currentIndex];
