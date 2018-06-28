@@ -60,6 +60,7 @@ html {
     border: none;
     line-height: 42px;
     outline: none;
+    cursor: pointer;
   }
 }
 .slideout-menu {

@@ -58,8 +58,8 @@ export default {
     },
 
     scrollTo(offset) {
-      // console.log('scrollTo', offset);
-      // window.scrollTo(0, offset);
+      const fixedTopOffset = 100;
+      window.scrollTo(0, offset - fixedTopOffset);
     }
   },
   created() {

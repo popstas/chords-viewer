@@ -9,8 +9,11 @@
         <el-col :span="8">
           <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
         </el-col>
-        <el-col :span="16">
+        <el-col :span="12">
           <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
+        </el-col>
+        <el-col :span="4">
+          <el-button class="toolbar__random" @click="randomSong">random</el-button>
         </el-col>
       </el-row>
     </div>
@@ -201,6 +204,10 @@ export default {
         return arr.indexOf(letter) == pos;
       });
       this.letters = letters;
+    },
+
+    randomSong() {
+      this.$store.dispatch('setRandomSong');
     }
   },
 

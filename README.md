@@ -15,6 +15,7 @@
 - Поиск на amdm.ru
 - Автопрокрутка текста с настройкой скорости
 - Транспонирование аккордов
+- Выбор случайной песни
 - При наведении на аккорд показывается аппликатура
 - Режим "не спать" для телефонов
 - Сайт может работать без интернета, если хоть раз на него зайти
@@ -37,6 +38,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Autoscroll with speed control
 - Transpose chords
 - Chords images
+- Random song
 - No sleep mode for phones
 - Single Page Application
 - Static site, hosted anywhere
