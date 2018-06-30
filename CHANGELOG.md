@@ -1,3 +1,24 @@
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/popstas/chords-viewer/compare/v1.3.0...v1.4.0) (2018-06-30)
+
+
+### Bug Fixes
+
+* app was not 100% on screens with 640+ px ([59ca835](https://github.com/popstas/chords-viewer/commit/59ca835))
+* enable icon in [@nuxtjs](https://github.com/nuxtjs)/pwa ([f109abb](https://github.com/popstas/chords-viewer/commit/f109abb))
+* hide floating chords while floating toolbar ([f135058](https://github.com/popstas/chords-viewer/commit/f135058))
+* was 5px horizontal scroll ([145b65d](https://github.com/popstas/chords-viewer/commit/145b65d))
+
+
+### Features
+
+* add app icon ([248f5a7](https://github.com/popstas/chords-viewer/commit/248f5a7))
+* random song ([5819bc2](https://github.com/popstas/chords-viewer/commit/5819bc2))
+* replace icon, change site.webmanifest for PWA criteria ([2ea8ac4](https://github.com/popstas/chords-viewer/commit/2ea8ac4))
+* search on amdm.ru ([59e8e7f](https://github.com/popstas/chords-viewer/commit/59e8e7f))
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/popstas/chords-viewer/compare/v1.2.0...v1.3.0) (2018-06-08)
 
