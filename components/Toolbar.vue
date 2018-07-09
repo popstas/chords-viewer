@@ -144,7 +144,8 @@ export default {
       this.changeFilter('q', val);
     },
 
-    autoScroll() {
+    autoScroll(val) {
+      this.$store.commit('setToolbarHidden', val);
       this.changeAutoScroll();
     },
 
