@@ -1,3 +1,13 @@
+<a name="1.4.1"></a>
+## [1.4.1](https://github.com/popstas/chords-viewer/compare/v1.4.0...v1.4.1) (2018-07-09)
+
+
+### Features
+
+* скрытие тулбара при начале автоскролла ([a2839e4](https://github.com/popstas/chords-viewer/commit/a2839e4))
+
+
+
 <a name="1.4.0"></a>
 # [1.4.0](https://github.com/popstas/chords-viewer/compare/v1.3.0...v1.4.0) (2018-06-30)
 
