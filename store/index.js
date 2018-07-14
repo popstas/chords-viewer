@@ -110,8 +110,8 @@ export const actions = {
 
   setRandomSong({ commit, state}, payload){
     const keys = state.songs.keys();
-    const randomKey = Math.floor(Math.random() * state.songs.length);
-    const randomSong = state.songs[randomKey];
+    const randomKey = Math.floor(Math.random() * state.filteredSongs.length);
+    const randomSong = state.filteredSongs[randomKey];
     console.log(randomKey);
     console.log(randomSong);
     commit('activeSong', randomSong);
