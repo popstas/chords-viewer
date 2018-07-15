@@ -1,3 +1,13 @@
+<a name="1.4.2"></a>
+## [1.4.2](https://github.com/popstas/chords-viewer/compare/v1.4.1...v1.4.2) (2018-07-15)
+
+
+### Bug Fixes
+
+* random only for filtered songs ([9360d60](https://github.com/popstas/chords-viewer/commit/9360d60))
+
+
+
 <a name="1.4.1"></a>
 ## [1.4.1](https://github.com/popstas/chords-viewer/compare/v1.4.0...v1.4.1) (2018-07-09)
 
