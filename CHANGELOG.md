@@ -1,3 +1,14 @@
+<a name="1.4.3"></a>
+## [1.4.3](https://github.com/popstas/chords-viewer/compare/v1.4.2...v1.4.3) (2018-09-12)
+
+
+### Bug Fixes
+
+* incorrect offset bug on change random song ([7a79783](https://github.com/popstas/chords-viewer/commit/7a79783))
+* toolbar overflow issue ([d1858d3](https://github.com/popstas/chords-viewer/commit/d1858d3))
+
+
+
 <a name="1.4.2"></a>
 ## [1.4.2](https://github.com/popstas/chords-viewer/compare/v1.4.1...v1.4.2) (2018-07-15)
 
