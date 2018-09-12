@@ -106,7 +106,11 @@ export default {
 
   watch: {
     active(val) {
-      if (val) this.$emit('active', this.$el.offsetTop);
+      if (!val) return;
+      this.$emit('active', this.$el.offsetTop);
+      setTimeout(() => {
+        this.$emit('active', this.$el.offsetTop);
+      }, 1000);
     },
     transposeLevel(val) {
       // cycle transpose

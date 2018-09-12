@@ -60,10 +60,31 @@ export default {
     scrollTo(offset) {
       const fixedTopOffset = 100;
       window.scrollTo(0, offset - fixedTopOffset);
-    }
+    },
+
+    /* handleAddToHomeScreen(event) {
+      this.$store.dispatch('setRandomSong');
+      console.log('add to homescreen', result);
+      event.preventDefault();
+      event.prompt();
+      event.userChoice.then(choice => {
+        console.log('after choice: ', choice);
+        if (choice.outcome === 'dismissed') {
+          // They dismissed, send to analytics
+        } else {
+          // User accepted! Send to analytics
+        }
+      });
+    } */
   },
+
   created() {
     this.$store.dispatch('filterSongs');
-  }
+    // window.addEventListener('beforeinstallprompt', this.handleAddToHomeScreen);
+  },
+
+  /* destroyed() {
+    window.removeEventListener('beforeinstallprompt');
+  } */
 };
 </script>
