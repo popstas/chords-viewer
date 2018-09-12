@@ -43,6 +43,7 @@ html {
   box-sizing: border-box;
 }
 .el-main {
+  max-width: 100vw;
   padding: 5px;
 }
 

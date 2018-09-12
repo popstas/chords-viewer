@@ -42,8 +42,13 @@
 
 <style lang="scss">
 .song-item {
+
   [role='tab'] {
     overflow: hidden;
+  }
+
+  &__content {
+    overflow-x: auto;
   }
 
   .chords {
