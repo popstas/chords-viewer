@@ -47,6 +47,7 @@ export default {
     },
 
     noSleep(val) {
+      this.$store.commit('setNoSleep', val);
       val ? nosleep.enable() : nosleep.disable();
     }
   },
@@ -56,6 +57,13 @@ export default {
       this.$store.commit('changeFilter', { name, value });
       this.$emit('changeFilter', { name, value });
     }
+  },
+
+  mounted() {
+    ['withChords', 'withTexts', 'sortByDate'].forEach(name => {
+      this[name] = this.$store.state.filter[name];
+    });
+    this.noSleep = this.$store.state.noSleep;
   }
 };
 </script>

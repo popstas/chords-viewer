@@ -12,7 +12,8 @@ module.exports = {
 
   plugins: [
     '@/plugins/element-ui',
-    '@/plugins/vue-awesome'
+    '@/plugins/vue-awesome',
+    { src: '~/plugins/localStorage.js', ssr: false }
   ],
 
   /*

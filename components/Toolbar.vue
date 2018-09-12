@@ -215,6 +215,7 @@ export default {
   created() {
     this.buildLetters();
     window.addEventListener('scroll', this.handleScroll);
+    this.q = this.$store.state.filter.q;
   },
 
   destroyed() {

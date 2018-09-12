@@ -57,6 +57,9 @@ export const mutations = {
   },
   setToolbarHidden(state, newValue) {
     state.toolbarHidden = newValue;
+  },
+  setNoSleep(state, newValue) {
+    state.noSleep = newValue;
   }
 };
 
