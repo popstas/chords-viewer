@@ -1,3 +1,13 @@
+<a name="1.5.0"></a>
+# [1.5.0](https://github.com/popstas/chords-viewer/compare/v1.4.3...v1.5.0) (2018-09-13)
+
+
+### Features
+
+* persistent app state (filters and noSleep) ([7a236e6](https://github.com/popstas/chords-viewer/commit/7a236e6))
+
+
+
 <a name="1.4.3"></a>
 ## [1.4.3](https://github.com/popstas/chords-viewer/compare/v1.4.2...v1.4.3) (2018-09-12)
 
