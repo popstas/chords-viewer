@@ -1,3 +1,13 @@
+<a name="1.6.0"></a>
+# [1.6.0](https://github.com/popstas/chords-viewer/compare/v1.5.0...v1.6.0) (2018-09-14)
+
+
+### Features
+
+* popular chords filter ([181b1bd](https://github.com/popstas/chords-viewer/commit/181b1bd))
+
+
+
 <a name="1.5.0"></a>
 # [1.5.0](https://github.com/popstas/chords-viewer/compare/v1.4.3...v1.5.0) (2018-09-13)
 
