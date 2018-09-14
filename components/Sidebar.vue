@@ -2,6 +2,7 @@
   <div class="sidebar">
     <el-row><el-switch v-model="withChords" active-text="chords"></el-switch></el-row>
     <el-row><el-switch v-model="withTexts" active-text="texts"></el-switch></el-row>
+    <el-row><el-switch v-model="popular" active-text="popular"></el-switch></el-row>
     <el-row><el-switch v-model="sortByDate" active-text="by date"></el-switch></el-row>
     <el-row><el-switch v-model="noSleep" active-text="no sleep"></el-switch></el-row>
   </div>
@@ -28,6 +29,7 @@ export default {
     return {
       withChords: false,
       withTexts: false,
+      popular: false,
       sortByDate: false,
       noSleep: false
     };
@@ -41,6 +43,9 @@ export default {
     },
     withTexts(val) {
       this.changeFilter('withTexts', val);
+    },
+    popular(val) {
+      this.changeFilter('popular', val);
     },
     sortByDate(val) {
       this.changeFilter('sortByDate', val);
@@ -60,7 +65,7 @@ export default {
   },
 
   mounted() {
-    ['withChords', 'withTexts', 'sortByDate'].forEach(name => {
+    ['withChords', 'withTexts', 'popular', 'sortByDate'].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
     this.noSleep = this.$store.state.noSleep;

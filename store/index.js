@@ -30,7 +30,8 @@ export const state = () => ({
     q: '',
     withChords: false,
     withTexts: false,
-    sortByDate: false
+    sortByDate: false,
+    popular: false,
   }
 });
 
@@ -104,6 +105,10 @@ export const actions = {
       result = result.filter(song => song.text);
     }
 
+    if (state.filter.popular) {
+      result = result.filter(song => song.tags.indexOf('аккорды популярные') != -1);
+    }
+
     if (state.filter.sortByDate) {
       result = result.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
     }
@@ -112,13 +117,9 @@ export const actions = {
   },
 
   setRandomSong({ commit, state}, payload){
-    const keys = state.songs.keys();
     const randomKey = Math.floor(Math.random() * state.filteredSongs.length);
     const randomSong = state.filteredSongs[randomKey];
-    console.log(randomKey);
-    console.log(randomSong);
     commit('activeSong', randomSong);
-
   }
 };
 
