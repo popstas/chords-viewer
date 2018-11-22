@@ -1,3 +1,19 @@
+<a name="1.7.1"></a>
+## [1.7.1](https://github.com/popstas/chords-viewer/compare/v1.7.0...v1.7.1) (2018-11-22)
+
+
+### Bug Fixes
+
+* wrap .chord__sequence ([74290a2](https://github.com/popstas/chords-viewer/commit/74290a2))
+
+
+### Features
+
+* highlight even sequence different ([63c9f69](https://github.com/popstas/chords-viewer/commit/63c9f69))
+* hotkeys j/k, arrows, space for song navigation ([8dd9ea1](https://github.com/popstas/chords-viewer/commit/8dd9ea1))
+
+
+
 <a name="1.7.0"></a>
 # [1.7.0](https://github.com/popstas/chords-viewer/compare/v1.6.0...v1.7.0) (2018-11-22)
 
