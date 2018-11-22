@@ -25,7 +25,13 @@
     padding: 5px 3px;
     margin: 2px 0;
     border: 1px solid #ededed;
+
     background: #f9f9f9;
+    // highlight even sequence different
+    .chords__section:nth-child(even) &{
+      background: #ededed;
+    }
+
     min-width: 25px;
     &:hover,
     &:focus {

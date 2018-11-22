@@ -65,7 +65,7 @@
     right: 0;
     text-align: center;
     background: #fff;
-    padding: 5px;
+    padding: 0px;
     box-shadow: 0 0 2px #ccc;
 
     &__section {
