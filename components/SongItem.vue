@@ -73,7 +73,7 @@
     }
 
     &__sequence {
-      white-space: nowrap;
+      // white-space: nowrap;
       &:after {
         content: ' .. ';
       }
