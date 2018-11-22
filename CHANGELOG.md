@@ -1,3 +1,13 @@
+<a name="1.7.0"></a>
+# [1.7.0](https://github.com/popstas/chords-viewer/compare/v1.6.0...v1.7.0) (2018-11-22)
+
+
+### Features
+
+* playlist, prev/next song, toolbar moved bottom ([a8b21d7](https://github.com/popstas/chords-viewer/commit/a8b21d7))
+
+
+
 <a name="1.6.0"></a>
 # [1.6.0](https://github.com/popstas/chords-viewer/compare/v1.5.0...v1.6.0) (2018-09-14)
 
