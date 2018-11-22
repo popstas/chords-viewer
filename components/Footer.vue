@@ -8,6 +8,15 @@
       <icon name="calendar-alt"></icon>
       songs updated: {{ $store.getters.lastUpdated }}
     </a>
+    <span class="footer__help">
+      <el-popover
+        placement="top-start"
+        trigger="hover"
+        content="Hotkeys: j/k, arrows, space"
+      >
+        <span slot="reference">help</span>
+      </el-popover>
+    </span>
   </el-footer>
 </template>
 

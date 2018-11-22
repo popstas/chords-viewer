@@ -11,12 +11,15 @@
         </el-col>
         <el-col :span="4">
           <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong"><icon name="backward"></icon></el-button>
+          <input type="hidden" v-shortkey="{k:['k'], right: ['arrowleft']}" @shortkey="prevSong"/>
         </el-col>
         <el-col :span="4">
           <el-checkbox-button class="toolbar__play" v-model="autoScroll"><icon :name="autoScroll ? 'pause' : 'play'"></icon></el-checkbox-button>
+          <input type="hidden" v-shortkey="['space']" @shortkey="autoScroll = !autoScroll"/>
         </el-col>
         <el-col :span="4">
           <el-button class="toolbar__next" @click="nextSong"><icon name="forward"></icon></el-button>
+          <input type="hidden" v-shortkey="{j:['j'], right: ['arrowright']}" @shortkey="nextSong"/>
         </el-col>
       </el-row>
     </div>
@@ -119,6 +122,7 @@ $max_width: 640px;
 
 <script>
 import SearchInput from '~/components/SearchInput';
+import _ from 'lodash';
 import 'vue-awesome/icons/play';
 import 'vue-awesome/icons/pause';
 import 'vue-awesome/icons/backward';
@@ -178,6 +182,10 @@ export default {
   },
 
   methods: {
+    shortkey(opts) {
+      console.log('opts: ', opts);
+    },
+
     changeFilter(name, value) {
       this.$store.commit('changeFilter', { name, value });
       this.$emit('changeFilter', { name, value });

@@ -16,9 +16,12 @@
 - Автопрокрутка текста с настройкой скорости
 - Транспонирование аккордов
 - Выбор случайной песни
+- Переключение между песнями назад-вперед
+- Горячие кнопки (j/k, стрелки, пробел)
 - При наведении на аккорд показывается аппликатура
 - Режим "не спать" для телефонов
 - Сайт может работать без интернета, если хоть раз на него зайти
+- Подсветка куплетов и припевов
 
 ### Требования
 Чтобы собрать, нужно положить `chords.json` в корень проекта.
@@ -39,10 +42,13 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Transpose chords
 - Chords images
 - Random song
+- Select prev/next song
+- Hotkeys (j/k, arrows, space)
 - No sleep mode for phones
 - Single Page Application
 - Static site, hosted anywhere
 - PWA (offline access, when deployed to https domain)
+- Highlight odd chords sequences
 
 ### Requirements
 `chords.json` should be placed in project root. You can download my data with command `npm run update-data`.

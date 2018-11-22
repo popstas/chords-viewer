@@ -13,6 +13,7 @@ module.exports = {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/vue-awesome',
+    '@/plugins/vue-shortkey',
     { src: '~/plugins/localStorage.js', ssr: false }
   ],
 
