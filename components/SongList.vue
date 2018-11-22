@@ -55,12 +55,14 @@ export default {
     changeSong(activeName) {
       let activeSong = this.songs.find(song => song.url == activeName) || {};
       this.$store.commit('activeSong', activeSong);
+      this.$store.commit('playlistCurrent', this.$store.state.playlistCurrent + 1);
+      this.$store.commit('playlist', [...this.$store.state.playlist, activeSong]);
     },
 
     scrollTo(offset) {
-      const fixedTopOffset = 100;
+      const fixedTopOffset = 0;
       window.scrollTo(0, offset - fixedTopOffset);
-    },
+    }
 
     /* handleAddToHomeScreen(event) {
       this.$store.dispatch('setRandomSong');
@@ -81,7 +83,7 @@ export default {
   created() {
     this.$store.dispatch('filterSongs');
     // window.addEventListener('beforeinstallprompt', this.handleAddToHomeScreen);
-  },
+  }
 
   /* destroyed() {
     window.removeEventListener('beforeinstallprompt');

@@ -23,6 +23,8 @@ export const state = () => ({
 
   // app state
   activeSong: {},
+  playlist: [],
+  playlistCurrent: -1,
   toolbarHidden: false,
 
   // filters
@@ -31,7 +33,7 @@ export const state = () => ({
     withChords: false,
     withTexts: false,
     sortByDate: false,
-    popular: false,
+    popular: false
   }
 });
 
@@ -48,6 +50,12 @@ export const mutations = {
   },
   activeSong(state, newValue) {
     state.activeSong = newValue;
+  },
+  playlist(state, newValue) {
+    state.playlist = newValue;
+  },
+  playlistCurrent(state, newValue) {
+    state.playlistCurrent = newValue;
   },
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;
@@ -116,10 +124,24 @@ export const actions = {
     commit('setFilteredSongs', result);
   },
 
-  setRandomSong({ commit, state}, payload){
-    const randomKey = Math.floor(Math.random() * state.filteredSongs.length);
-    const randomSong = state.filteredSongs[randomKey];
-    commit('activeSong', randomSong);
+  setPrevSong({ commit, state }, payload) {
+    if (state.playlistCurrent <= 0) return;
+    commit('activeSong', state.playlist[state.playlistCurrent - 1]);
+    commit('playlistCurrent', state.playlistCurrent - 1);
+  },
+
+  setNextSong({ commit, state }, payload) {
+    if (state.playlist[state.playlistCurrent + 1]) {
+      // next known
+      commit('activeSong', state.playlist[state.playlistCurrent + 1]);
+    } else {
+      // next random
+      const randomKey = Math.floor(Math.random() * state.filteredSongs.length);
+      const randomSong = state.filteredSongs[randomKey];
+      commit('activeSong', randomSong);
+      commit('playlist', [...state.playlist, randomSong]);
+    }
+    commit('playlistCurrent', state.playlistCurrent + 1);
   }
 };
 

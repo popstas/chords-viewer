@@ -1,19 +1,22 @@
 <template>
   <div :class="{toolbar: true, toolbar_fixed: toolbarFixed, toolbar_hidden: toolbarHidden}">
-    <SearchInput v-model="q"></SearchInput>
+    <SearchInput class="toolbar__search" v-model="q"></SearchInput>
 
     <div class="toolbar__filters">
-      <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button>
+      <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
 
       <el-row class="toolbar__autoscroll" :gutter="20">
-        <el-col :span="8">
-          <el-switch v-model="autoScroll" active-text="autoscroll"></el-switch>
-        </el-col>
-        <el-col :span="12">
+        <el-col :span="6">
           <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
         </el-col>
         <el-col :span="4">
-          <el-button class="toolbar__random" @click="randomSong">random</el-button>
+          <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong"><icon name="backward"></icon></el-button>
+        </el-col>
+        <el-col :span="4">
+          <el-checkbox-button class="toolbar__play" v-model="autoScroll"><icon :name="autoScroll ? 'pause' : 'play'"></icon></el-checkbox-button>
+        </el-col>
+        <el-col :span="4">
+          <el-button class="toolbar__next" @click="nextSong"><icon name="forward"></icon></el-button>
         </el-col>
       </el-row>
     </div>
@@ -39,13 +42,17 @@ $max_width: 640px;
 
   &_fixed {
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     right: 0;
     padding: 5px;
     box-shadow: 0 0 1px #ccc;
 
     .search-letters {
+      display: none;
+    }
+
+    .toolbar__search {
       display: none;
     }
   }
@@ -95,16 +102,28 @@ $max_width: 640px;
   }
 
   // close button
-  .el-button {
-    border: none;
+  .el-button,
+  .el-checkbox-button__inner {
+    border: none !important;
+    border-radius: 4px !important;
+    background: none !important;
+    color: #999 !important;
+    &:disabled {
+      color: #eee !important;
+    }
     padding: 7px;
-    float: right;
+    // float: right;
   }
 }
 </style>
 
 <script>
 import SearchInput from '~/components/SearchInput';
+import 'vue-awesome/icons/play';
+import 'vue-awesome/icons/pause';
+import 'vue-awesome/icons/backward';
+import 'vue-awesome/icons/forward';
+import Icon from 'vue-awesome/components/Icon';
 
 const speedMapping = {
   1: 1024,
@@ -136,6 +155,10 @@ export default {
   computed: {
     toolbarHidden() {
       return this.$store.state.toolbarHidden;
+    },
+
+    playlistCurrent() {
+      return this.$store.state.playlistCurrent;
     }
   },
 
@@ -207,8 +230,12 @@ export default {
       this.letters = letters;
     },
 
-    randomSong() {
-      this.$store.dispatch('setRandomSong');
+    prevSong() {
+      this.$store.dispatch('setPrevSong');
+    },
+
+    nextSong() {
+      this.$store.dispatch('setNextSong');
     }
   },
 
