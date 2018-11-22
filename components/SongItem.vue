@@ -42,9 +42,16 @@
 
 <style lang="scss">
 .song-item {
-
   [role='tab'] {
     overflow: hidden;
+  }
+
+  [role='button'] {
+    display: block;
+  }
+
+  .el-collapse-item__arrow {
+    display: none;
   }
 
   &__content {
