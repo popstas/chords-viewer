@@ -4,6 +4,7 @@
       {{ title }}
       <i v-if="song.text" class="el-icon-tickets"></i>
       <i v-if="song.details.chords" class="el-icon-check"></i>
+      <span :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity"></span>
     </template>
 
     <div class="song-item__content" v-if="active">
@@ -52,6 +53,14 @@
 
   .el-collapse-item__arrow {
     display: none;
+  }
+
+  &__complexity{
+    padding: 2px 4px;
+    border-radius: 100%;
+    &_1 { background: #aaffaa; }
+    &_2 { background: #ffffaa; }
+    &_3 { background: #ffaaaa; }
   }
 
   &__content {
@@ -133,6 +142,18 @@ export default {
       }
       title = title.trim(',');
       return title;
+    },
+
+    complexity() {
+      return this.song.details.complexity || '?';
+    },
+
+    complexityClass() {
+      const c = this.song.details.complexity || 0;
+      if(c == 0) return 'song-item__complexity_0';
+      if(c < 6) return 'song-item__complexity_1';
+      if(c < 10) return 'song-item__complexity_2';
+      return 'song-item__complexity_3';
     },
 
     textLines() {

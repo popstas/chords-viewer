@@ -22,6 +22,7 @@
 - Режим "не спать" для телефонов
 - Сайт может работать без интернета, если хоть раз на него зайти
 - Подсветка куплетов и припевов
+- Отображение сложности песни
 
 ### Требования
 Чтобы собрать, нужно положить `chords.json` в корень проекта.
@@ -49,6 +50,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Static site, hosted anywhere
 - PWA (offline access, when deployed to https domain)
 - Highlight odd chords sequences
+- Display song complexity
 
 ### Requirements
 `chords.json` should be placed in project root. You can download my data with command `npm run update-data`.
