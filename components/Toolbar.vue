@@ -11,7 +11,7 @@
         </el-col>
         <el-col :span="4">
           <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong"><icon name="backward"></icon></el-button>
-          <input type="hidden" v-shortkey="{k:['k'], right: ['arrowleft']}" @shortkey="prevSong"/>
+          <input type="hidden" v-shortkey="{k:['k'], kRus: ['л'], left: ['arrowleft']}" @shortkey="prevSong"/>
         </el-col>
         <el-col :span="4">
           <el-checkbox-button class="toolbar__play" v-model="autoScroll"><icon :name="autoScroll ? 'pause' : 'play'"></icon></el-checkbox-button>
@@ -19,7 +19,7 @@
         </el-col>
         <el-col :span="4">
           <el-button class="toolbar__next" @click="nextSong"><icon name="forward"></icon></el-button>
-          <input type="hidden" v-shortkey="{j:['j'], right: ['arrowright']}" @shortkey="nextSong"/>
+          <input type="hidden" v-shortkey="{j:['j'], jRus: ['о'], right: ['arrowright']}" @shortkey="nextSong"/>
         </el-col>
       </el-row>
     </div>
