@@ -17,7 +17,7 @@
       <div v-if="active && chords" class="text item chords">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
-            <Chord v-for="(chord, key) in sequence" :chord="chord" :transposeLevel="transposeLevel" :key="key"></Chord>
+            <Chord v-for="(chord, key) in sequence" :chord="chord" :transposeLevel="defaultTransposeLevel - transposeLevel" :key="key"></Chord>
           </span>
         </span>
       </div>
@@ -133,7 +133,10 @@ export default {
       setTimeout(() => {
         this.$emit('active', this.$el.offsetTop);
       }, 1000);
+
+      this.transposeLevel = this.defaultTransposeLevel;
     },
+
     transposeLevel(val) {
       // cycle transpose
       if (Math.abs(val) == 12) this.transposeLevel = 0;
@@ -148,6 +151,11 @@ export default {
       }
       title = title.trim(',');
       return title;
+    },
+
+    defaultTransposeLevel() {
+      const transpose = this.song.title.match(/\((капо|кап|capo|cap)\.? (\d+)\)/);
+      return transpose ? transpose[1] * -1 : 0;
     },
 
     complexity() {

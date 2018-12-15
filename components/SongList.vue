@@ -55,7 +55,7 @@ export default {
     },
 
     activeSongTitle() {
-      if(!this.activeSong) return '';
+      if(!this.activeSong.title) return '';
       let title = this.activeSong.title;
       if (this.activeSong.details) {
         title = this.activeSong.details.artist + ' - ' + this.activeSong.details.title;
