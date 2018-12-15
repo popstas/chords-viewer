@@ -22,7 +22,7 @@ export const state = () => ({
   homepage: pjson.homepage,
 
   // app state
-  activeSong: {},
+  activeSong: {title:''},
   playlist: [],
   playlistCurrent: -1,
   toolbarHidden: false,

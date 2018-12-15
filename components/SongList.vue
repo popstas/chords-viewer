@@ -5,10 +5,25 @@
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
       <SongItem v-for="song in filteredSongs" :song="song" :key="song.url" :active="song.url == activeSong.url" @active="scrollTo"></SongItem>
     </el-collapse>
+    <button class="current-song" @click="scrollTo(lastOffset)">{{ activeSongTitle }}</button>
   </div>
 </template>
 
 <style lang="scss">
+.current-song {
+  @media (max-width: 1400px) {
+    display: none;
+  }
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  color: #666;
+}
 </style>
 
 <script>
@@ -19,7 +34,13 @@ import Toolbar from '~/components/Toolbar';
 export default {
   components: {
     SongItem,
-    Toolbar
+    Toolbar,
+  },
+
+  data() {
+    return {
+      lastOffset: 0
+    }
   },
 
   computed: {
@@ -32,6 +53,17 @@ export default {
     activeSong() {
       return this.$store.state.activeSong;
     },
+
+    activeSongTitle() {
+      if(!this.activeSong) return '';
+      let title = this.activeSong.title;
+      if (this.activeSong.details) {
+        title = this.activeSong.details.artist + ' - ' + this.activeSong.details.title;
+      }
+      title = title.trim(',');
+      return title;
+    },
+
     songs() {
       return this.$store.state.songs;
     },
@@ -60,6 +92,7 @@ export default {
     },
 
     scrollTo(offset) {
+      this.lastOffset = offset;
       const fixedTopOffset = 0;
       window.scrollTo(0, offset - fixedTopOffset);
     }
@@ -84,9 +117,5 @@ export default {
     this.$store.dispatch('filterSongs');
     // window.addEventListener('beforeinstallprompt', this.handleAddToHomeScreen);
   }
-
-  /* destroyed() {
-    window.removeEventListener('beforeinstallprompt');
-  } */
 };
 </script>
