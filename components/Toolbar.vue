@@ -35,13 +35,17 @@
 </template>
 
 <style lang="scss">
-$max_width: 640px;
+$max-width: 640px;
+$max-width-wide: 1000px;
 
 .toolbar {
   background: #fff;
   text-align: center;
   margin: 0 auto;
-  max-width: $max_width;
+  max-width: $max-width;
+  @media (min-width: 1400px) {
+    max-width: $max-width-wide;
+  }
 
   &_fixed {
     position: fixed;

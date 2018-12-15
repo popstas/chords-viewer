@@ -27,13 +27,17 @@
 </template>
 
 <style lang="scss">
-$container_width: 640px;
+$container-width: 640px;
+$container-width-wide: 1000px;
 
 .container-wrap {
   margin: 0 auto;
-  max-width: $container_width;
+  max-width: $container-width;
   background: #fff;
   position: relative;
+  @media (min-width: 1400px) {
+    max-width: $container-width-wide;
+  }
 }
 
 html {
@@ -98,8 +102,11 @@ html {
   // will-change: transform; - it breaks position: fixed
   min-height: 100vh;
   background: #fff;
-  @media (min-width: $container_width) {
-    min-width: $container_width;
+  @media (min-width: $container-width) {
+    min-width: $container-width;
+  }
+  @media (min-width: 1400px) {
+    min-width: $container-width-wide;
   }
 
   .slideout-open & {

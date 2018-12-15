@@ -43,6 +43,10 @@
 
 <style lang="scss">
 .song-item {
+  &.active {
+    margin-bottom: 50px;
+  }
+
   [role='tab'] {
     overflow: hidden;
   }
@@ -65,6 +69,9 @@
 
   &__content {
     overflow-x: auto;
+  }
+  &.active .song-item__content {
+    columns: 2;
   }
 
   .chords {
