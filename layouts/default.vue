@@ -1,24 +1,29 @@
 <template>
-    <div class="container-wrap">
-      <el-container>
-        <!-- https://github.com/Mango/slideout#user-content-slideoutoptions -->
-        <Slideout :toggleSelectors="['.menu-toggle']" panel="#panel" menu="#menu"
-            side="left" :padding="130">
-          <div id="panel">
-            <el-header height="42px">
-              <button class="menu-toggle">☰</button>
-            </el-header>
-            <el-main>
-              <nuxt/>
-            </el-main>
-            <Footer></Footer>
-          </div>
-        </Slideout>
-      </el-container>
-      <nav id="menu">
-        <Sidebar @changeFilter="$store.dispatch('filterSongs')"></Sidebar>
-      </nav>
-    </div>
+  <div class="container-wrap">
+    <el-container>
+      <!-- https://github.com/Mango/slideout#user-content-slideoutoptions -->
+      <Slideout
+        :toggleSelectors="['.menu-toggle']"
+        panel="#panel"
+        menu="#menu"
+        side="left"
+        :padding="130"
+      >
+        <div id="panel">
+          <el-header height="42px">
+            <button class="menu-toggle">☰</button>
+          </el-header>
+          <el-main>
+            <nuxt/>
+          </el-main>
+          <Footer></Footer>
+        </div>
+      </Slideout>
+    </el-container>
+    <nav id="menu">
+      <Sidebar @changeFilter="$store.dispatch('filterSongs')"></Sidebar>
+    </nav>
+  </div>
 </template>
 
 <style lang="scss">
@@ -32,8 +37,8 @@ $container_width: 640px;
 }
 
 html {
-  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 14px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -101,20 +106,39 @@ html {
     overflow: hidden;
   }
 }
+
+// always open on wide screen
+@media (min-width: 800px) {
+  .slideout-panel {
+    transform: none !important;
+  }
+
+  .slideout-menu {
+    display: block !important;
+    left: 0 !important;
+    position: fixed !important;
+  }
+
+  .el-header {
+    display: none;
+  }
+}
+
 </style>
 
 <script>
-import Footer from '~/components/Footer';
-import Sidebar from '~/components/Sidebar';
-import Slideout from 'vue-slideout';
+import Footer from "~/components/Footer";
+import Sidebar from "~/components/Sidebar";
+import Slideout from "vue-slideout";
 
 export default {
   components: { Footer, Slideout, Sidebar },
   computed: {
     title() {
       return (
-        (this.$store.state.activeSong.title ? this.$store.state.activeSong.title + ' - ' : '') +
-        this.$store.state.name
+        (this.$store.state.activeSong.title
+          ? this.$store.state.activeSong.title + " - "
+          : "") + this.$store.state.name
       );
     }
   },
@@ -122,16 +146,26 @@ export default {
     return {
       title: this.title,
       link: [
-        { rel: 'manifest', href: '/site.webmanifest' },
-        { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
+        { rel: "manifest", href: "/site.webmanifest" },
+        { rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5" },
         {
-          rel: 'apple-touch-icon',
-          type: 'image/png',
-          sizes: '180x180',
-          href: '/apple-touch-icon.png'
+          rel: "apple-touch-icon",
+          type: "image/png",
+          sizes: "180x180",
+          href: "/apple-touch-icon.png"
         },
-        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
-        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' }
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "16x16",
+          href: "/favicon-16x16.png"
+        },
+        {
+          rel: "icon",
+          type: "image/png",
+          sizes: "32x32",
+          href: "/favicon-32x32.png"
+        }
       ]
     };
   }
