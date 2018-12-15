@@ -14,7 +14,7 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
-      <div v-if="active && chords && toolbarHidden" class="text item chords">
+      <div v-if="active && chords" class="text item chords">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
             <Chord v-for="(chord, key) in sequence" :chord="chord" :transposeLevel="transposeLevel" :key="key"></Chord>
@@ -76,6 +76,12 @@
     background: #fff;
     padding: 0px;
     box-shadow: 0 0 2px #ccc;
+
+    @media (min-width: 1400px) {
+      left: auto;
+      box-shadow: none;
+      padding: 10px
+    }
 
     &__section {
       display: block;
