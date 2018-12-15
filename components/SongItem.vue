@@ -162,7 +162,7 @@ export default {
 
     defaultTransposeLevel() {
       const transpose = this.song.title.match(/\((капо|кап|capo|cap)\.? (\d+)\)/);
-      return transpose ? transpose[1] * -1 : 0;
+      return transpose ? transpose[2] * -1 : 0;
     },
 
     complexity() {
