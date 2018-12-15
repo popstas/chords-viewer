@@ -1,3 +1,21 @@
+<a name="1.8.0"></a>
+# [1.8.0](https://github.com/popstas/chords-viewer/compare/v1.7.1...v1.8.0) (2018-12-15)
+
+
+### Bug Fixes
+
+* always open menu on wide screens ([565ea49](https://github.com/popstas/chords-viewer/commit/565ea49))
+* j/k hotkeys working in russian keymap ([a0acf80](https://github.com/popstas/chords-viewer/commit/a0acf80))
+
+
+### Features
+
+* always chow current song chords, on right for desktops ([9a24be2](https://github.com/popstas/chords-viewer/commit/9a24be2))
+* show current song on desktops ([3f35eb8](https://github.com/popstas/chords-viewer/commit/3f35eb8))
+* song complexity ([d77737f](https://github.com/popstas/chords-viewer/commit/d77737f))
+
+
+
 <a name="1.7.1"></a>
 ## [1.7.1](https://github.com/popstas/chords-viewer/compare/v1.7.0...v1.7.1) (2018-11-22)
 
