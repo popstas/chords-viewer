@@ -1,3 +1,19 @@
+<a name="1.9.0"></a>
+# [1.9.0](https://github.com/popstas/chords-viewer/compare/v1.8.0...v1.9.0) (2018-12-15)
+
+
+### Bug Fixes
+
+* default transpose level fix ([733e84c](https://github.com/popstas/chords-viewer/commit/733e84c))
+
+
+### Features
+
+* 2 column song text on desktops ([a60fc33](https://github.com/popstas/chords-viewer/commit/a60fc33))
+* default transpose level from title (cap 4) ([54c5680](https://github.com/popstas/chords-viewer/commit/54c5680))
+
+
+
 <a name="1.8.0"></a>
 # [1.8.0](https://github.com/popstas/chords-viewer/compare/v1.7.1...v1.8.0) (2018-12-15)
 
