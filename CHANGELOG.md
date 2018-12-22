@@ -1,3 +1,15 @@
+<a name="1.10.0"></a>
+# [1.10.0](https://github.com/popstas/chords-viewer/compare/v1.9.0...v1.10.0) (2018-12-22)
+
+
+### Features
+
+* change fontSize, refactorings, reformat ([d5a7a9d](https://github.com/popstas/chords-viewer/commit/d5a7a9d))
+* current song title on mobile ([93daf1a](https://github.com/popstas/chords-viewer/commit/93daf1a))
+* store current song in browser history ([0be6f65](https://github.com/popstas/chords-viewer/commit/0be6f65))
+
+
+
 <a name="1.9.0"></a>
 # [1.9.0](https://github.com/popstas/chords-viewer/compare/v1.8.0...v1.9.0) (2018-12-15)
 
