@@ -2,6 +2,10 @@
   <div :class="{toolbar: true, toolbar_fixed: toolbarFixed, toolbar_hidden: toolbarHidden}">
     <SearchInput class="toolbar__search" v-model="q"></SearchInput>
 
+    <div class="toolbar__current-song">
+      <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
+    </div>
+
     <div class="toolbar__filters">
       <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
       <el-row class="toolbar__autoscroll" :gutter="20">
@@ -142,6 +146,7 @@
     // float: right;
   }
 
+  // font size radiobuttons
   &__font-size {
     text-align: right;
 
@@ -149,6 +154,18 @@
       @media (max-width: 800px) {
         padding: 7px 8px;
       }
+    }
+  }
+
+  // current song breadcrumbs
+  &__current-song {
+    button {
+      padding: 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      color: #666;
     }
   }
 }

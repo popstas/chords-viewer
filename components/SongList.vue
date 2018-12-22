@@ -1,7 +1,7 @@
 <template>
   <div :class="['song-list', 'size' + this.$store.state.fontSize]">
     <div class="search-total">total: {{ count }}</div>
-    <Toolbar @changeFilter="$store.dispatch('filterSongs')"></Toolbar>
+    <Toolbar @changeFilter="$store.dispatch('filterSongs')" @scrollToLast="scrollTo(lastOffset)"></Toolbar>
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
       <SongItem
         v-for="song in filteredSongs"
@@ -11,27 +11,11 @@
         @active="scrollTo"
       ></SongItem>
     </el-collapse>
-    <button class="current-song" @click="scrollTo(lastOffset)">{{ activeSongTitle }}</button>
   </div>
 </template>
 
 <style lang="scss">
 @import "@/assets/variables.scss";
-
-.current-song {
-  @media (max-width: 1400px) {
-    display: none;
-  }
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 10px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  outline: none;
-  color: #666;
-}
 
 // global text size
 .el-collapse-item__content {
@@ -74,19 +58,6 @@ export default {
     },
     activeSong() {
       return this.$store.state.activeSong;
-    },
-
-    activeSongTitle() {
-      if (!this.activeSong.title) return "";
-      let title = this.activeSong.title;
-      if (this.activeSong.details) {
-        title =
-          this.activeSong.details.artist +
-          " - " +
-          this.activeSong.details.title;
-      }
-      title = title.trim(",");
-      return title;
     },
 
     songs() {

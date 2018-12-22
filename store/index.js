@@ -44,6 +44,19 @@ export const getters = {
   lastUpdated(state) {
     let date = Math.max.apply(Math, state.songs.map(song => new Date(song.created)));
     return dateformat(new Date(date), 'dd.mm.yyyy');
+  },
+
+  activeSongTitle(state) {
+    if (!state.activeSong.title) return "";
+    let title = state.activeSong.title;
+    if (state.activeSong.details) {
+      title =
+        state.activeSong.details.artist +
+        " - " +
+        state.activeSong.details.title;
+    }
+    title = title.trim(",");
+    return title;
   }
 };
 
