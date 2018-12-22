@@ -76,6 +76,11 @@ export default {
       if (val.length == 1) {
         this.changeSong(val[0].url);
       }
+    },
+
+    activeSong(val) {
+      const query = { url: val.url };
+      this.$router.push({ query });
     }
   },
 
@@ -118,6 +123,18 @@ export default {
   created() {
     this.$store.dispatch("filterSongs");
     // window.addEventListener('beforeinstallprompt', this.handleAddToHomeScreen);
+  },
+
+  mounted() {
+    if (this.$route.query["url"]) {
+      this.changeSong(this.$route.query["url"]);
+    }
+
+    this.$router.afterEach((to, from) => {
+      if (this.$route.query["url"]) {
+        this.changeSong(this.$route.query["url"]);
+      }
+    });
   }
 };
 </script>

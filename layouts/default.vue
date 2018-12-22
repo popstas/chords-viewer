@@ -140,11 +140,9 @@ export default {
   components: { Footer, Slideout, Sidebar },
   computed: {
     title() {
-      return (
-        (this.$store.state.activeSong.title
-          ? this.$store.state.activeSong.title + " - "
-          : "") + this.$store.state.name
-      );
+      return this.$store.state.activeSong.title
+        ? this.$store.state.activeSong.title
+        : this.$store.state.name;
     }
   },
   head() {
