@@ -14,7 +14,7 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
-      <div v-if="active && chords" class="text item chords">
+      <div v-if="chords" class="text item chords">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
             <Chord
@@ -27,7 +27,7 @@
         </span>
       </div>
 
-      <div v-if="active && song.text" class="song-text">
+      <div v-if="song.text" class="song-text">
         <template class="song-text__line" v-for="(line, lineKey) in textLines">
           <div v-if="line.type == 'chords'" class="song-item__line_chords" :key="lineKey">
             <template v-for="(chord, chordKey) in line.data">
@@ -106,6 +106,10 @@
       left: auto;
       box-shadow: none;
       padding: 10px;
+    }
+
+    .slideout-open & {
+      display: none;
     }
 
     &__section {
@@ -220,8 +224,6 @@ export default {
     toolbarHidden() {
       return this.$store.state.toolbarHidden;
     }
-  },
-
-  methods: {}
+  }
 };
 </script>

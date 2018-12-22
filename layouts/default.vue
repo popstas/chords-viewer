@@ -1,5 +1,5 @@
 <template>
-  <div class="container-wrap">
+  <div class="container-wrap" :style="{ paddingTop: chordsHeight + 'px' }">
     <el-container>
       <!-- https://github.com/Mango/slideout#user-content-slideoutoptions -->
       <Slideout
@@ -8,6 +8,7 @@
         menu="#menu"
         side="left"
         :padding="130"
+        :touch="false"
       >
         <div id="panel">
           <el-header height="42px">
@@ -138,6 +139,12 @@ import Slideout from "vue-slideout";
 
 export default {
   components: { Footer, Slideout, Sidebar },
+  data() {
+    return {
+      chordsHeight: 0
+    };
+  },
+
   computed: {
     title() {
       return this.$store.state.activeSong.title
@@ -145,6 +152,15 @@ export default {
         : this.$store.state.name;
     }
   },
+
+  methods: {
+    handleScroll() {
+      const chords = this.$el.querySelector(".song-item.active .chords");
+      if(!chords) return;
+      this.chordsHeight = chords.clientHeight;
+    }
+  },
+
   head() {
     return {
       title: this.title,
@@ -171,6 +187,14 @@ export default {
         }
       ]
     };
+  },
+
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>
