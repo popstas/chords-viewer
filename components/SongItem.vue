@@ -95,16 +95,13 @@
   .chords {
     position: fixed;
     top: 0;
-    left: 0;
+    left: auto;
     right: 0;
     text-align: center;
     background: #fff;
-    padding: 0px;
-    box-shadow: 0 0 2px #ccc;
+    padding: 5px;
 
     @media (min-width: 1200px) {
-      left: auto;
-      box-shadow: none;
       padding: 10px;
     }
 
