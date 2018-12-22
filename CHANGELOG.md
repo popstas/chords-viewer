@@ -1,3 +1,18 @@
+<a name="1.10.1"></a>
+## [1.10.1](https://github.com/popstas/chords-viewer/compare/v1.10.0...v1.10.1) (2018-12-22)
+
+
+### Bug Fixes
+
+* chords overflowed top of song and top of page ([afb519e](https://github.com/popstas/chords-viewer/commit/afb519e))
+
+
+### Features
+
+* chords now fixed at top right on mobile, not all width ([7f66c09](https://github.com/popstas/chords-viewer/commit/7f66c09))
+
+
+
 <a name="1.10.0"></a>
 # [1.10.0](https://github.com/popstas/chords-viewer/compare/v1.9.0...v1.10.0) (2018-12-22)
 
