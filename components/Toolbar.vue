@@ -4,22 +4,42 @@
 
     <div class="toolbar__filters">
       <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
-
       <el-row class="toolbar__autoscroll" :gutter="20">
         <el-col :span="6">
           <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
         </el-col>
         <el-col :span="4">
-          <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong"><icon name="backward"></icon></el-button>
-          <input type="hidden" v-shortkey="{k:['k'], kRus: ['л'], left: ['arrowleft']}" @shortkey="prevSong"/>
+          <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong">
+            <icon name="backward"></icon>
+          </el-button>
+          <input
+            type="hidden"
+            v-shortkey="{k:['k'], kRus: ['л'], left: ['arrowleft']}"
+            @shortkey="prevSong"
+          >
         </el-col>
         <el-col :span="4">
-          <el-checkbox-button class="toolbar__play" v-model="autoScroll"><icon :name="autoScroll ? 'pause' : 'play'"></icon></el-checkbox-button>
-          <input type="hidden" v-shortkey="['space']" @shortkey="autoScroll = !autoScroll"/>
+          <el-checkbox-button class="toolbar__play" v-model="autoScroll">
+            <icon :name="autoScroll ? 'pause' : 'play'"></icon>
+          </el-checkbox-button>
+          <input type="hidden" v-shortkey="['space']" @shortkey="autoScroll = !autoScroll">
         </el-col>
         <el-col :span="4">
-          <el-button class="toolbar__next" @click="nextSong"><icon name="forward"></icon></el-button>
-          <input type="hidden" v-shortkey="{j:['j'], jRus: ['о'], right: ['arrowright']}" @shortkey="nextSong"/>
+          <el-button class="toolbar__next" @click="nextSong">
+            <icon name="forward"></icon>
+          </el-button>
+          <input
+            type="hidden"
+            v-shortkey="{j:['j'], jRus: ['о'], right: ['arrowright']}"
+            @shortkey="nextSong"
+          >
+        </el-col>
+        <el-col :span="6" class="toolbar__font-size">
+          <el-radio-group v-model="fontSize" size="mini" @change="changeFontSize">
+            <el-radio-button label="1"></el-radio-button>
+            <el-radio-button label="2"></el-radio-button>
+            <el-radio-button label="3"></el-radio-button>
+          </el-radio-group>
         </el-col>
       </el-row>
     </div>
@@ -27,7 +47,8 @@
     <ul class="toolbar__search-letters search-letters">
       <li
         :class="{'search-letters__letter': true, active: q == '^' + letter}"
-        v-for="letter in letters" :key="letter"
+        v-for="letter in letters"
+        :key="letter"
         @click="q = '^' + letter"
       >{{ letter }}</li>
     </ul>
@@ -35,16 +56,15 @@
 </template>
 
 <style lang="scss">
-$max-width: 640px;
-$max-width-wide: 1000px;
+@import "@/assets/variables.scss";
 
 .toolbar {
   background: #fff;
   text-align: center;
   margin: 0 auto;
-  max-width: $max-width;
+  max-width: $container-width;
   @media (min-width: 1400px) {
-    max-width: $max-width-wide;
+    max-width: $container-width-wide;
   }
 
   &_fixed {
@@ -121,17 +141,27 @@ $max-width-wide: 1000px;
     padding: 7px;
     // float: right;
   }
+
+  &__font-size {
+    text-align: right;
+
+    .el-radio-button__inner {
+      @media (max-width: 800px) {
+        padding: 7px 8px;
+      }
+    }
+  }
 }
 </style>
 
 <script>
-import SearchInput from '~/components/SearchInput';
-import _ from 'lodash';
-import 'vue-awesome/icons/play';
-import 'vue-awesome/icons/pause';
-import 'vue-awesome/icons/backward';
-import 'vue-awesome/icons/forward';
-import Icon from 'vue-awesome/components/Icon';
+import SearchInput from "~/components/SearchInput";
+import _ from "lodash";
+import "vue-awesome/icons/play";
+import "vue-awesome/icons/pause";
+import "vue-awesome/icons/backward";
+import "vue-awesome/icons/forward";
+import Icon from "vue-awesome/components/Icon";
 
 const speedMapping = {
   1: 1024,
@@ -152,11 +182,12 @@ export default {
       autoScroll: false,
       autoScrollSpeed: 4,
       scrollInterval: false,
+      fontSize: 1,
 
       toolbarFixed: false,
       lastScrollTop: 0,
 
-      q: ''
+      q: ""
     };
   },
 
@@ -172,11 +203,11 @@ export default {
 
   watch: {
     q(val) {
-      this.changeFilter('q', val);
+      this.changeFilter("q", val);
     },
 
     autoScroll(val) {
-      this.$store.commit('setToolbarHidden', val);
+      this.$store.commit("setToolbarHidden", val);
       this.changeAutoScroll();
     },
 
@@ -187,12 +218,12 @@ export default {
 
   methods: {
     shortkey(opts) {
-      console.log('opts: ', opts);
+      console.log("opts: ", opts);
     },
 
     changeFilter(name, value) {
-      this.$store.commit('changeFilter', { name, value });
-      this.$emit('changeFilter', { name, value });
+      this.$store.commit("changeFilter", { name, value });
+      this.$emit("changeFilter", { name, value });
     },
 
     changeAutoScroll() {
@@ -224,10 +255,10 @@ export default {
       }
 
       if (delta < 0) {
-        this.$store.commit('setToolbarHidden', false);
+        this.$store.commit("setToolbarHidden", false);
       }
       if (delta > 1 && this.toolbarFixed) {
-        this.$store.commit('setToolbarHidden', true);
+        this.$store.commit("setToolbarHidden", true);
       }
     },
 
@@ -243,22 +274,27 @@ export default {
     },
 
     prevSong() {
-      this.$store.dispatch('setPrevSong');
+      this.$store.dispatch("setPrevSong");
     },
 
     nextSong() {
-      this.$store.dispatch('setNextSong');
+      this.$store.dispatch("setNextSong");
+    },
+
+    changeFontSize(size) {
+      this.$store.commit("fontSize", size);
     }
   },
 
   created() {
     this.buildLetters();
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
     this.q = this.$store.state.filter.q;
+    this.fontSize = this.$store.state.fontSize;
   },
 
   destroyed() {
-    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll);
     clearInterval(this.scrollInterval);
   }
 };

@@ -9,11 +9,7 @@
       songs updated: {{ $store.getters.lastUpdated }}
     </a>
     <span class="footer__help">
-      <el-popover
-        placement="top-start"
-        trigger="hover"
-        content="Hotkeys: j/k, arrows, space"
-      >
+      <el-popover placement="top-start" trigger="hover" content="Hotkeys: j/k, arrows, space">
         <span slot="reference">help</span>
       </el-popover>
     </span>
@@ -39,9 +35,9 @@
 </style>
 
 <script>
-import 'vue-awesome/icons/brands/github';
-import 'vue-awesome/icons/calendar-alt';
-import Icon from 'vue-awesome/components/Icon';
+import "vue-awesome/icons/brands/github";
+import "vue-awesome/icons/calendar-alt";
+import Icon from "vue-awesome/components/Icon";
 
 export default {};
 </script>

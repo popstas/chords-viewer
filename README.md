@@ -40,6 +40,7 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - Voice search
 - Search on amdm.ru
 - Autoscroll with speed control
+- Change font size without zoom
 - Transpose chords
 - Chords images
 - Random song

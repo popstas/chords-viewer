@@ -1,15 +1,23 @@
 <template>
-  <div>
+  <div :class="['song-list', 'size' + this.$store.state.fontSize]">
     <div class="search-total">total: {{ count }}</div>
     <Toolbar @changeFilter="$store.dispatch('filterSongs')"></Toolbar>
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
-      <SongItem v-for="song in filteredSongs" :song="song" :key="song.url" :active="song.url == activeSong.url" @active="scrollTo"></SongItem>
+      <SongItem
+        v-for="song in filteredSongs"
+        :song="song"
+        :key="song.url"
+        :active="song.url == activeSong.url"
+        @active="scrollTo"
+      ></SongItem>
     </el-collapse>
     <button class="current-song" @click="scrollTo(lastOffset)">{{ activeSongTitle }}</button>
   </div>
 </template>
 
 <style lang="scss">
+@import "@/assets/variables.scss";
+
 .current-song {
   @media (max-width: 1400px) {
     display: none;
@@ -24,23 +32,37 @@
   outline: none;
   color: #666;
 }
+
+// global text size
+.el-collapse-item__content {
+  font-size: 13px;
+  .size1 & {
+    font-size: $font-size-1;
+  }
+  .size2 & {
+    font-size: $font-size-2;
+  }
+  .size3 & {
+    font-size: $font-size-3;
+  }
+}
 </style>
 
 <script>
-import SongItem from '~/components/SongItem';
-import Toolbar from '~/components/Toolbar';
+import SongItem from "~/components/SongItem";
+import Toolbar from "~/components/Toolbar";
 // import mapState from "vuex";
 
 export default {
   components: {
     SongItem,
-    Toolbar,
+    Toolbar
   },
 
   data() {
     return {
       lastOffset: 0
-    }
+    };
   },
 
   computed: {
@@ -55,12 +77,15 @@ export default {
     },
 
     activeSongTitle() {
-      if(!this.activeSong.title) return '';
+      if (!this.activeSong.title) return "";
       let title = this.activeSong.title;
       if (this.activeSong.details) {
-        title = this.activeSong.details.artist + ' - ' + this.activeSong.details.title;
+        title =
+          this.activeSong.details.artist +
+          " - " +
+          this.activeSong.details.title;
       }
-      title = title.trim(',');
+      title = title.trim(",");
       return title;
     },
 
@@ -86,9 +111,15 @@ export default {
   methods: {
     changeSong(activeName) {
       let activeSong = this.songs.find(song => song.url == activeName) || {};
-      this.$store.commit('activeSong', activeSong);
-      this.$store.commit('playlistCurrent', this.$store.state.playlistCurrent + 1);
-      this.$store.commit('playlist', [...this.$store.state.playlist, activeSong]);
+      this.$store.commit("activeSong", activeSong);
+      this.$store.commit(
+        "playlistCurrent",
+        this.$store.state.playlistCurrent + 1
+      );
+      this.$store.commit("playlist", [
+        ...this.$store.state.playlist,
+        activeSong
+      ]);
     },
 
     scrollTo(offset) {
@@ -114,7 +145,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('filterSongs');
+    this.$store.dispatch("filterSongs");
     // window.addEventListener('beforeinstallprompt', this.handleAddToHomeScreen);
   }
 };

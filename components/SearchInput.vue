@@ -1,12 +1,19 @@
 <template>
   <el-input v-model="q" autofocus>
-    <button :class="{'search-input__speech-toggle':true, active: isSpeechRunning}" @click="speechToggle" slot="suffix">
+    <button
+      :class="{'search-input__speech-toggle':true, active: isSpeechRunning}"
+      @click="speechToggle"
+      slot="suffix"
+    >
       <icon v-if="recognition" name="microphone" class="el-icon-speech el-input__icon"></icon>
     </button>
-    <a :class="{'search-input__amdm-search':true}" v-if="q"
-       :href="'https://amdm.ru/search/?q=' + encodeURIComponent(q)"
-       slot="suffix" target="_blank"
-     >
+    <a
+      :class="{'search-input__amdm-search':true}"
+      v-if="q"
+      :href="'https://amdm.ru/search/?q=' + encodeURIComponent(q)"
+      slot="suffix"
+      target="_blank"
+    >
       <span class="search-input__amdm-search-text">amdm.ru</span>
     </a>
   </el-input>
@@ -60,11 +67,11 @@
 </style>
 
 <script>
-import 'vue-awesome/icons/microphone';
+import "vue-awesome/icons/microphone";
 export default {
   props: {
     value: {
-      default: ''
+      default: ""
     }
   },
 
@@ -73,7 +80,7 @@ export default {
       q: this.value,
       recognition: false,
       isSpeechRunning: false,
-      runtimeTranscription: '',
+      runtimeTranscription: "",
       transcription: []
     };
   },
@@ -84,13 +91,13 @@ export default {
     },
 
     q(val) {
-      this.$emit('input', val);
+      this.$emit("input", val);
     }
   },
 
   methods: {
     speechStart() {
-      console.log('speech start');
+      console.log("speech start");
       if (!this.recognition) return;
       this.recognition.start();
       this.isSpeechRunning = true;
@@ -108,31 +115,32 @@ export default {
     onSpeechEnd() {
       // console.log("speech end");
       this.speechStop();
-      if (this.runtimeTranscription === '') return;
+      if (this.runtimeTranscription === "") return;
 
       this.transcription.push(this.runtimeTranscription);
       this.q = this.runtimeTranscription;
     },
 
     checkSpeechApi() {
-      window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      window.SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
         return;
       }
       this.recognition = new SpeechRecognition();
       let recognition = this.recognition;
       this.speechStop();
-      recognition.lang = 'ru-RU';
+      recognition.lang = "ru-RU";
       recognition.interimResults = true;
-      recognition.addEventListener('result', event => {
+      recognition.addEventListener("result", event => {
         // console.log("speech result", event.results);
         const text = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
-          .join('');
+          .join("");
         this.runtimeTranscription = text;
       });
-      recognition.addEventListener('end', this.onSpeechEnd);
+      recognition.addEventListener("end", this.onSpeechEnd);
       this.recognition = recognition;
     }
   },

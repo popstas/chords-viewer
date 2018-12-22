@@ -22,10 +22,13 @@ export const state = () => ({
   homepage: pjson.homepage,
 
   // app state
-  activeSong: {title:''},
+  activeSong: { title: '' },
   playlist: [],
   playlistCurrent: -1,
   toolbarHidden: false,
+
+  // settings
+  fontSize: 1,
 
   // filters
   filter: {
@@ -56,6 +59,9 @@ export const mutations = {
   },
   playlistCurrent(state, newValue) {
     state.playlistCurrent = newValue;
+  },
+  fontSize(state, newValue) {
+    state.fontSize = newValue;
   },
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;

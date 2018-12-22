@@ -27,8 +27,7 @@
 </template>
 
 <style lang="scss">
-$container-width: 640px;
-$container-width-wide: 1000px;
+@import "@/assets/variables.scss";
 
 .container-wrap {
   margin: 0 auto;
@@ -130,7 +129,6 @@ html {
     display: none;
   }
 }
-
 </style>
 
 <script>
