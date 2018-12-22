@@ -14,6 +14,7 @@ module.exports = {
     '@/plugins/element-ui',
     '@/plugins/vue-awesome',
     '@/plugins/vue-shortkey',
+    '@/plugins/yametrika',
     { src: '~/plugins/localStorage.js', ssr: false }
   ],
 
