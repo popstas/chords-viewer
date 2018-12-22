@@ -1,3 +1,14 @@
+<a name="1.10.2"></a>
+## [1.10.2](https://github.com/popstas/chords-viewer/compare/v1.10.1...v1.10.2) (2018-12-22)
+
+
+### Features
+
+* popular icon in list, song title improvements ([0ada81f](https://github.com/popstas/chords-viewer/commit/0ada81f))
+* share button for pwa ([6d47aa7](https://github.com/popstas/chords-viewer/commit/6d47aa7))
+
+
+
 <a name="1.10.1"></a>
 ## [1.10.1](https://github.com/popstas/chords-viewer/compare/v1.10.0...v1.10.1) (2018-12-22)
 
