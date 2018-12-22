@@ -35,7 +35,7 @@
   max-width: $container-width;
   background: #fff;
   position: relative;
-  @media (min-width: 1400px) {
+  @media (min-width: $wide-min-width) {
     max-width: $container-width-wide;
   }
 }
@@ -105,7 +105,7 @@ html {
   @media (min-width: $container-width) {
     min-width: $container-width;
   }
-  @media (min-width: 1400px) {
+  @media (min-width: $wide-min-width) {
     min-width: $container-width-wide;
   }
 
@@ -115,7 +115,7 @@ html {
 }
 
 // always open on wide screen
-@media (min-width: 800px) {
+@media (min-width: 1450px) {
   .slideout-panel {
     transform: none !important;
   }

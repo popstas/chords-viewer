@@ -67,7 +67,7 @@
   text-align: center;
   margin: 0 auto;
   max-width: $container-width;
-  @media (min-width: 1400px) {
+  @media (min-width: $wide-min-width) {
     max-width: $container-width-wide;
   }
 

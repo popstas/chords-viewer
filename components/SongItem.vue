@@ -1,10 +1,12 @@
 <template>
   <el-collapse-item :title="title" :name="song.url" :class="{'song-item': true, active: active}">
     <template slot="title">
+        <i v-if="song.popular" class="el-icon-star-off" title="popular song"></i>
       {{ title }}
-      <i v-if="song.text" class="el-icon-tickets"></i>
-      <i v-if="song.details.chords" class="el-icon-check"></i>
-      <span :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity"></span>
+      <span class="song-item__badges">
+        <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity" title="song complexity"></span>
+        <i v-if="song.text" class="el-icon-tickets" title="with text"></i>
+      </span>
     </template>
 
     <div class="song-item__content" v-if="active">
@@ -62,12 +64,20 @@
     margin-bottom: 50px;
   }
 
+  &__badges {
+    float: right;
+  }
+
   [role="tab"] {
     overflow: hidden;
   }
 
   [role="button"] {
     display: block;
+
+    &:hover {
+      background: #fbfbfb;
+    }
   }
 
   .el-collapse-item__arrow {
@@ -203,12 +213,12 @@ export default {
     },
 
     complexity() {
-      return this.song.details.complexity || "?";
+      return 'complexity' in this.song.details ? this.song.details.complexity : "";
     },
 
     complexityClass() {
       const c = this.song.details.complexity || 0;
-      if (c == 0) return "song-item__complexity_0";
+      // if (c == 0) return "song-item__complexity_0";
       if (c < 6) return "song-item__complexity_1";
       if (c < 10) return "song-item__complexity_2";
       return "song-item__complexity_3";

@@ -47,15 +47,12 @@ export const getters = {
   },
 
   activeSongTitle(state) {
-    if (!state.activeSong.title) return "";
+    if (!state.activeSong.title) return '';
     let title = state.activeSong.title;
     if (state.activeSong.details) {
-      title =
-        state.activeSong.details.artist +
-        " - " +
-        state.activeSong.details.title;
+      title = state.activeSong.details.artist + ' - ' + state.activeSong.details.title;
     }
-    title = title.trim(",");
+    title = title.trim(',');
     return title;
   }
 };
@@ -133,12 +130,17 @@ export const actions = {
     }
 
     if (state.filter.popular) {
-      result = result.filter(song => song.tags.indexOf('аккорды популярные') != -1);
+      result = result.filter(song => song.popular);
     }
 
     if (state.filter.sortByDate) {
       result = result.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
     }
+
+    result = result.map(song => {
+      song.popular = song.tags.indexOf('аккорды популярные') != -1;
+      return song;
+    });
 
     commit('setFilteredSongs', result);
   },
