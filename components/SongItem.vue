@@ -46,7 +46,12 @@
         </template>
       </div>
 
-      <a target="_blank" :href="song.url">link</a>
+      <a class="song-item__link" target="_blank" :href="song.url">
+        <icon name="link"></icon>
+      </a>
+      <a v-if="isShare" class="song-item__link" @click.prevent="share">
+        <icon name="share-alt"></icon>
+      </a>
     </div>
   </el-collapse-item>
 </template>
@@ -135,12 +140,22 @@
   .song-transpose .el-button {
     border: none;
   }
+
+  &__link {
+    display: inline-block;
+    color: #999;
+    text-decoration: none;
+    margin-right: 10px;
+    padding: 10px;
+  }
 }
 </style>
 
 <script>
 import Chord from "~/components/Chord";
 import { transposeMap } from "~/store";
+import "vue-awesome/icons/share-alt";
+import "vue-awesome/icons/link";
 
 export default {
   components: { Chord },
@@ -148,7 +163,8 @@ export default {
 
   data() {
     return {
-      transposeLevel: 0
+      transposeLevel: 0,
+      isShare: false
     };
   },
 
@@ -221,6 +237,22 @@ export default {
     toolbarHidden() {
       return this.$store.state.toolbarHidden;
     }
+  },
+
+  methods: {
+    share() {
+      if (navigator.share) {
+        navigator.share({
+          title: this.title,
+          text: this.song.text,
+          url: window.location.href
+        });
+      }
+    }
+  },
+
+  mounted() {
+    this.isShare = !!navigator.share;
   }
 };
 </script>
