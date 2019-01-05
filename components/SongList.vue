@@ -87,6 +87,8 @@ export default {
   methods: {
     changeSong(activeName) {
       let activeSong = this.songs.find(song => song.url == activeName) || {};
+      if (this.activeSong.url == activeName) return;
+
       this.$store.commit("activeSong", activeSong);
       this.$store.commit(
         "playlistCurrent",
