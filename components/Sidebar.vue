@@ -15,6 +15,13 @@
     <el-row>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
     </el-row>
+    <el-row style="text-align:center">
+      <el-radio-group class="sidebar__font-size" v-model="fontSize" size="mini" @change="changeFontSize">
+        <el-radio-button label="1"></el-radio-button>
+        <el-radio-button label="2"></el-radio-button>
+        <el-radio-button label="3"></el-radio-button>
+      </el-radio-group>
+    </el-row>
   </div>
 </template>
 
@@ -24,6 +31,15 @@
 
   .el-row {
     margin-bottom: 10px;
+  }
+
+  // font size radiobuttons
+  &__font-size {
+    text-align: right;
+
+    .el-radio-button__inner {
+      padding: 7px 8px;
+    }
   }
 }
 </style>
@@ -41,7 +57,8 @@ export default {
       withTexts: false,
       popular: false,
       sortByDate: false,
-      noSleep: false
+      noSleep: false,
+      fontSize: 1
     };
   },
 
@@ -71,7 +88,15 @@ export default {
     changeFilter(name, value) {
       this.$store.commit("changeFilter", { name, value });
       this.$emit("changeFilter", { name, value });
+    },
+
+    changeFontSize(size) {
+      this.$store.commit("fontSize", size);
     }
+  },
+
+  created() {
+    this.fontSize = this.$store.state.fontSize;
   },
 
   mounted() {

@@ -38,13 +38,6 @@
             @shortkey="nextSong"
           >
         </el-col>
-        <el-col :span="6" class="toolbar__font-size">
-          <el-radio-group v-model="fontSize" size="mini" @change="changeFontSize">
-            <el-radio-button label="1"></el-radio-button>
-            <el-radio-button label="2"></el-radio-button>
-            <el-radio-button label="3"></el-radio-button>
-          </el-radio-group>
-        </el-col>
       </el-row>
     </div>
 
@@ -146,17 +139,6 @@
     // float: right;
   }
 
-  // font size radiobuttons
-  &__font-size {
-    text-align: right;
-
-    .el-radio-button__inner {
-      @media (max-width: 800px) {
-        padding: 7px 8px;
-      }
-    }
-  }
-
   // current song breadcrumbs
   &__current-song {
     button {
@@ -199,7 +181,6 @@ export default {
       autoScroll: false,
       autoScrollSpeed: 4,
       scrollInterval: false,
-      fontSize: 1,
 
       toolbarFixed: false,
       lastScrollTop: 0,
@@ -296,10 +277,6 @@ export default {
 
     nextSong() {
       this.$store.dispatch("setNextSong");
-    },
-
-    changeFontSize(size) {
-      this.$store.commit("fontSize", size);
     }
   },
 
@@ -307,7 +284,6 @@ export default {
     this.buildLetters();
     window.addEventListener("scroll", this.handleScroll);
     this.q = this.$store.state.filter.q;
-    this.fontSize = this.$store.state.fontSize;
   },
 
   destroyed() {
