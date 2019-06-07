@@ -1,3 +1,19 @@
+<a name="1.11.0"></a>
+# [1.11.0](https://github.com/popstas/chords-viewer/compare/v1.10.3...v1.11.0) (2019-06-07)
+
+
+### Bug Fixes
+
+* el-input -> input, for avoid shortkey ([23772e0](https://github.com/popstas/chords-viewer/commit/23772e0))
+* move font-size controls to sidebar ([7083efd](https://github.com/popstas/chords-viewer/commit/7083efd))
+
+
+### Features
+
+* ukulele and piano chords, replace H to B ([8679b3d](https://github.com/popstas/chords-viewer/commit/8679b3d))
+
+
+
 <a name="1.10.3"></a>
 ## [1.10.3](https://github.com/popstas/chords-viewer/compare/v1.10.2...v1.10.3) (2019-02-04)
 
