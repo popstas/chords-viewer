@@ -38,6 +38,13 @@
             @shortkey="nextSong"
           >
         </el-col>
+        <el-col :span="7" class="toolbar__instrument">
+          <el-radio-group v-model="instrument" size="mini" @change="changeInstrument">
+            <el-radio-button label="guitar">G</el-radio-button>
+            <el-radio-button label="ukulele">U</el-radio-button>
+            <el-radio-button label="piano">P</el-radio-button>
+          </el-radio-group>
+        </el-col>
       </el-row>
     </div>
 
@@ -139,6 +146,17 @@
     // float: right;
   }
 
+  // font size radiobuttons
+  &__instrument {
+    text-align: right;
+
+    .el-radio-button__inner {
+      @media (max-width: 800px) {
+        padding: 7px 8px;
+      }
+    }
+  }
+
   // current song breadcrumbs
   &__current-song {
     button {
@@ -181,6 +199,7 @@ export default {
       autoScroll: false,
       autoScrollSpeed: 4,
       scrollInterval: false,
+      instrument: 'guitar',
 
       toolbarFixed: false,
       lastScrollTop: 0,
@@ -277,6 +296,10 @@ export default {
 
     nextSong() {
       this.$store.dispatch("setNextSong");
+    },
+
+    changeInstrument(val) {
+      this.$store.commit("instrument", val);
     }
   },
 
@@ -284,6 +307,7 @@ export default {
     this.buildLetters();
     window.addEventListener("scroll", this.handleScroll);
     this.q = this.$store.state.filter.q;
+    this.fontSize = this.$store.state.fontSize;
   },
 
   destroyed() {

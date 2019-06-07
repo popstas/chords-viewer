@@ -47,6 +47,13 @@
     }
   }
 }
+
+.el-popover {
+  img {
+    max-width: 150px;
+    height: auto;
+  }
+}
 </style>
 
 <script>
@@ -57,12 +64,22 @@ export default {
 
   computed: {
     imageUrl() {
-      let chord = this.transposedChord
-        .split("#")
-        .join("w")
-        .split("+")
-        .join("p");
-      return `https://amdm.ru/images/chords/${chord}_0.gif`;
+      let chord = this.transposedChord;
+      switch(this.$store.state.instrument) {
+        case 'ukulele':
+          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p');
+          return `https://chordu.com/diags/advance/ukulele/${chord}.png?v2`
+          break;
+        case 'piano':
+          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p');
+          return `https://chordu.com/diags/advance/piano/${chord}.png?v2`
+          break;
+        case 'guitar':
+        default:
+          chord = chord.replace(/\#/g, 'w').replace(/\+/g, 'p');
+          return `https://amdm.ru/images/chords/${chord}_0.gif`;
+      }
+
     },
 
     isKnown() {
@@ -79,7 +96,7 @@ export default {
     },
 
     replacedChord() {
-      return this.chord.replace("B", "H").replace("m#", "#m");
+      return this.chord.replace("H", "B").replace("m#", "#m");
     },
 
     transposedChord() {
