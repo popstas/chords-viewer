@@ -67,16 +67,16 @@ export default {
       let chord = this.transposedChord;
       switch(this.$store.state.instrument) {
         case 'ukulele':
-          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p');
+          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p').replace(/\-/g, 'z');
           return `https://chordu.com/diags/advance/ukulele/${chord}.png?v2`
           break;
         case 'piano':
-          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p');
+          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p').replace(/\-/g, 'z');
           return `https://chordu.com/diags/advance/piano/${chord}.png?v2`
           break;
         case 'guitar':
         default:
-          chord = chord.replace(/\#/g, 'w').replace(/\+/g, 'p');
+          chord = chord.replace(/\#/g, 'w').replace(/\+/g, 'p').replace(/\-/g, 'z');
           return `https://amdm.ru/images/chords/${chord}_0.gif`;
       }
 

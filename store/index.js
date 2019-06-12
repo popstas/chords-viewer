@@ -6,9 +6,12 @@ import Fuse from 'fuse.js';
 export const transposeMap = [
   ['Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'],
   ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+  ['C+7', 'C#+7', 'D+7', 'D#+7', 'E+7', 'F+7', 'F#+7', 'G+7', 'G#+7', 'A+7', 'A#+7', 'B+7'],
   ['Csus2', 'C#sus2', 'Dsus2', 'D#sus2', 'Esus2', 'Fsus2', 'F#sus2', 'Gsus2', 'G#sus2', 'Asus2', 'A#sus2', 'Bsus2'],
+  ['Csus2/A#', 'C#sus2/B', 'Dsus2/C', 'D#sus2/C#', 'Esus2/D', 'Fsus2/D#', 'F#sus2/E', 'Gsus2/F', 'G#sus2/F#', 'Absus2/Gb', 'A#sus2/Ab', 'Bsus2/A'],
   ['A7', 'A#7', 'B7', 'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7'],
-  ['Am7', 'A#m7', 'Bm7', 'Cm7', 'C#m7', 'Dm7', 'D#m7', 'Em7', 'Fm7', 'F#m7', 'Gm7', 'G#m7']
+  ['Am7', 'A#m7', 'Bm7', 'Cm7', 'C#m7', 'Dm7', 'D#m7', 'Em7', 'Fm7', 'F#m7', 'Gm7', 'G#m7'],
+  ['Am7-5', 'A#m7-5', 'Bm7-5', 'Cm7-5', 'C#m7-5', 'Dm7-5', 'D#m7-5', 'Em7-5', 'Fm7-5', 'F#m7-5', 'Gm7-5', 'G#m7-5']
 ];
 
 export const state = () => ({
