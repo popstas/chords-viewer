@@ -1,3 +1,19 @@
+<a name="1.12.0"></a>
+# [1.12.0](https://github.com/popstas/chords-viewer/compare/v1.11.1...v1.12.0) (2019-06-12)
+
+
+### Bug Fixes
+
+* H7 -> B7 ([79d998d](https://github.com/popstas/chords-viewer/commit/79d998d))
+* store selected instrument ([33b9da3](https://github.com/popstas/chords-viewer/commit/33b9da3))
+
+
+### Features
+
+* artists list with songs count ([3fce113](https://github.com/popstas/chords-viewer/commit/3fce113))
+
+
+
 <a name="1.11.1"></a>
 ## [1.11.1](https://github.com/popstas/chords-viewer/compare/v1.11.0...v1.11.1) (2019-06-12)
 
