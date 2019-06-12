@@ -22,7 +22,7 @@
             <Chord
               v-for="(chord, key) in sequence"
               :chord="chord"
-              :transposeLevel="defaultTransposeLevel - transposeLevel"
+              :transposeLevel="transposeLevel - defaultTransposeLevel"
               :key="key"
             ></Chord>
           </span>
