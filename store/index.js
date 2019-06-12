@@ -76,7 +76,6 @@ export const mutations = {
   },
   instrument(state, newValue) {
     state.instrument = newValue;
-    console.log('newValue: ', newValue);
   },
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;
