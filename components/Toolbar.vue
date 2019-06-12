@@ -56,6 +56,16 @@
         @click="q = '^' + letter"
       >{{ letter }}</li>
     </ul>
+
+    <el-select class="toolbar__search-artists search-artists" placeholder="Select artist" v-model="artist">
+      <el-option
+        v-for="item in artists"
+        :key="item.name"
+        :value="item.name">
+        <span style="float: left">{{ item.name }}</span>
+        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.count }}</span>
+      </el-option>
+    </el-select>
   </div>
 </template>
 
@@ -80,6 +90,10 @@
     box-shadow: 0 0 1px #ccc;
 
     .search-letters {
+      display: none;
+    }
+
+    .search-artists {
       display: none;
     }
 
@@ -130,6 +144,10 @@
         color: #409eff;
       }
     }
+  }
+
+  .search-artists {
+    margin-bottom: 15px;
   }
 
   // close button
@@ -204,7 +222,8 @@ export default {
       toolbarFixed: false,
       lastScrollTop: 0,
 
-      q: ""
+      q: "",
+      artist: ""
     };
   },
 
@@ -230,6 +249,10 @@ export default {
 
     autoScrollSpeed() {
       this.changeAutoScroll();
+    },
+
+    artist(val) {
+      this.q = '^' + val;
     }
   },
 
@@ -290,6 +313,28 @@ export default {
       this.letters = letters;
     },
 
+    buildArtists() {
+      let artists = [];
+      this.$store.state.songs.map(song => {
+        if(!song.details || !song.details.artist) return;
+
+        const foundIndex = artists.findIndex(artist => {
+          return artist && artist.name == song.details.artist;
+        });
+        if(foundIndex == -1) {
+          artists.push({ name: song.details.artist, count: 1 });
+        }
+        else {
+          artists[foundIndex].count++;
+        }
+      });
+      artists.sort();
+      artists = artists.filter((letter, pos, arr) => {
+        return arr.indexOf(letter) == pos;
+      });
+      this.artists = artists;
+    },
+
     prevSong() {
       this.$store.dispatch("setPrevSong");
     },
@@ -305,6 +350,7 @@ export default {
 
   created() {
     this.buildLetters();
+    this.buildArtists();
     window.addEventListener("scroll", this.handleScroll);
     this.q = this.$store.state.filter.q;
     this.fontSize = this.$store.state.fontSize;

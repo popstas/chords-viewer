@@ -99,8 +99,11 @@ export const actions = {
 
     if (q) {
       let isLetter = q.match(/\^.$/);
+      let isArtist = q.match(/\^.*$/);
       if (isLetter) {
         result = result.filter(song => song.title.toLowerCase().search(q) >= 0);
+      } else if (isArtist) {
+        result = result.filter(song => song.details && song.details.artist.toLowerCase().search(q) >= 0);
       } else {
         let fuse = new Fuse(result, {
           keys: [
