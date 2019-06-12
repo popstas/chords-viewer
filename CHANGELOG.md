@@ -1,3 +1,14 @@
+<a name="1.12.1"></a>
+## [1.12.1](https://github.com/popstas/chords-viewer/compare/v1.12.0...v1.12.1) (2019-06-12)
+
+
+### Bug Fixes
+
+* +7, /, +5 chords support ([7500c09](https://github.com/popstas/chords-viewer/commit/7500c09))
+* sus2 chords support ([247368c](https://github.com/popstas/chords-viewer/commit/247368c))
+
+
+
 <a name="1.12.0"></a>
 # [1.12.0](https://github.com/popstas/chords-viewer/compare/v1.11.1...v1.12.0) (2019-06-12)
 
