@@ -1,3 +1,13 @@
+<a name="1.11.1"></a>
+## [1.11.1](https://github.com/popstas/chords-viewer/compare/v1.11.0...v1.11.1) (2019-06-12)
+
+
+### Bug Fixes
+
+* transpose was inverted on songs with "capo" in title ([134c569](https://github.com/popstas/chords-viewer/commit/134c569))
+
+
+
 <a name="1.11.0"></a>
 # [1.11.0](https://github.com/popstas/chords-viewer/compare/v1.10.3...v1.11.0) (2019-06-07)
 
