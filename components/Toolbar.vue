@@ -39,7 +39,7 @@
           >
         </el-col>
         <el-col :span="7" class="toolbar__instrument">
-          <el-radio-group v-model="instrument" size="mini" @change="changeInstrument">
+          <el-radio-group v-model="instrument" size="mini">
             <el-radio-button label="guitar">G</el-radio-button>
             <el-radio-button label="ukulele">U</el-radio-button>
             <el-radio-button label="piano">P</el-radio-button>
@@ -66,6 +66,11 @@
         <span style="float: right; color: #8492a6; font-size: 13px">{{ item.count }}</span>
       </el-option>
     </el-select>
+
+    <el-radio-group class="search-artists-sort" v-model="artistsSort" size="mini">
+      <el-radio-button label="name">name</el-radio-button>
+      <el-radio-button label="count">count</el-radio-button>
+    </el-radio-group>
   </div>
 </template>
 
@@ -94,6 +99,10 @@
     }
 
     .search-artists {
+      display: none;
+    }
+
+    .search-artists-sort {
       display: none;
     }
 
@@ -148,6 +157,7 @@
 
   .search-artists {
     margin-bottom: 15px;
+    margin-right: 15px;
   }
 
   // close button
@@ -217,7 +227,6 @@ export default {
       autoScroll: false,
       autoScrollSpeed: 4,
       scrollInterval: false,
-      instrument: 'guitar',
 
       toolbarFixed: false,
       lastScrollTop: 0,
@@ -230,6 +239,25 @@ export default {
   computed: {
     toolbarHidden() {
       return this.$store.state.toolbarHidden;
+    },
+
+    artistsSort: {
+      get() {
+        return this.$store.state.artistsSort;
+      },
+      set(val) {
+        this.$store.commit("artistsSort", val);
+        this.buildArtists();
+      }
+    },
+
+    instrument: {
+      get() {
+        return this.$store.state.instrument;
+      },
+      set(val) {
+        this.$store.commit("instrument", val);
+      }
     },
 
     playlistCurrent() {
@@ -328,7 +356,13 @@ export default {
           artists[foundIndex].count++;
         }
       });
-      artists.sort();
+
+      if(this.artistsSort == 'count'){
+        artists.sort((a, b) => {
+          return a.count > b.count ? 1 : a.count < b.count ? -1 : 0;
+        }).reverse();
+      }
+
       artists = artists.filter((letter, pos, arr) => {
         return arr.indexOf(letter) == pos;
       });
@@ -341,10 +375,6 @@ export default {
 
     nextSong() {
       this.$store.dispatch("setNextSong");
-    },
-
-    changeInstrument(val) {
-      this.$store.commit("instrument", val);
     }
   },
 

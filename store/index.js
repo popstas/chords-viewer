@@ -34,6 +34,7 @@ export const state = () => ({
   // settings
   fontSize: 1,
   instrument: 'guitar',
+  artistsSort: 'name',
 
   // filters
   filter: {
@@ -80,6 +81,9 @@ export const mutations = {
   },
   instrument(state, newValue) {
     state.instrument = newValue;
+  },
+  artistsSort(state, newValue) {
+    state.artistsSort = newValue;
   },
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;
