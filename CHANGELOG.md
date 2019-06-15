@@ -1,3 +1,13 @@
+<a name="1.13.0"></a>
+# [1.13.0](https://github.com/popstas/chords-viewer/compare/v1.12.1...v1.13.0) (2019-06-15)
+
+
+### Features
+
+* artists select sort by count ([3df44d1](https://github.com/popstas/chords-viewer/commit/3df44d1))
+
+
+
 <a name="1.12.1"></a>
 ## [1.12.1](https://github.com/popstas/chords-viewer/compare/v1.12.0...v1.12.1) (2019-06-12)
 
