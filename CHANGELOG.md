@@ -1,4 +1,7 @@
-<a name="1.13.0"></a>
+## [1.13.1](https://github.com/popstas/chords-viewer/compare/v1.13.0...v1.13.1) (2019-06-19)
+
+
+
 # [1.13.0](https://github.com/popstas/chords-viewer/compare/v1.12.1...v1.13.0) (2019-06-15)
 
 
@@ -8,7 +11,6 @@
 
 
 
-<a name="1.12.1"></a>
 ## [1.12.1](https://github.com/popstas/chords-viewer/compare/v1.12.0...v1.12.1) (2019-06-12)
 
 
@@ -19,7 +21,6 @@
 
 
 
-<a name="1.12.0"></a>
 # [1.12.0](https://github.com/popstas/chords-viewer/compare/v1.11.1...v1.12.0) (2019-06-12)
 
 
@@ -35,7 +36,6 @@
 
 
 
-<a name="1.11.1"></a>
 ## [1.11.1](https://github.com/popstas/chords-viewer/compare/v1.11.0...v1.11.1) (2019-06-12)
 
 
@@ -45,7 +45,6 @@
 
 
 
-<a name="1.11.0"></a>
 # [1.11.0](https://github.com/popstas/chords-viewer/compare/v1.10.3...v1.11.0) (2019-06-07)
 
 
@@ -61,7 +60,6 @@
 
 
 
-<a name="1.10.3"></a>
 ## [1.10.3](https://github.com/popstas/chords-viewer/compare/v1.10.2...v1.10.3) (2019-02-04)
 
 
@@ -71,7 +69,6 @@
 
 
 
-<a name="1.10.2"></a>
 ## [1.10.2](https://github.com/popstas/chords-viewer/compare/v1.10.1...v1.10.2) (2018-12-22)
 
 
@@ -82,7 +79,6 @@
 
 
 
-<a name="1.10.1"></a>
 ## [1.10.1](https://github.com/popstas/chords-viewer/compare/v1.10.0...v1.10.1) (2018-12-22)
 
 
@@ -97,7 +93,6 @@
 
 
 
-<a name="1.10.0"></a>
 # [1.10.0](https://github.com/popstas/chords-viewer/compare/v1.9.0...v1.10.0) (2018-12-22)
 
 
@@ -109,7 +104,6 @@
 
 
 
-<a name="1.9.0"></a>
 # [1.9.0](https://github.com/popstas/chords-viewer/compare/v1.8.0...v1.9.0) (2018-12-15)
 
 
@@ -125,7 +119,6 @@
 
 
 
-<a name="1.8.0"></a>
 # [1.8.0](https://github.com/popstas/chords-viewer/compare/v1.7.1...v1.8.0) (2018-12-15)
 
 
@@ -143,7 +136,6 @@
 
 
 
-<a name="1.7.1"></a>
 ## [1.7.1](https://github.com/popstas/chords-viewer/compare/v1.7.0...v1.7.1) (2018-11-22)
 
 
@@ -159,7 +151,6 @@
 
 
 
-<a name="1.7.0"></a>
 # [1.7.0](https://github.com/popstas/chords-viewer/compare/v1.6.0...v1.7.0) (2018-11-22)
 
 
@@ -169,7 +160,6 @@
 
 
 
-<a name="1.6.0"></a>
 # [1.6.0](https://github.com/popstas/chords-viewer/compare/v1.5.0...v1.6.0) (2018-09-14)
 
 
@@ -179,7 +169,6 @@
 
 
 
-<a name="1.5.0"></a>
 # [1.5.0](https://github.com/popstas/chords-viewer/compare/v1.4.3...v1.5.0) (2018-09-13)
 
 
@@ -189,7 +178,6 @@
 
 
 
-<a name="1.4.3"></a>
 ## [1.4.3](https://github.com/popstas/chords-viewer/compare/v1.4.2...v1.4.3) (2018-09-12)
 
 
@@ -200,7 +188,6 @@
 
 
 
-<a name="1.4.2"></a>
 ## [1.4.2](https://github.com/popstas/chords-viewer/compare/v1.4.1...v1.4.2) (2018-07-15)
 
 
@@ -210,7 +197,6 @@
 
 
 
-<a name="1.4.1"></a>
 ## [1.4.1](https://github.com/popstas/chords-viewer/compare/v1.4.0...v1.4.1) (2018-07-09)
 
 
@@ -220,14 +206,13 @@
 
 
 
-<a name="1.4.0"></a>
 # [1.4.0](https://github.com/popstas/chords-viewer/compare/v1.3.0...v1.4.0) (2018-06-30)
 
 
 ### Bug Fixes
 
 * app was not 100% on screens with 640+ px ([59ca835](https://github.com/popstas/chords-viewer/commit/59ca835))
-* enable icon in [@nuxtjs](https://github.com/nuxtjs)/pwa ([f109abb](https://github.com/popstas/chords-viewer/commit/f109abb))
+* enable icon in @nuxtjs/pwa ([f109abb](https://github.com/popstas/chords-viewer/commit/f109abb))
 * hide floating chords while floating toolbar ([f135058](https://github.com/popstas/chords-viewer/commit/f135058))
 * was 5px horizontal scroll ([145b65d](https://github.com/popstas/chords-viewer/commit/145b65d))
 
@@ -241,7 +226,6 @@
 
 
 
-<a name="1.3.0"></a>
 # [1.3.0](https://github.com/popstas/chords-viewer/compare/v1.2.0...v1.3.0) (2018-06-08)
 
 
@@ -251,7 +235,6 @@
 
 
 
-<a name="1.2.0"></a>
 # [1.2.0](https://github.com/popstas/chords-viewer/compare/v1.1.0...v1.2.0) (2018-06-04)
 
 
@@ -270,7 +253,6 @@
 
 
 
-<a name="1.1.0"></a>
 # [1.1.0](https://github.com/popstas/chords-viewer/compare/v1.0.0...v1.1.0) (2018-06-02)
 
 
@@ -290,7 +272,6 @@
 
 
 
-<a name="1.0.0"></a>
 # [1.0.0](https://github.com/popstas/chords-viewer/compare/a312802...v1.0.0) (2018-06-02)
 
 
@@ -310,7 +291,7 @@
 
 ### Features
 
-* [@nuxtjs](https://github.com/nuxtjs)/pwa ([98fe753](https://github.com/popstas/chords-viewer/commit/98fe753))
+* @nuxtjs/pwa ([98fe753](https://github.com/popstas/chords-viewer/commit/98fe753))
 * add icons and fixed chords to SongItem ([6fe9314](https://github.com/popstas/chords-viewer/commit/6fe9314))
 * autoscroll ([8232cf2](https://github.com/popstas/chords-viewer/commit/8232cf2))
 * autoscroll speed ([1065b24](https://github.com/popstas/chords-viewer/commit/1065b24))
