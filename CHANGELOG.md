@@ -1,3 +1,17 @@
+# [1.15.0](https://github.com/popstas/chords-viewer/compare/v1.14.1...v1.15.0) (2019-06-19)
+
+
+### Bug Fixes
+
+* move footer content to sidebar ([3b73f41](https://github.com/popstas/chords-viewer/commit/3b73f41))
+
+
+### Features
+
+* scroll to top button in toolbar ([f403de7](https://github.com/popstas/chords-viewer/commit/f403de7))
+
+
+
 ## [1.14.1](https://github.com/popstas/chords-viewer/compare/v1.14.0...v1.14.1) (2019-06-19)
 
 
