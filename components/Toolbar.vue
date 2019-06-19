@@ -3,6 +3,9 @@
     <SearchInput class="toolbar__search" v-model="q"></SearchInput>
 
     <div class="toolbar__current-song">
+          <el-button class="toolbar__up" @click="toTop">
+            <icon name="chevron-up"></icon>
+          </el-button>
       <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
     </div>
 
@@ -86,6 +89,10 @@
     max-width: $container-width-wide;
   }
 
+  &__up {
+    display: none;
+  }
+
   &_fixed {
     position: fixed;
     bottom: 0;
@@ -93,6 +100,12 @@
     right: 0;
     padding: 5px;
     box-shadow: 0 0 1px #ccc;
+
+    .toolbar__up {
+      display: block;
+      float: left;
+      margin-left: 7px;
+    }
 
     .search-letters {
       display: none;
@@ -206,6 +219,7 @@ import "vue-awesome/icons/play";
 import "vue-awesome/icons/pause";
 import "vue-awesome/icons/backward";
 import "vue-awesome/icons/forward";
+import "vue-awesome/icons/chevron-up";
 import Icon from "vue-awesome/components/Icon";
 
 const speedMapping = {
@@ -375,6 +389,10 @@ export default {
 
     nextSong() {
       this.$store.dispatch("setNextSong");
+    },
+
+    toTop() {
+      window.scrollTo(0, 0);
     }
   },
 
