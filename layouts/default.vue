@@ -17,7 +17,6 @@
           <el-main>
             <nuxt/>
           </el-main>
-          <Footer></Footer>
         </div>
       </Slideout>
     </el-container>
@@ -133,12 +132,11 @@ html {
 </style>
 
 <script>
-import Footer from "~/components/Footer";
 import Sidebar from "~/components/Sidebar";
 import Slideout from "vue-slideout";
 
 export default {
-  components: { Footer, Slideout, Sidebar },
+  components: { Slideout, Sidebar },
   data() {
     return {
       chordsHeight: 0

@@ -38,6 +38,27 @@
         <el-radio-button label="3"></el-radio-button>
       </el-radio-group>
     </el-row>
+
+    <el-row style="text-align:center">
+      <a class="sidebar__link" :href="$store.state.homepage + '/CHANGELOG.md'" target="_blank">
+        <icon name="brands/github"></icon>
+        {{ $store.state.name }} {{ $store.state.version }} (changelog)
+      </a>
+    </el-row>
+    <el-row style="text-align:center">
+      <a class="sidebar__link" href="https://github.com/popstas/chords-data" target="_blank">
+        <icon name="calendar-alt"></icon>
+        songs updated: {{ $store.getters.lastUpdated }}
+      </a>
+    </el-row>
+    <el-row style="text-align:center">
+      <span class="sidebar__help">
+        <el-popover placement="top-start" trigger="hover" content="Hotkeys: j/k, arrows, space">
+          <span slot="reference">help</span>
+        </el-popover>
+      </span>
+    </el-row>
+
   </div>
 </template>
 
@@ -61,10 +82,25 @@
       padding: 7px 8px;
     }
   }
+
+  &__link {
+    display: inline-block;
+    margin-right: 15px;
+    text-decoration: none;
+    color: #333;
+    &:hover {
+      color: #666;
+    }
+  }
+
 }
 </style>
 
 <script>
+import "vue-awesome/icons/brands/github";
+import "vue-awesome/icons/calendar-alt";
+import Icon from "vue-awesome/components/Icon";
+
 import NoSleep from "nosleep.js";
 const nosleep = new NoSleep();
 
