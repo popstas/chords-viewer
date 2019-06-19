@@ -39,10 +39,10 @@ export const state = () => ({
   // filters
   filter: {
     q: '',
-    withChords: false,
+    withChords: -1,
     withTexts: -1,
     sortByDate: false,
-    popular: false
+    popular: -1
   }
 });
 
@@ -136,8 +136,12 @@ export const actions = {
       }
     }
 
-    if (state.filter.withChords) {
+    if (state.filter.withChords === '1') {
       result = result.filter(song => song.details.chords);
+    }
+
+    if (state.filter.withChords === '0') {
+      result = result.filter(song => !song.details.chords);
     }
 
     if (state.filter.withTexts === '1') {
@@ -148,8 +152,12 @@ export const actions = {
       result = result.filter(song => !song.text);
     }
 
-    if (state.filter.popular) {
+    if (state.filter.popular === '1') {
       result = result.filter(song => song.popular);
+    }
+
+    if (state.filter.popular === '0') {
+      result = result.filter(song => !song.popular);
     }
 
     if (state.filter.sortByDate) {
