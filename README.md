@@ -60,9 +60,11 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 
 ## Build Setup
 
+You should use yarn!
+
 ``` bash
 # install dependencies
-npm install
+yarn install
 npm run update-data
 
 # serve with hot reload at localhost:3001
@@ -84,7 +86,7 @@ npm deploy
 
 cd ..
 git clone https://github.com/popstas/chords-viewer.git
-npm install
+yarn install
 npm update-data
 npm deploy
 ```
