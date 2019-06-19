@@ -40,7 +40,7 @@ export const state = () => ({
   filter: {
     q: '',
     withChords: false,
-    withTexts: false,
+    withTexts: -1,
     sortByDate: false,
     popular: false
   }
@@ -140,8 +140,12 @@ export const actions = {
       result = result.filter(song => song.details.chords);
     }
 
-    if (state.filter.withTexts) {
+    if (state.filter.withTexts === '1') {
       result = result.filter(song => song.text);
+    }
+
+    if (state.filter.withTexts === '0') {
+      result = result.filter(song => !song.text);
     }
 
     if (state.filter.popular) {

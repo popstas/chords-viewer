@@ -4,7 +4,12 @@
       <el-switch v-model="withChords" active-text="chords"></el-switch>
     </el-row>
     <el-row>
-      <el-switch v-model="withTexts" active-text="texts"></el-switch>
+      <label>texts:</label>
+      <el-radio-group v-model="withTexts" size="mini">
+        <el-radio-button label="-1">any</el-radio-button>
+        <el-radio-button label="1">yes</el-radio-button>
+        <el-radio-button label="0">no</el-radio-button>
+      </el-radio-group>
     </el-row>
     <el-row>
       <el-switch v-model="popular" active-text="popular"></el-switch>
@@ -31,6 +36,10 @@
 
   .el-row {
     margin-bottom: 10px;
+  }
+
+  .el-radio-button--mini .el-radio-button__inner {
+    padding: 7px;
   }
 
   // font size radiobuttons
