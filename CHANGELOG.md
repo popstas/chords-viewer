@@ -1,3 +1,12 @@
+# [1.14.0](https://github.com/popstas/chords-viewer/compare/v1.13.1...v1.14.0) (2019-06-19)
+
+
+### Features
+
+* text filter any/yes/no ([3e1b8e7](https://github.com/popstas/chords-viewer/commit/3e1b8e7))
+
+
+
 ## [1.13.1](https://github.com/popstas/chords-viewer/compare/v1.13.0...v1.13.1) (2019-06-19)
 
 
