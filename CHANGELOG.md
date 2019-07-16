@@ -1,3 +1,12 @@
+# [1.16.0](https://github.com/popstas/chords-viewer/compare/v1.15.0...v1.16.0) (2019-07-16)
+
+
+### Features
+
+* display song created date when sort by date ([c67a056](https://github.com/popstas/chords-viewer/commit/c67a056))
+
+
+
 # [1.15.0](https://github.com/popstas/chords-viewer/compare/v1.14.1...v1.15.0) (2019-06-19)
 
 
