@@ -1,6 +1,7 @@
 <template>
   <el-collapse-item :title="title" :name="song.url" :class="{'song-item': true, active: active}">
     <template slot="title">
+        <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
         <i v-if="song.popular" class="el-icon-star-off" title="popular song"></i>
       {{ title }}
       <span class="song-item__badges">
@@ -82,6 +83,10 @@
 
   .el-collapse-item__arrow {
     display: none;
+  }
+
+  &__date {
+    color: #999;
   }
 
   &__complexity {

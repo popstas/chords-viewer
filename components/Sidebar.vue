@@ -40,7 +40,7 @@
     </el-row>
 
     <el-row style="text-align:center">
-      <a class="sidebar__link" :href="$store.state.homepage + '/CHANGELOG.md'" target="_blank">
+      <a class="sidebar__link" href="https://github.com/popstas/chords-viewer/blob/master/CHANGELOG.md" target="_blank">
         <icon name="brands/github"></icon>
         {{ $store.state.name }} {{ $store.state.version }} (changelog)
       </a>
