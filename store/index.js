@@ -41,7 +41,7 @@ export const state = () => ({
     q: '',
     withChords: -1,
     withTexts: -1,
-    sortByDate: false,
+    sortByDate: true,
     popular: -1
   }
 });
