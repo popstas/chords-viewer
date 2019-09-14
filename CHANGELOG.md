@@ -1,3 +1,12 @@
+## [1.16.1](https://github.com/popstas/chords-viewer/compare/v1.16.0...v1.16.1) (2019-09-14)
+
+
+### Bug Fixes
+
+* sort by date by default ([22f7b6a](https://github.com/popstas/chords-viewer/commit/22f7b6a))
+
+
+
 # [1.16.0](https://github.com/popstas/chords-viewer/compare/v1.15.0...v1.16.0) (2019-07-16)
 
 
