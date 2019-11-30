@@ -1,3 +1,12 @@
+## [1.16.2](https://github.com/popstas/chords-viewer/compare/v1.16.1...v1.16.2) (2019-11-30)
+
+
+### Bug Fixes
+
+* add quint chords A5 etc ([8d8425b](https://github.com/popstas/chords-viewer/commit/8d8425b))
+
+
+
 ## [1.16.1](https://github.com/popstas/chords-viewer/compare/v1.16.0...v1.16.1) (2019-09-14)
 
 
