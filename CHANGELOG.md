@@ -1,3 +1,12 @@
+## [1.17.1](https://github.com/popstas/chords-viewer/compare/v1.17.0...v1.17.1) (2019-12-15)
+
+
+### Bug Fixes
+
+* move popular icon after title ([b8bfc5a](https://github.com/popstas/chords-viewer/commit/b8bfc5a))
+
+
+
 # [1.17.0](https://github.com/popstas/chords-viewer/compare/v1.16.2...v1.17.0) (2019-12-15)
 
 
