@@ -1,3 +1,17 @@
+# [1.17.0](https://github.com/popstas/chords-viewer/compare/v1.16.2...v1.17.0) (2019-12-15)
+
+
+### Bug Fixes
+
+* remind autoscroll speed ([23f7ac6](https://github.com/popstas/chords-viewer/commit/23f7ac6))
+
+
+### Features
+
+* filter by genre ([2a48055](https://github.com/popstas/chords-viewer/commit/2a48055))
+
+
+
 ## [1.16.2](https://github.com/popstas/chords-viewer/compare/v1.16.1...v1.16.2) (2019-11-30)
 
 
