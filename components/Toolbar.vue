@@ -60,6 +60,15 @@
       >{{ letter }}</li>
     </ul>
 
+    <ul class="toolbar__search-genres search-genres">
+      <li
+        :class="{'search-genres__genre': true, active: q == 'жанр: ' + genre}"
+        v-for="genre in genres"
+        :key="genre"
+        @click="q = q=='жанр: ' + genre ? '' : 'жанр: ' + genre"
+      >{{ genre }}</li>
+    </ul>
+
     <el-select class="toolbar__search-artists search-artists" placeholder="Select artist" v-model="artist">
       <el-option
         v-for="item in artists"
@@ -111,6 +120,10 @@
       display: none;
     }
 
+    .search-genres {
+      display: none;
+    }
+
     .search-artists {
       display: none;
     }
@@ -151,6 +164,29 @@
     padding: 0;
 
     &__letter {
+      padding: 0;
+      display: inline-block;
+      font-size: 13px;
+      min-width: 23px;
+      height: 28px;
+      line-height: 28px;
+      cursor: pointer;
+      box-sizing: border-box;
+      text-align: center;
+      margin: 0;
+
+      &.active {
+        color: #409eff;
+      }
+    }
+  }
+
+  // search genres
+  .search-genres {
+    list-style: none;
+    padding: 0;
+
+    &__genre {
       padding: 0;
       display: inline-block;
       font-size: 13px;
@@ -349,10 +385,32 @@ export default {
         return song.title[0];
       });
       letters.sort();
+      // unique letters
       letters = letters.filter((letter, pos, arr) => {
         return arr.indexOf(letter) == pos;
       });
       this.letters = letters;
+    },
+
+    buildGenres() {
+      let genres = this.$store.state.songs.map(song => {
+        if (!song.tags) return [];
+        let g = song.tags.map(tag => {
+          if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+        });
+        g = g.filter((genre, pos, arr) => {
+          return genre;
+        });
+        return g;
+      });
+      genres = genres
+      // .filter((genre, index) => genres.indexOf(genre) !== index)
+      .flat()
+      .filter((genre, index, arr) => arr.indexOf(genre) == index)
+
+      genres.sort();
+
+      this.genres = genres;
     },
 
     buildArtists() {
@@ -398,6 +456,7 @@ export default {
 
   created() {
     this.buildLetters();
+    this.buildGenres();
     this.buildArtists();
     window.addEventListener("scroll", this.handleScroll);
     this.q = this.$store.state.filter.q;

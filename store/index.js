@@ -109,10 +109,14 @@ export const actions = {
     if (q) {
       let isLetter = q.match(/\^.$/);
       let isArtist = q.match(/\^.*$/);
+      let isGenre = q.match(/^жанр:.*$/);
       if (isLetter) {
         result = result.filter(song => song.title.toLowerCase().search(q) >= 0);
       } else if (isArtist) {
         result = result.filter(song => song.details && song.details.artist.toLowerCase().search(q) >= 0);
+      } else if (isGenre) {
+        let g = q.replace('жанр: ', '');
+        result = result.filter(song => song.genres.includes(g));
       } else {
         let fuse = new Fuse(result, {
           keys: [
@@ -136,6 +140,24 @@ export const actions = {
         }); */
       }
     }
+
+
+    // data modify
+    result = result.map(song => {
+      song.popular = song.tags.indexOf('аккорды популярные') != -1;
+
+      // song.genre
+      let g = song.tags.map(tag => {
+        if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+      });
+      song.genres = g.filter((genre, pos, arr) => {
+        return genre;
+      });
+
+      return song;
+    });
+
+    // filters
 
     if (state.filter.withChords === '1') {
       result = result.filter(song => song.details.chords);
@@ -164,11 +186,6 @@ export const actions = {
     if (state.filter.sortByDate) {
       result = result.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
     }
-
-    result = result.map(song => {
-      song.popular = song.tags.indexOf('аккорды популярные') != -1;
-      return song;
-    });
 
     commit('setFilteredSongs', result);
   },
