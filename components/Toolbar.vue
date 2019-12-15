@@ -275,7 +275,6 @@ export default {
   data() {
     return {
       autoScroll: false,
-      autoScrollSpeed: 4,
       scrollInterval: false,
 
       toolbarFixed: false,
@@ -298,6 +297,15 @@ export default {
       set(val) {
         this.$store.commit("artistsSort", val);
         this.buildArtists();
+      }
+    },
+
+    autoScrollSpeed: {
+      get() {
+        return this.$store.state.autoScrollSpeed;
+      },
+      set(val) {
+        this.$store.commit("autoScrollSpeed", val);
       }
     },
 

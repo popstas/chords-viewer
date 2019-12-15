@@ -34,6 +34,7 @@ export const state = () => ({
 
   // settings
   fontSize: 1,
+  autoScrollSpeed: 4,
   instrument: 'guitar',
   artistsSort: 'name',
 
@@ -85,6 +86,9 @@ export const mutations = {
   },
   artistsSort(state, newValue) {
     state.artistsSort = newValue;
+  },
+  autoScrollSpeed(state, newValue) {
+    state.autoScrollSpeed = newValue;
   },
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;
