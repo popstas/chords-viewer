@@ -386,6 +386,11 @@ export default {
       if (delta > 1 && this.toolbarFixed) {
         this.$store.commit("setToolbarHidden", true);
       }
+
+      // stop when 2+ columns
+      if(this.$el.parentElement.offsetWidth > 1200) {
+        this.autoScroll = false;
+      }
     },
 
     buildLetters() {
