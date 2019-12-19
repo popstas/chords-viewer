@@ -110,6 +110,12 @@
     @media (min-width: 1200px) {
       columns: 2;
     }
+    @media (min-width: 1400px) {
+      columns: 3;
+    }
+    @media (min-width: 1600px) {
+      columns: 4;
+    }
   }
 
   .chords {

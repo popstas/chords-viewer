@@ -105,7 +105,7 @@ html {
   @media (min-width: $container-width) {
     min-width: $container-width;
   }
-  @media (min-width: $wide-min-width) {
+  @media (min-width: $container-width-wide) {
     min-width: $container-width-wide;
   }
 
@@ -115,7 +115,7 @@ html {
 }
 
 // always open on wide screen
-@media (min-width: 1450px) {
+@media (min-width: 1850px) {
   .slideout-panel {
     transform: none !important;
   }
@@ -126,7 +126,7 @@ html {
     position: fixed !important;
   }
 
-  .el-header {
+  .el-header .menu-toggle{
     display: none;
   }
 }
