@@ -110,6 +110,21 @@ export const actions = {
     const q = state.filter.q.toLowerCase();
     let result = state.songs;
 
+    // data modify
+    result = result.map(song => {
+      song.popular = song.tags.indexOf('аккорды популярные') != -1;
+
+      // song.genre
+      let g = song.tags.map(tag => {
+        if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+      });
+      song.genres = g.filter((genre, pos, arr) => {
+        return genre;
+      });
+
+      return song;
+    });
+
     if (q) {
       let isLetter = q.match(/\^.$/);
       let isArtist = q.match(/\^.*$/);
@@ -146,21 +161,6 @@ export const actions = {
       }
     }
 
-
-    // data modify
-    result = result.map(song => {
-      song.popular = song.tags.indexOf('аккорды популярные') != -1;
-
-      // song.genre
-      let g = song.tags.map(tag => {
-        if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
-      });
-      song.genres = g.filter((genre, pos, arr) => {
-        return genre;
-      });
-
-      return song;
-    });
 
     // filters
 
