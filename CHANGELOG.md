@@ -1,3 +1,20 @@
+# [1.18.0](https://github.com/popstas/chords-viewer/compare/v1.17.2...v1.18.0) (2019-12-19)
+
+
+### Bug Fixes
+
+* genre filter not work after page reload ([5f00777](https://github.com/popstas/chords-viewer/commit/5f00777))
+* remove input autofocus ([b850e93](https://github.com/popstas/chords-viewer/commit/b850e93))
+
+
+### Features
+
+* 3-4 columns for wide screens ([5e23042](https://github.com/popstas/chords-viewer/commit/5e23042))
+* filter input clear button ([b5f0ca6](https://github.com/popstas/chords-viewer/commit/b5f0ca6))
+* stop autoscroll when 2+ columns ([9ee0f59](https://github.com/popstas/chords-viewer/commit/9ee0f59))
+
+
+
 ## [1.17.2](https://github.com/popstas/chords-viewer/compare/v1.17.1...v1.17.2) (2019-12-19)
 
 
