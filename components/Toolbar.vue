@@ -187,7 +187,7 @@
     padding: 0;
 
     &__genre {
-      padding: 0;
+      padding: 0 5px;
       display: inline-block;
       font-size: 13px;
       min-width: 23px;

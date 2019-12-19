@@ -119,8 +119,9 @@ export const actions = {
       } else if (isArtist) {
         result = result.filter(song => song.details && song.details.artist.toLowerCase().search(q) >= 0);
       } else if (isGenre) {
-        let g = q.replace('жанр: ', '');
-        result = result.filter(song => song.genres.includes(g));
+        let g = state.filter.q.replace('жанр: ', '');
+        result = result.filter(song => song.genres && song.genres.includes(g));
+        console.log('result: ', result);
       } else {
         let fuse = new Fuse(result, {
           keys: [
