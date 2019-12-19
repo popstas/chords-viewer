@@ -1,3 +1,12 @@
+## [1.17.2](https://github.com/popstas/chords-viewer/compare/v1.17.1...v1.17.2) (2019-12-19)
+
+
+### Bug Fixes
+
+* allow caps in genre ([5043ae4](https://github.com/popstas/chords-viewer/commit/5043ae4))
+
+
+
 ## [1.17.1](https://github.com/popstas/chords-viewer/compare/v1.17.0...v1.17.1) (2019-12-15)
 
 
