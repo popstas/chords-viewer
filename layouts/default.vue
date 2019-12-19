@@ -13,6 +13,7 @@
         <div id="panel">
           <el-header height="42px">
             <button class="menu-toggle">☰</button>
+            <button class="input-clear" @click="onInputClear">&cross;</button>
           </el-header>
           <el-main>
             <nuxt/>
@@ -64,7 +65,7 @@ html {
 
 .el-header {
   padding: 0 5px;
-  .menu-toggle {
+  .menu-toggle, .input-clear {
     background: none;
     border: none;
     line-height: 42px;
@@ -156,6 +157,14 @@ export default {
       const chords = this.$el.querySelector(".song-item.active .chords");
       if(!chords) return;
       this.chordsHeight = chords.clientHeight;
+    },
+
+    onInputClear() {
+      const options = { name: 'q', value: '' };
+      this.$store.commit("changeFilter", options);
+      const input = this.$el.querySelector(".search-input input");
+      input.value = '';
+      this.$store.dispatch('filterSongs');
     }
   },
 
