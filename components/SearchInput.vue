@@ -1,6 +1,6 @@
 <template>
   <div class="search-input">
-    <input v-model="q" autofocus v-shortkey.avoid />
+    <input v-model="q" v-shortkey.avoid />
     <span class="el-input__suffix">
       <span class="el-input__suffix-inner">
         <button
