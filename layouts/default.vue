@@ -30,16 +30,6 @@
 <style lang="scss">
 @import "@/assets/variables.scss";
 
-.container-wrap {
-  margin: 0 auto;
-  max-width: $container-width;
-  background: #fff;
-  position: relative;
-  @media (min-width: $wide-min-width) {
-    max-width: $container-width-wide;
-  }
-}
-
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -61,6 +51,63 @@ html {
 *:after {
   box-sizing: border-box;
   margin: 0;
+}
+
+.container-wrap {
+  margin: 0 auto;
+  background: #fff;
+  position: relative;
+  max-width: $container-width-xs;
+  @media (min-width: $min-width-sm) {
+    max-width: $container-width-sm;
+  }
+  @media (min-width: $min-width-md) {
+    max-width: $container-width-md;
+  }
+  @media (min-width: $min-width-lg) {
+    max-width: $container-width-lg;
+  }
+}
+
+.slideout-panel {
+  position: relative;
+  z-index: 1;
+  // will-change: transform; - it breaks position: fixed
+  min-height: 100vh;
+  background: #fff;
+  @media (min-width: $container-width-xs) {
+    min-width: $container-width-xs;
+  }
+  @media (min-width: $container-width-sm) {
+    min-width: $container-width-sm;
+  }
+  @media (min-width: $container-width-md) {
+    min-width: $container-width-md;
+  }
+  @media (min-width: $container-width-lg) {
+    min-width: $container-width-lg;
+  }
+
+  .slideout-open & {
+    overflow: hidden;
+  }
+}
+
+// always open on wide screen
+@media (min-width: 1850px) {
+  .slideout-panel {
+    transform: none !important;
+  }
+
+  .slideout-menu {
+    display: block !important;
+    left: 0 !important;
+    position: fixed !important;
+  }
+
+  .el-header .menu-toggle{
+    display: none;
+  }
 }
 
 .el-header {
@@ -93,41 +140,6 @@ html {
 
   .slideout-open & {
     display: block;
-  }
-}
-
-.slideout-panel {
-  position: relative;
-  z-index: 1;
-  // will-change: transform; - it breaks position: fixed
-  min-height: 100vh;
-  background: #fff;
-  @media (min-width: $container-width) {
-    min-width: $container-width;
-  }
-  @media (min-width: $container-width-wide) {
-    min-width: $container-width-wide;
-  }
-
-  .slideout-open & {
-    overflow: hidden;
-  }
-}
-
-// always open on wide screen
-@media (min-width: 1850px) {
-  .slideout-panel {
-    transform: none !important;
-  }
-
-  .slideout-menu {
-    display: block !important;
-    left: 0 !important;
-    position: fixed !important;
-  }
-
-  .el-header .menu-toggle{
-    display: none;
   }
 }
 </style>

@@ -1,7 +1,12 @@
 // switch to wide mode
-$wide-min-width: 1200px;
-$container-width: 640px;
-$container-width-wide: 1600px;
+$min-width-sm: 1200px;
+$min-width-md: 1400px;
+$min-width-lg: 1600px;
+
+$container-width-xs: 640px;
+$container-width-sm: 1200px;
+$container-width-md: 1400px;
+$container-width-lg: 1600px;
 
 // font sizes
 $font-size-1: 13px;

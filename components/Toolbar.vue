@@ -93,9 +93,15 @@
   background: #fff;
   text-align: center;
   margin: 0 auto;
-  max-width: $container-width;
-  @media (min-width: $wide-min-width) {
-    max-width: $container-width-wide;
+  max-width: $container-width-xs;
+  @media (min-width: $container-width-sm) {
+    max-width: $container-width-sm;
+  }
+  @media (min-width: $container-width-md) {
+    max-width: $container-width-md;
+  }
+  @media (min-width: $container-width-lg) {
+    max-width: $container-width-lg;
   }
 
   &__up {
