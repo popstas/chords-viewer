@@ -1,3 +1,12 @@
+## [1.18.1](https://github.com/popstas/chords-viewer/compare/v1.18.0...v1.18.1) (2020-01-03)
+
+
+### Bug Fixes
+
+* correct container width on medium screens (1200-1599) ([c93e689](https://github.com/popstas/chords-viewer/commit/c93e689))
+
+
+
 # [1.18.0](https://github.com/popstas/chords-viewer/compare/v1.17.2...v1.18.0) (2019-12-19)
 
 
