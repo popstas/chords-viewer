@@ -30,6 +30,9 @@
     <el-row>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
     </el-row>
+    <el-row>
+      <el-switch v-model="showImages" active-text="images"></el-switch>
+    </el-row>
     <el-row style="text-align:center">
       <label>font size:</label>
       <el-radio-group class="sidebar__font-size" v-model="fontSize" size="mini" @change="changeFontSize">
@@ -114,7 +117,8 @@ export default {
       popular: -1,
       sortByDate: false,
       noSleep: false,
-      fontSize: 1
+      fontSize: 1,
+      showImages: false
     };
   },
 
@@ -137,6 +141,10 @@ export default {
     noSleep(val) {
       this.$store.commit("setNoSleep", val);
       val ? nosleep.enable() : nosleep.disable();
+    },
+
+    showImages(val) {
+      this.$store.commit("showImages", val);
     }
   },
 
@@ -153,13 +161,14 @@ export default {
 
   created() {
     this.fontSize = this.$store.state.fontSize;
+    this.showImages = this.$store.state.showImages;
+    this.noSleep = this.$store.state.noSleep;
   },
 
   mounted() {
     ["withChords", "withTexts", "popular", "sortByDate"].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
-    this.noSleep = this.$store.state.noSleep;
   }
 };
 </script>

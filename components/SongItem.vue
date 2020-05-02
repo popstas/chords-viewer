@@ -17,7 +17,7 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
-      <div v-if="chords" class="text item chords">
+      <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
             <Chord
@@ -25,7 +25,7 @@
               :chord="chord"
               :transposeLevel="transposeLevel - defaultTransposeLevel"
               :key="key"
-              :image="false"
+              :image="$store.state.showImages"
             ></Chord>
           </span>
         </span>
@@ -127,6 +127,10 @@
     text-align: center;
     background: #fff;
     padding: 5px;
+
+    &_images {
+      position: static;
+    }
 
     @media (min-width: 1200px) {
       padding: 10px;
