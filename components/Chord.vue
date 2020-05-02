@@ -1,7 +1,7 @@
 <template>
   <span :class="{chord: true, chord_known: isKnown, chord_separator: chord.match(/^[-.]+$/)}">
     <el-popover v-if="isKnown" placement="top-start" trigger="hover">
-      <el-button slot="reference">{{ html }}</el-button>
+      <el-button slot="reference">{{ html }} <img v-if="image" height="100" class="chord__image" :src="imageUrl" slot="default"></el-button>
       <img class="chord__image" :src="imageUrl" slot="default">
     </el-popover>
     <template v-if="!isKnown">{{ html }}</template>
@@ -58,25 +58,33 @@
 
 <script>
 import { transposeMap } from "~/store";
+
 export default {
   name: "chord",
-  props: ["chord", "transposeLevel"],
+  props: {
+    chord: String,
+    transposeLevel: Number,
+    image: {
+      type: Boolean,
+      default: false
+    }
+  },
 
   computed: {
     imageUrl() {
       let chord = this.transposedChord;
       switch(this.$store.state.instrument) {
         case 'ukulele':
-          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p').replace(/\-/g, 'z');
-          return `https://chordu.com/diags/advance/ukulele/${chord}.png?v2`
+          chord = this.chordifyReplace(chord);
+          return `https://chordify.net/img/diagrams/ukulele/${chord}.png`
           break;
         case 'piano':
-          chord = chord.replace(/\#/g, 's').replace(/\+/g, 'p').replace(/\-/g, 'z');
-          return `https://chordu.com/diags/advance/piano/${chord}.png?v2`
+          chord = this.chordifyReplace(chord);
+          return `https://chordify.net/img/diagrams/piano/${chord}.png`
           break;
         case 'guitar':
         default:
-          chord = chord.replace(/\#/g, 'w').replace(/\+/g, 'p').replace(/\-/g, 'z');
+          chord = this.amdmReplace(chord);
           return `https://amdm.ru/images/chords/${chord}_0.gif`;
       }
 
@@ -125,6 +133,33 @@ export default {
     }
   },
 
-  methods: {}
+  methods: {
+    chordifyReplace(chord) {
+      const orig = chord;
+      const chordifyReplaceMap = {
+        '^([ABCDEFG])$': '$1_maj',
+        '^([ABCDEFG])5$': '$1_5',
+        '^([ABCDEFG])7$': '$1_7',
+        '^([ABCDEFG])m$': '$1_min',
+        '^([ABCDEFG])m5$': '$1_min5',
+        '^([ABCDEFG])m7$': '$1_min7',
+        '^([F])#$': '$1s_maj',
+        '^([F])#m$': '$1s_min',
+        '^A#$': 'Bb_maj',
+      }
+
+      for(let from in chordifyReplaceMap) {
+        const regFrom = new RegExp(from);
+        const to = chordifyReplaceMap[from];
+        chord = chord.replace(regFrom, to);
+      }
+      // console.log(`${o} -> ${chord}`);
+      return chord;
+    },
+
+    amdmReplace(chord) {
+      return chord.replace(/\#/g, 'w').replace(/\+/g, 'p').replace(/\-/g, 'z');
+    }
+  }
 };
 </script>

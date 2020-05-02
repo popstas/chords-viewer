@@ -25,6 +25,7 @@
               :chord="chord"
               :transposeLevel="transposeLevel - defaultTransposeLevel"
               :key="key"
+              :image="false"
             ></Chord>
           </span>
         </span>
