@@ -1,3 +1,17 @@
+# [1.19.0](https://github.com/popstas/chords-viewer/compare/v1.18.1...v1.19.0) (2020-05-02)
+
+
+### Bug Fixes
+
+* ukulele and piano chords from chordify.net ([51a408c](https://github.com/popstas/chords-viewer/commit/51a408c))
+
+
+### Features
+
+* show images inline ([82a9dca](https://github.com/popstas/chords-viewer/commit/82a9dca))
+
+
+
 ## [1.18.1](https://github.com/popstas/chords-viewer/compare/v1.18.0...v1.18.1) (2020-01-03)
 
 
@@ -329,7 +343,7 @@
 ### Bug Fixes
 
 * app was not 100% on screens with 640+ px ([59ca835](https://github.com/popstas/chords-viewer/commit/59ca835))
-* enable icon in @nuxtjs/pwa ([f109abb](https://github.com/popstas/chords-viewer/commit/f109abb))
+* enable icon in [@nuxtjs](https://github.com/nuxtjs)/pwa ([f109abb](https://github.com/popstas/chords-viewer/commit/f109abb))
 * hide floating chords while floating toolbar ([f135058](https://github.com/popstas/chords-viewer/commit/f135058))
 * was 5px horizontal scroll ([145b65d](https://github.com/popstas/chords-viewer/commit/145b65d))
 
@@ -408,7 +422,7 @@
 
 ### Features
 
-* @nuxtjs/pwa ([98fe753](https://github.com/popstas/chords-viewer/commit/98fe753))
+* [@nuxtjs](https://github.com/nuxtjs)/pwa ([98fe753](https://github.com/popstas/chords-viewer/commit/98fe753))
 * add icons and fixed chords to SongItem ([6fe9314](https://github.com/popstas/chords-viewer/commit/6fe9314))
 * autoscroll ([8232cf2](https://github.com/popstas/chords-viewer/commit/8232cf2))
 * autoscroll speed ([1065b24](https://github.com/popstas/chords-viewer/commit/1065b24))
