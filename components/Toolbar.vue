@@ -286,7 +286,6 @@ export default {
       toolbarFixed: false,
       lastScrollTop: 0,
 
-      q: "",
       artist: ""
     };
   },
@@ -303,6 +302,15 @@ export default {
       set(val) {
         this.$store.commit("artistsSort", val);
         this.buildArtists();
+      }
+    },
+
+    q: {
+      get() {
+        return this.$store.state.filter.q;
+      },
+      set(val) {
+        this.changeFilter("q", val);
       }
     },
 
@@ -330,10 +338,6 @@ export default {
   },
 
   watch: {
-    q(val) {
-      this.changeFilter("q", val);
-    },
-
     autoScroll(val) {
       this.$store.commit("setToolbarHidden", val);
       this.changeAutoScroll();

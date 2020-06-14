@@ -140,7 +140,6 @@ export const actions = {
       } else if (isGenre) {
         let g = state.filter.q.replace('жанр: ', '');
         result = result.filter(song => song.genres && song.genres.includes(g));
-        console.log('result: ', result);
       } else {
         let fuse = new Fuse(result, {
           keys: [

@@ -17,6 +17,18 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
+      <ul v-if="active" class="song-categories">
+        <li
+          class="song-categories__item"
+          @click="changeFilter('q', '^' + song.details.artist)"
+        >{{ song.details.artist }}</li>
+        <li
+          class="song-categories__item"
+          v-for="genre in genres" :key="genre"
+          @click="changeFilter('q', 'жанр: ' + genre)"
+        >{{ genre }}</li>
+      </ul>
+
       <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
@@ -175,6 +187,29 @@
     padding: 10px;
   }
 }
+
+.song-categories {
+  list-style: none;
+  padding: 0;
+
+  &__item {
+    padding: 0 5px;
+    display: inline-block;
+    font-size: 13px;
+    min-width: 23px;
+    height: 28px;
+    line-height: 28px;
+    cursor: pointer;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 0;
+
+    &.active {
+      color: #409eff;
+    }
+  }
+}
+
 </style>
 
 <script>
@@ -219,6 +254,23 @@ export default {
       }
       title = title.trim(",");
       return title;
+    },
+
+    genres() {
+      if (!this.song.tags) return [];
+      let genres = this.song.tags.map(tag => {
+        if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+      });
+      genres = genres.filter((genre, pos, arr) => {
+        return genre;
+      });
+      /* genres = genres
+      .flat()
+      .filter((genre, index, arr) => arr.indexOf(genre) == index) */
+
+      genres.sort();
+
+      return genres;
     },
 
     defaultTransposeLevel() {
@@ -266,6 +318,11 @@ export default {
   },
 
   methods: {
+    changeFilter(name, value) {
+      this.$store.commit("changeFilter", { name, value });
+      this.$emit("changeFilter", { name, value });
+    },
+
     share() {
       if (navigator.share) {
         navigator.share({

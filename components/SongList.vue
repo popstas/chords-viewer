@@ -9,6 +9,7 @@
         :key="song.url"
         :active="song.url == activeSong.url"
         @active="scrollTo"
+        @changeFilter="$store.dispatch('filterSongs')"
       ></SongItem>
     </el-collapse>
   </div>
