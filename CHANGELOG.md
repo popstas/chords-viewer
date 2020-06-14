@@ -1,3 +1,12 @@
+# [1.20.0](https://github.com/popstas/chords-viewer/compare/v1.19.0...v1.20.0) (2020-06-14)
+
+
+### Features
+
+* фильтр по жанру или исполнителю из песни ([5c3ac12](https://github.com/popstas/chords-viewer/commit/5c3ac12))
+
+
+
 # [1.19.0](https://github.com/popstas/chords-viewer/compare/v1.18.1...v1.19.0) (2020-05-02)
 
 
