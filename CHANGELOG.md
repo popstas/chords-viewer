@@ -1,3 +1,12 @@
+# [1.21.0](https://github.com/popstas/chords-viewer/compare/v1.20.0...v1.21.0) (2020-07-05)
+
+
+### Features
+
+* счётчик просмотров в localStorage ([76ad9c0](https://github.com/popstas/chords-viewer/commit/76ad9c0))
+
+
+
 # [1.20.0](https://github.com/popstas/chords-viewer/compare/v1.19.0...v1.20.0) (2020-06-14)
 
 
