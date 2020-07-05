@@ -31,6 +31,7 @@ export const state = () => ({
   playlist: [],
   playlistCurrent: -1,
   toolbarHidden: false,
+  shows: {},
 
   // settings
   fontSize: 1,
@@ -106,6 +107,10 @@ export const mutations = {
   },
   setNoSleep(state, newValue) {
     state.noSleep = newValue;
+  },
+  addShow(state, url) {
+    const current = state.shows[url] || 0;
+    state.shows[url] = current + 1;
   }
 };
 

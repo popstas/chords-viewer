@@ -27,6 +27,7 @@
           v-for="genre in genres" :key="genre"
           @click="changeFilter('q', 'жанр: ' + genre)"
         >{{ genre }}</li>
+        <li v-if="$store.state.shows[song.url]" class="song-categories__item">просмотров: {{ $store.state.shows[song.url] }}</li>
       </ul>
 
       <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
@@ -193,7 +194,7 @@
   padding: 0;
 
   &__item {
-    padding: 0 5px;
+    padding: 0 5px 0 0;
     display: inline-block;
     font-size: 13px;
     min-width: 23px;

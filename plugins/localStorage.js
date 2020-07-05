@@ -4,6 +4,7 @@ export default ({ store }) => {
   createPersistedState({
     paths: [
       "filter",
+      "shows",
       "noSleep",
       "fontSize",
       "autoScrollSpeed",

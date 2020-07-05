@@ -46,7 +46,8 @@ export default {
 
   data() {
     return {
-      lastOffset: 0
+      lastOffset: 0,
+      showTimer: null
     };
   },
 
@@ -82,6 +83,11 @@ export default {
     activeSong(val) {
       const query = { url: val.url };
       this.$router.push({ query });
+
+      clearTimeout(this.showTimer);
+      this.showTimer = setTimeout(() => {
+        this.$store.commit("addShow", val.url);
+      }, 60000);
     }
   },
 
