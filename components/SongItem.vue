@@ -3,8 +3,8 @@
     <template slot="title">
       <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
       {{ title }}
-      <i v-if="song.popular" class="el-icon-star-off" title="popular song"></i>
-      <span class="song-item__badges">
+      <i v-if="song.popular && $store.state.showBadges" class="el-icon-star-off" title="popular song"></i>
+      <span class="song-item__badges" v-if="$store.state.showBadges">
         <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity" title="song complexity"></span>
         <i v-if="song.text" class="el-icon-tickets" title="with text"></i>
       </span>

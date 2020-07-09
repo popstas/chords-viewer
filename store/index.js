@@ -39,6 +39,7 @@ export const state = () => ({
   instrument: 'guitar',
   artistsSort: 'name',
   showImages: false,
+  showBadges: false,
 
   // filters
   filter: {
@@ -91,6 +92,9 @@ export const mutations = {
   },
   showImages(state, newValue) {
     state.showImages = newValue;
+  },
+  showBadges(state, newValue) {
+    state.showBadges = newValue;
   },
   autoScrollSpeed(state, newValue) {
     state.autoScrollSpeed = newValue;

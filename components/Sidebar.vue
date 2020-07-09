@@ -33,6 +33,9 @@
     <el-row>
       <el-switch v-model="showImages" active-text="images"></el-switch>
     </el-row>
+    <el-row>
+      <el-switch v-model="showBadges" active-text="badges"></el-switch>
+    </el-row>
     <el-row style="text-align:center">
       <label>font size:</label>
       <el-radio-group class="sidebar__font-size" v-model="fontSize" size="mini" @change="changeFontSize">
@@ -118,7 +121,8 @@ export default {
       sortByDate: false,
       noSleep: false,
       fontSize: 1,
-      showImages: false
+      showImages: false,
+      showBadges: false
     };
   },
 
@@ -145,6 +149,9 @@ export default {
 
     showImages(val) {
       this.$store.commit("showImages", val);
+    },
+    showBadges(val) {
+      this.$store.commit("showBadges", val);
     }
   },
 

@@ -10,7 +10,8 @@ export default ({ store }) => {
       "autoScrollSpeed",
       "instrument",
       "artistsSort",
-      "showImages"
+      "showImages",
+      "showBadges"
     ]
   })(store);
 };
