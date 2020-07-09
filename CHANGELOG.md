@@ -1,3 +1,12 @@
+# [1.22.0](https://github.com/popstas/chords-viewer/compare/v1.21.0...v1.22.0) (2020-07-09)
+
+
+### Features
+
+* по умолчанию иконки в списке скрыты, включается через настройку ([99e7c63](https://github.com/popstas/chords-viewer/commit/99e7c63))
+
+
+
 # [1.21.0](https://github.com/popstas/chords-viewer/compare/v1.20.0...v1.21.0) (2020-07-05)
 
 
