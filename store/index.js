@@ -225,11 +225,11 @@ export const actions = {
 
     if (state.filter.sortByShows) {
       result = result.slice().sort((a, b) => {
-        const aSafe = a.url;
-        const bSafe = b.url;
-        aShows = parseInt(state.shows[aSafe]);
-        bShows = parseInt(state.shows[bSafe]);
-        return b - a;
+        const aSafe = a.url.replace(/[\/\.]/g, '_');
+        const bSafe = b.url.replace(/[\/\.]/g, '_');
+        const aShows = state.shows[aSafe] || 0;
+        const bShows = state.shows[bSafe] || 0;
+        return bShows - aShows;
       });
     }
 

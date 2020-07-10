@@ -28,6 +28,9 @@
       <el-switch v-model="sortByDate" active-text="by date"></el-switch>
     </el-row>
     <el-row>
+      <el-switch v-model="sortByShows" active-text="by shows"></el-switch>
+    </el-row>
+    <el-row>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
     </el-row>
     <el-row>

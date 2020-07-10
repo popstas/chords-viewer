@@ -2,7 +2,7 @@
   <el-collapse-item :title="title" :name="song.url" :class="{'song-item': true, active: active}">
     <template slot="title">
       <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
-      <span v-if="$store.state.filter.sortByShows" class="song-item__shows">{{ $store.state.shows[song.safeUrl] }}</span>
+      <span v-if="$store.state.filter.sortByShows" class="song-item__shows">{{ $store.state.shows[safeUrl] }}</span>
       {{ title }}
       <i v-if="song.popular && $store.state.showBadges" class="el-icon-star-off" title="popular song"></i>
       <span class="song-item__badges" v-if="$store.state.showBadges">
