@@ -119,6 +119,7 @@ export default {
       withTexts: -1,
       popular: -1,
       sortByDate: false,
+      sortByShows: false,
       noSleep: false,
       fontSize: 1,
       showImages: false,
@@ -141,6 +142,9 @@ export default {
     sortByDate(val) {
       this.changeFilter("sortByDate", val);
     },
+    sortByShows(val) {
+      this.changeFilter("sortByShows", val);
+    },
 
     noSleep(val) {
       this.$store.commit("setNoSleep", val);
@@ -157,6 +161,12 @@ export default {
 
   methods: {
     changeFilter(name, value) {
+      if(name == "sortByDate" && value && this.sortByShows) {
+        this.sortByShows = false;
+      }
+      if(name == "sortByShows" && value && this.sortByShows) {
+        this.sortByDate = false;
+      }
       this.$store.commit("changeFilter", { name, value });
       this.$emit("changeFilter", { name, value });
     },
@@ -173,7 +183,7 @@ export default {
   },
 
   mounted() {
-    ["withChords", "withTexts", "popular", "sortByDate"].forEach(name => {
+    ["withChords", "withTexts", "popular", "sortByDate", "sortByShows"].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
   }
