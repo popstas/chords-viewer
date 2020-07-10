@@ -49,6 +49,7 @@ export const state = () => ({
     withChords: -1,
     withTexts: -1,
     sortByDate: true,
+    sortByShows: false,
     popular: -1
   }
 });
@@ -110,7 +111,7 @@ export const mutations = {
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;
   },
-  // q, withChords, withTexts, sortByDate
+  // q, withChords, withTexts, sortByDate, sortByShows
   changeFilter(state, options) {
     state.filter[options.name] = options.value;
   },
@@ -220,6 +221,16 @@ export const actions = {
       result = result
         .slice()
         .sort((a, b) => new Date(b.created) - new Date(a.created));
+    }
+
+    if (state.filter.sortByShows) {
+      result = result.slice().sort((a, b) => {
+        const aSafe = a.url;
+        const bSafe = b.url;
+        aShows = parseInt(state.shows[aSafe]);
+        bShows = parseInt(state.shows[bSafe]);
+        return b - a;
+      });
     }
 
     commit("setFilteredSongs", result);
