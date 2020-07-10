@@ -65,6 +65,11 @@
   }
 }
 
+.chord_separator_short + .chord .el-button{
+  padding: 5px 1px;
+  min-width: auto;
+}
+
 .el-popover {
   img {
     max-width: 150px;

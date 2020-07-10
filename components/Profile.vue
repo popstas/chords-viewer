@@ -10,7 +10,7 @@
 
 .profile {
   float: right;
-  margin: 10px 0 -10px 0;
+  margin: 10px 3px -10px 0;
 
   a {
     color: #000;
