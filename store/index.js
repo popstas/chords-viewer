@@ -1,7 +1,8 @@
-import pjson from '~/package.json';
-import dateformat from 'dateformat';
-import songs from '~/chords.json';
-import Fuse from 'fuse.js';
+import pjson from "~/package.json";
+import dateformat from "dateformat";
+import songs from "~/chords.json";
+import Fuse from "fuse.js";
+import firebase from "firebase";
 
 export const transposeMap = [
   ['Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'],
@@ -27,23 +28,24 @@ export const state = () => ({
   homepage: pjson.homepage,
 
   // app state
-  activeSong: { title: '' },
+  activeSong: { title: "" },
   playlist: [],
   playlistCurrent: -1,
   toolbarHidden: false,
   shows: {},
+  user: false,
 
   // settings
   fontSize: 1,
   autoScrollSpeed: 4,
-  instrument: 'guitar',
-  artistsSort: 'name',
+  instrument: "guitar",
+  artistsSort: "name",
   showImages: false,
   showBadges: false,
 
   // filters
   filter: {
-    q: '',
+    q: "",
     withChords: -1,
     withTexts: -1,
     sortByDate: true,
@@ -53,17 +55,23 @@ export const state = () => ({
 
 export const getters = {
   lastUpdated(state) {
-    let date = Math.max.apply(Math, state.songs.map(song => new Date(song.created)));
-    return dateformat(new Date(date), 'dd.mm.yyyy');
+    let date = Math.max.apply(
+      Math,
+      state.songs.map(song => new Date(song.created))
+    );
+    return dateformat(new Date(date), "dd.mm.yyyy");
   },
 
   activeSongTitle(state) {
-    if (!state.activeSong.title) return '';
+    if (!state.activeSong.title) return "";
     let title = state.activeSong.title;
     if (state.activeSong.details) {
-      title = state.activeSong.details.artist + ' - ' + state.activeSong.details.title;
+      title =
+        state.activeSong.details.artist +
+        " - " +
+        state.activeSong.details.title;
     }
-    title = title.trim(',');
+    title = title.trim(",");
     return title;
   }
 };
@@ -115,6 +123,12 @@ export const mutations = {
   addShow(state, url) {
     const current = state.shows[url] || 0;
     state.shows[url] = current + 1;
+  },
+  setShows(state, newValue) {
+    state.shows = newValue;
+  },
+  setUser(state, newValue) {
+    state.user = newValue;
   }
 };
 
@@ -125,11 +139,11 @@ export const actions = {
 
     // data modify
     result = result.map(song => {
-      song.popular = song.tags.indexOf('аккорды популярные') != -1;
+      song.popular = song.tags.indexOf("аккорды популярные") != -1;
 
       // song.genre
       let g = song.tags.map(tag => {
-        if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+        if (tag.indexOf("жанр:") === 0) return tag.replace("жанр: ", "");
       });
       song.genres = g.filter((genre, pos, arr) => {
         return genre;
@@ -145,19 +159,22 @@ export const actions = {
       if (isLetter) {
         result = result.filter(song => song.title.toLowerCase().search(q) >= 0);
       } else if (isArtist) {
-        result = result.filter(song => song.details && song.details.artist.toLowerCase().search(q) >= 0);
+        result = result.filter(
+          song =>
+            song.details && song.details.artist.toLowerCase().search(q) >= 0
+        );
       } else if (isGenre) {
-        let g = state.filter.q.replace('жанр: ', '');
+        let g = state.filter.q.replace("жанр: ", "");
         result = result.filter(song => song.genres && song.genres.includes(g));
       } else {
         let fuse = new Fuse(result, {
           keys: [
             {
-              name: 'title',
+              name: "title",
               weight: 0.7
             },
             {
-              name: 'text',
+              name: "text",
               weight: 0.3
             }
           ]
@@ -173,58 +190,97 @@ export const actions = {
       }
     }
 
-
     // filters
 
-    if (state.filter.withChords === '1') {
+    if (state.filter.withChords === "1") {
       result = result.filter(song => song.details.chords);
     }
 
-    if (state.filter.withChords === '0') {
+    if (state.filter.withChords === "0") {
       result = result.filter(song => !song.details.chords);
     }
 
-    if (state.filter.withTexts === '1') {
+    if (state.filter.withTexts === "1") {
       result = result.filter(song => song.text);
     }
 
-    if (state.filter.withTexts === '0') {
+    if (state.filter.withTexts === "0") {
       result = result.filter(song => !song.text);
     }
 
-    if (state.filter.popular === '1') {
+    if (state.filter.popular === "1") {
       result = result.filter(song => song.popular);
     }
 
-    if (state.filter.popular === '0') {
+    if (state.filter.popular === "0") {
       result = result.filter(song => !song.popular);
     }
 
     if (state.filter.sortByDate) {
-      result = result.slice().sort((a, b) => new Date(b.created) - new Date(a.created));
+      result = result
+        .slice()
+        .sort((a, b) => new Date(b.created) - new Date(a.created));
     }
 
-    commit('setFilteredSongs', result);
+    commit("setFilteredSongs", result);
   },
 
   setPrevSong({ commit, state }, payload) {
     if (state.playlistCurrent <= 0) return;
-    commit('activeSong', state.playlist[state.playlistCurrent - 1]);
-    commit('playlistCurrent', state.playlistCurrent - 1);
+    commit("activeSong", state.playlist[state.playlistCurrent - 1]);
+    commit("playlistCurrent", state.playlistCurrent - 1);
   },
 
   setNextSong({ commit, state }, payload) {
     if (state.playlist[state.playlistCurrent + 1]) {
       // next known
-      commit('activeSong', state.playlist[state.playlistCurrent + 1]);
+      commit("activeSong", state.playlist[state.playlistCurrent + 1]);
     } else {
       // next random
       const randomKey = Math.floor(Math.random() * state.filteredSongs.length);
       const randomSong = state.filteredSongs[randomKey];
-      commit('activeSong', randomSong);
-      commit('playlist', [...state.playlist, randomSong]);
+      commit("activeSong", randomSong);
+      commit("playlist", [...state.playlist, randomSong]);
     }
-    commit('playlistCurrent', state.playlistCurrent + 1);
+    commit("playlistCurrent", state.playlistCurrent + 1);
+  },
+
+  setUser({ commit, state }, user) {
+    if(user) {
+      commit("setUser", {
+        uid: user.uid,
+        photoURL: user.photoURL,
+        displayName: user.displayName,
+        email: user.email,
+        uid: user.uid
+      });
+
+      firebase
+        .database()
+        .ref("users/" + state.user.uid)
+        .once("value")
+        .then(snapshot => {
+          const shows = (snapshot.val() && snapshot.val().shows) || false;
+          if (shows) {
+            console.log('Update shows from firebase:', shows);
+            commit("setShows", shows);
+          }
+        });
+    } else {
+      commit("setUser", false);
+    }
+  },
+
+  addShow({ commit, state }, url) {
+    commit("addShow", url);
+    if (state.user) {
+      firebase
+        .database()
+        .ref("users/" + state.user.uid)
+        .update({
+          shows: state.shows
+        });
+    }
   }
 };
 

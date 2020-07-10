@@ -14,9 +14,10 @@
           <el-header height="42px">
             <button class="menu-toggle">☰</button>
             <button class="input-clear" @click="onInputClear">&cross;</button>
+            <Profile></Profile>
           </el-header>
           <el-main>
-            <nuxt/>
+            <nuxt />
           </el-main>
         </div>
       </Slideout>
@@ -105,14 +106,15 @@ html {
     position: fixed !important;
   }
 
-  .el-header .menu-toggle{
+  .el-header .menu-toggle {
     display: none;
   }
 }
 
 .el-header {
   padding: 0 5px;
-  .menu-toggle, .input-clear {
+  .menu-toggle,
+  .input-clear {
     background: none;
     border: none;
     line-height: 42px;
@@ -145,11 +147,25 @@ html {
 </style>
 
 <script>
+import Profile from "~/components/Profile";
 import Sidebar from "~/components/Sidebar";
 import Slideout from "vue-slideout";
 
+import firebase from "firebase";
+const firebaseConfig = {
+  apiKey: "AIzaSyAi6BptwN63ruuHJiTmm_ofYUyquAaPf9U",
+  authDomain: "chords-viewer.firebaseapp.com",
+  databaseURL: "https://chords-viewer.firebaseio.com",
+  projectId: "chords-viewer",
+  storageBucket: "chords-viewer.appspot.com",
+  messagingSenderId: "98010485379",
+  appId: "1:98010485379:web:bf6700c3e06ba149ce81b6",
+  measurementId: "G-YYGZ8HR9JB"
+};
+firebase.initializeApp(firebaseConfig);
+
 export default {
-  components: { Slideout, Sidebar },
+  components: { Slideout, Sidebar, Profile },
   data() {
     return {
       chordsHeight: 0
@@ -167,16 +183,16 @@ export default {
   methods: {
     handleScroll() {
       const chords = this.$el.querySelector(".song-item.active .chords");
-      if(!chords) return;
+      if (!chords) return;
       this.chordsHeight = chords.clientHeight;
     },
 
     onInputClear() {
-      const options = { name: 'q', value: '' };
+      const options = { name: "q", value: "" };
       this.$store.commit("changeFilter", options);
       const input = this.$el.querySelector(".search-input input");
-      input.value = '';
-      this.$store.dispatch('filterSongs');
+      input.value = "";
+      this.$store.dispatch("filterSongs");
     }
   },
 

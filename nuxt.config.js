@@ -11,10 +11,10 @@ module.exports = {
   ],
 
   plugins: [
-    '@/plugins/element-ui',
-    '@/plugins/vue-awesome',
-    '@/plugins/vue-shortkey',
-    '@/plugins/yametrika',
+    { src: '@/plugins/element-ui', ssr: false },
+    { src: '@/plugins/vue-awesome', ssr: false },
+    { src: '@/plugins/vue-shortkey', ssr: false },
+    { src: '@/plugins/yametrika', ssr: false },
     { src: '~/plugins/localStorage.js', ssr: false }
   ],
 

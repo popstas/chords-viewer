@@ -27,7 +27,7 @@
           v-for="genre in genres" :key="genre"
           @click="changeFilter('q', 'жанр: ' + genre)"
         >{{ genre }}</li>
-        <li v-if="$store.state.shows[song.url]" class="song-categories__item">просмотров: {{ $store.state.shows[song.url] }}</li>
+        <li v-if="$store.state.shows[safeUrl]" class="song-categories__item">просмотров: {{ $store.state.shows[safeUrl] }}</li>
       </ul>
 
       <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
@@ -255,6 +255,10 @@ export default {
       }
       title = title.trim(",");
       return title;
+    },
+
+    safeUrl() {
+      return this.song.url.replace(/[\/\.]/g, '_');
     },
 
     genres() {

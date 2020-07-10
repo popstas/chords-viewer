@@ -28,6 +28,8 @@
     "axios": "^0.18.1",
     "dateformat": "^3.0.3",
     "element-ui": "^2.13.1",
+    "firebase": "^7.16.0",
+    "firebaseui": "^4.5.2",
     "fuse.js": "^3.6.1",
     "nosleep.js": "^0.7.0",
     "nuxt": "^2.12.2",

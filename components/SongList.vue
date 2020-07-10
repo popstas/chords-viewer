@@ -86,7 +86,8 @@ export default {
 
       clearTimeout(this.showTimer);
       this.showTimer = setTimeout(() => {
-        this.$store.commit("addShow", val.url);
+        const safeUrl = val.url.replace(/[\/\.]/g, '_');
+        this.$store.dispatch("addShow", safeUrl);
       }, 60000);
     }
   },
