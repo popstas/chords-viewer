@@ -18,20 +18,6 @@
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
       </div>
 
-      <ul v-if="active" class="song-categories">
-        <li class="song-categories__item">{{ song.created.replace(/T.*/, '') }}</li>
-        <li
-          class="song-categories__item"
-          @click="changeFilter('q', '^' + song.details.artist)"
-        >{{ song.details.artist }}</li>
-        <li
-          class="song-categories__item"
-          v-for="genre in genres" :key="genre"
-          @click="changeFilter('q', 'жанр: ' + genre)"
-        >{{ genre }}</li>
-        <li v-if="$store.state.shows[safeUrl]" class="song-categories__item">просмотров: {{ $store.state.shows[safeUrl] }}</li>
-      </ul>
-
       <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
         <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
           <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
@@ -71,6 +57,21 @@
       <a v-if="isShare" class="song-item__link" @click.prevent="share">
         <icon name="share-alt"></icon>
       </a>
+
+      <ul v-if="active" class="song-categories">
+        <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
+        <li
+          class="song-categories__item song-categories__item_artist"
+          @click="changeFilter('q', '^' + song.details.artist)"
+        >{{ song.details.artist }}</li>
+        <li
+          class="song-categories__item song-categories__item_genre"
+          v-for="genre in genres" :key="genre"
+          @click="changeFilter('q', 'жанр: ' + genre)"
+        >{{ genre }}</li>
+        <li v-if="$store.state.shows[safeUrl]" class="song-categories__item song-categories__item_shows">просмотров: {{ $store.state.shows[safeUrl] }}</li>
+      </ul>
+
     </div>
   </el-collapse-item>
 </template>
@@ -198,6 +199,7 @@
   &__item {
     padding: 0 5px 0 0;
     display: inline-block;
+    color: #999;
     font-size: 13px;
     min-width: 23px;
     height: 28px;
@@ -209,6 +211,14 @@
 
     &.active {
       color: #409eff;
+    }
+
+    &_artist {
+      color: #ccc;
+    }
+
+    &_date, &_shows {
+      cursor: default;
     }
   }
 }

@@ -10,9 +10,10 @@
 
 .profile {
   float: right;
-  margin: 15px 0 -15px 0;
-  @media (max-width: $container-width-xs) {
-    margin: 5px 0 -5px 0;
+  margin: 10px 0 -10px 0;
+
+  a {
+    color: #000;
   }
 }
 .profile-avatar {

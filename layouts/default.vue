@@ -12,7 +12,7 @@
       >
         <div id="panel">
           <el-header height="42px">
-            <button class="menu-toggle">☰</button>
+            <button class="menu-toggle">☰</button><!-- коммент, чтобы кодировка не переключалась -->
             <button class="input-clear" @click="onInputClear">&cross;</button>
             <Profile></Profile>
           </el-header>

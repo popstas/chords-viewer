@@ -11,8 +11,8 @@
 
     <div class="toolbar__filters">
       <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
-      <el-row class="toolbar__autoscroll" :gutter="20">
-        <el-col :span="6">
+      <el-row class="toolbar__controls" :gutter="20">
+        <el-col :span="6" class="toolbar__autoscroll">
           <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
         </el-col>
         <el-col :span="4">
@@ -43,9 +43,9 @@
         </el-col>
         <el-col :span="7" class="toolbar__instrument">
           <el-radio-group v-model="instrument" size="mini">
-            <el-radio-button label="guitar">G</el-radio-button>
-            <el-radio-button label="ukulele">U</el-radio-button>
-            <el-radio-button label="piano">P</el-radio-button>
+            <el-radio-button title="guitar" label="guitar">G</el-radio-button>
+            <el-radio-button title="ukulele" label="ukulele">U</el-radio-button>
+            <el-radio-button title="piano" label="piano">P</el-radio-button>
           </el-radio-group>
         </el-col>
       </el-row>
@@ -152,15 +152,25 @@
     margin: 15px 15px 15px 0;
   }
 
-  &__autoscroll {
+  &__controls {
     display: flex;
     align-items: center;
     margin-left: -5px !important;
     margin-right: -5px !important;
 
+    > .el-col:first-child {
+      padding-left: 0 !important;
+    }
+
     // autoscroll speed
     .el-slider {
       margin: 0 8px;
+    }
+  }
+
+  &__autoscroll {
+    @media (min-width: 1200px) {
+      visibility: hidden;
     }
   }
 
@@ -191,6 +201,7 @@
   .search-genres {
     list-style: none;
     padding: 0;
+    margin-bottom: 8px;
 
     &__genre {
       padding: 0 5px;
@@ -213,6 +224,16 @@
   .search-artists {
     margin-bottom: 15px;
     margin-right: 15px;
+
+    $input-height: 30px;
+    .el-input__icon, input {
+      line-height: $input-height;
+      height: $input-height;
+    }
+
+    &-sort {
+      margin-bottom: 3px;
+    }
   }
 
   // close button
@@ -232,6 +253,7 @@
   // font size radiobuttons
   &__instrument {
     text-align: right;
+    padding: 0 5px !important;
 
     .el-radio-button__inner {
       @media (max-width: 800px) {
