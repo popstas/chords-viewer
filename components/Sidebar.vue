@@ -62,7 +62,10 @@
     </el-row>
     <el-row style="text-align:center">
       <span class="sidebar__help">
-        <el-popover placement="top-start" trigger="hover" content="Hotkeys: j/k, arrows, space">
+        <el-popover placement="top-start" trigger="hover" content="
+        j/k, left/right - переключение песен,
+        space - автопрокрутка,
+        ctrl+up/down - транспонировать">
           <span slot="reference">help</span>
         </el-popover>
       </span>

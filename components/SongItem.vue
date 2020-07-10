@@ -13,6 +13,8 @@
 
     <div class="song-item__content" v-if="active">
       <div v-if="active" class="song-transpose">
+        <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
+        <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
         <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
         <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
         <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
