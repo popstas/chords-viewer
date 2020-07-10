@@ -170,8 +170,8 @@ export default {
       if(name == "sortByShows" && value && this.sortByShows) {
         this.sortByDate = false;
       }
-      this.$store.commit("changeFilter", { name, value });
-      this.$emit("changeFilter", { name, value });
+      this.$store.dispatch("changeFilter", { name, value });
+      // this.$emit("changeFilter", { name, value });
     },
 
     changeFontSize(size) {

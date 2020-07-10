@@ -23,7 +23,7 @@
       </Slideout>
     </el-container>
     <nav id="menu">
-      <Sidebar @changeFilter="$store.dispatch('filterSongs')"></Sidebar>
+      <Sidebar></Sidebar>
     </nav>
   </div>
 </template>
@@ -189,10 +189,10 @@ export default {
 
     onInputClear() {
       const options = { name: "q", value: "" };
-      this.$store.commit("changeFilter", options);
+      this.$store.dispatch("changeFilter", options);
       const input = this.$el.querySelector(".search-input input");
       input.value = "";
-      this.$store.dispatch("filterSongs");
+      // this.$store.dispatch("filterSongs");
     }
   },
 

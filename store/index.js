@@ -3,6 +3,7 @@ import dateformat from "dateformat";
 import songs from "~/chords.json";
 import Fuse from "fuse.js";
 import firebase from "firebase";
+import debounce from "lodash/debounce";
 
 export const transposeMap = [
   ['Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'],
@@ -133,8 +134,20 @@ export const mutations = {
   }
 };
 
+const debouncedFilterSongs = debounce(dispatch => {
+  dispatch("filterSongs");
+}, 100);
+
 export const actions = {
-  filterSongs({ commit, state }, payload) {
+  changeFilter({ commit, dispatch }, options) {
+    // console.log('options: ', options);
+    commit("changeFilter", options);
+    debouncedFilterSongs(dispatch);
+
+  },
+
+  filterSongs({ commit, state }) {
+    // console.log("FilterSongs");
     const q = state.filter.q.toLowerCase();
     let result = state.songs;
 

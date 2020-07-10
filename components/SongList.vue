@@ -1,7 +1,7 @@
 <template>
   <div :class="['song-list', 'size' + this.$store.state.fontSize]">
     <div class="search-total">total: {{ count }}</div>
-    <Toolbar @changeFilter="$store.dispatch('filterSongs')" @scrollToLast="scrollTo(lastOffset)"></Toolbar>
+    <Toolbar @scrollToLast="scrollTo(lastOffset)"></Toolbar>
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
       <SongItem
         v-for="song in filteredSongs"
@@ -9,7 +9,6 @@
         :key="song.url"
         :active="song.url == activeSong.url"
         @active="scrollTo"
-        @changeFilter="$store.dispatch('filterSongs')"
       ></SongItem>
     </el-collapse>
   </div>
@@ -131,7 +130,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("filterSongs");
+    // this.$store.dispatch("filterSongs");
     // window.addEventListener('beforeinstallprompt', this.handleAddToHomeScreen);
   },
 
