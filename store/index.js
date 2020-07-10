@@ -242,7 +242,7 @@ export const actions = {
         const bSafe = b.url.replace(/[\/\.]/g, '_');
         const aShows = state.shows[aSafe] || 0;
         const bShows = state.shows[bSafe] || 0;
-        return bShows - aShows;
+        return bShows - aShows || new Date(b.created) - new Date(a.created);
       });
     }
 

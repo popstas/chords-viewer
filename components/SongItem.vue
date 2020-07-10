@@ -19,6 +19,7 @@
       </div>
 
       <ul v-if="active" class="song-categories">
+        <li class="song-categories__item">{{ song.created.replace(/T.*/, '') }}</li>
         <li
           class="song-categories__item"
           @click="changeFilter('q', '^' + song.details.artist)"
