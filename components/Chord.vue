@@ -1,5 +1,12 @@
 <template>
-  <span :class="{chord: true, chord_known: isKnown, chord_separator: chord.match(/^[-.]+$/)}">
+  <span :class="{
+    chord: true,
+    chord_known: isKnown,
+    chord_separator: chord.match(/^[-.]+$/),
+    chord_separator_short: chord === '.',
+    chord_separator_bracket_left: chord === '(',
+    chord_separator_bracket_right: chord === ')'
+    }">
     <el-popover v-if="isKnown" placement="top-start" trigger="hover">
       <el-button slot="reference">{{ html }} <img v-if="image" height="100" class="chord__image" :src="imageUrl" slot="default"></el-button>
       <img class="chord__image" :src="imageUrl" slot="default">
@@ -45,6 +52,16 @@
     &:focus {
       background: #ededed;
     }
+  }
+
+  &_separator_short {
+    margin: 0 -5px;
+  }
+  &_separator_bracket_left {
+    margin-right: -4px;
+  }
+  &_separator_bracket_right {
+    margin-left: -5px;
   }
 }
 

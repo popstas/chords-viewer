@@ -327,7 +327,15 @@ export default {
       return this.song.details.chords
         .split(" - ")
         .map(section =>
-          section.split(" .. ").map(subsection => subsection.split(" "))
+          section.split(" .. ").map(subsection => {
+            return subsection
+            .replace(/\(([A-Z])/g, '( $1') // (C
+            .replace(/([A-Zm0-9#])\)/g, '$1 )') // C)
+            .replace(/\(кап\.? ([0-9]) \)/, '(кап.\xa0$1)') // (кап. 2 )
+            .replace(/\((x[0-9]) \)/g, '($1)') // (x3 )
+            .replace(/([A-Z])\.\.?([A-Z])/g, '$1 . $2') // C..G
+            .split(" ")
+          })
         );
     },
 
