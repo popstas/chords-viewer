@@ -233,6 +233,10 @@
 
     &-sort {
       margin-bottom: 3px;
+
+      .el-radio-button__inner {
+        padding: 7px 10px;
+      }
     }
   }
 
