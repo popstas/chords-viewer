@@ -12,3 +12,12 @@ $container-width-lg: 1600px;
 $font-size-1: 13px;
 $font-size-2: 16px;
 $font-size-3: 20px;
+
+$main-padding: 5px;
+
+:root {
+  --main-padding: #{$main-padding};
+
+  --container-width-md: #{$container-width-md};
+  --container-width-lg: #{$container-width-lg};
+}

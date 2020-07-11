@@ -44,7 +44,7 @@ html {
 }
 .el-main {
   max-width: 100vw;
-  padding: 5px;
+  padding: $main-padding;
 }
 
 *,
@@ -64,9 +64,15 @@ html {
   }
   @media (min-width: $min-width-md) {
     max-width: $container-width-md;
+    .song-list {
+      max-width: calc(100vw - (100vw - var(--container-width-md)) - (var(--main-padding) * 2));
+    }
   }
   @media (min-width: $min-width-lg) {
     max-width: $container-width-lg;
+    .song-list {
+      max-width: calc(100vw - (100vw - var(--container-width-lg)) - (var(--main-padding) * 2));
+    }
   }
 }
 
