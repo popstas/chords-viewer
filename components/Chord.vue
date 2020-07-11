@@ -6,7 +6,7 @@
     chord_separator_short: chord === '.',
     chord_separator_bracket_left: chord === '(',
     chord_separator_bracket_right: chord === ')'
-    }">
+    }" :data-chord="chord">
     <el-popover v-if="isKnown" placement="top-start" trigger="hover">
       <el-button slot="reference">{{ html }} <img v-if="image" height="100" class="chord__image" :src="imageUrl" slot="default"></el-button>
       <img class="chord__image" :src="imageUrl" slot="default">
@@ -121,12 +121,12 @@ export default {
 
     html() {
       if (!this.isKnown) return this.replacedChord;
-      return this.transposedChord;
+      return this.chord.match(/\(.*\)/) ? `(${this.transposedChord})` : this.transposedChord;
       // console.log(this.chord, this.transposeLevel, this.transposedChord, this.replacedChord);
     },
 
     replacedChord() {
-      return this.chord.replace("H", "B").replace("m#", "#m");
+      return this.chord.replace("H", "B").replace("m#", "#m").replace(/[()]/g, '');
     },
 
     transposedChord() {
