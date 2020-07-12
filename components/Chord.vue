@@ -165,8 +165,8 @@ export default {
         '^([ABCDEFG])m$': '$1_min',
         '^([ABCDEFG])m5$': '$1_min5',
         '^([ABCDEFG])m7$': '$1_min7',
-        '^([F])#$': '$1s_maj',
-        '^([F])#m$': '$1s_min',
+        '^([ABCDEFG])#$': '$1s_maj',
+        '^([ABCDEFG])#m$': '$1s_min',
         '^A#$': 'Bb_maj',
       }
 
