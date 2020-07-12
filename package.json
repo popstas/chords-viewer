@@ -23,30 +23,30 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.10.3",
-    "@nuxtjs/pwa": "^2.0.8",
-    "@nuxtjs/style-resources": "^0.1.2",
-    "axios": "^0.18.1",
+    "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "axios": "^0.19.2",
     "dateformat": "^3.0.3",
     "element-ui": "^2.13.1",
     "firebase": "^7.16.0",
     "firebaseui": "^4.5.2",
-    "fuse.js": "^3.6.1",
+    "fuse.js": "^6.4.0",
     "lodash": "^4.17.19",
-    "nosleep.js": "^0.7.0",
+    "nosleep.js": "^0.11.0",
     "nuxt": "^2.12.2",
-    "vue-awesome": "^3.5.4",
+    "vue-awesome": "^4.0.2",
     "vue-shortkey": "^3.1.7",
     "vue-slideout": "^1.8.0",
-    "vuex-persistedstate": "^2.7.1"
+    "vuex-persistedstate": "^3.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.6",
-    "eslint": "^4.19.1",
-    "eslint-friendly-formatter": "^3.0.0",
-    "eslint-loader": "^1.7.1",
-    "eslint-plugin-vue": "^4.7.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.4.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.14.0",
-    "sass-loader": "^7.3.1",
-    "style-loader": "^0.21.0"
+    "sass-loader": "^9.0.2",
+    "style-loader": "^1.2.1"
   }
 }

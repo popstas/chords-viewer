@@ -186,6 +186,7 @@ export const actions = {
         result = result.filter(song => song.genres && song.genres.includes(g));
       } else {
         let fuse = new Fuse(result, {
+          minMatchCharLength: 2,
           keys: [
             {
               name: "title",
@@ -197,7 +198,7 @@ export const actions = {
             }
           ]
         });
-        result = fuse.search(q);
+        result = fuse.search(q).map(r => r.item);
         /* // without fuse
         result = result.filter(song => {
           return (
