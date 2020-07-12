@@ -1,3 +1,26 @@
+# [2.0.0](https://github.com/popstas/chords-viewer/compare/v1.22.0...v2.0.0) (2020-07-12)
+
+
+### Bug Fixes
+
+* аккорды в тексте в скобках теперь распознаются ([ab08033](https://github.com/popstas/chords-viewer/commit/ab08033))
+* выбор исполнителя на 1 строку на мобильном ([0ecb405](https://github.com/popstas/chords-viewer/commit/0ecb405))
+* поправлены стили: красивые отступы, цвета ([29c0796](https://github.com/popstas/chords-viewer/commit/29c0796))
+* скобки больше не прилипают к аккордам, добавлены аккорды Dsus4, Dm/C, Am6, C6 ([d98f792](https://github.com/popstas/chords-viewer/commit/d98f792))
+* сортировка по просмотрам, потом по дате ([2832e40](https://github.com/popstas/chords-viewer/commit/2832e40))
+* убрана горизонтальная прокрутка на больших экранах ([2402d0d](https://github.com/popstas/chords-viewer/commit/2402d0d))
+* улучшены стили соединённых аккордов ([1e30e13](https://github.com/popstas/chords-viewer/commit/1e30e13))
+
+
+### Features
+
+* ctrl+up/down - транспонирование ([6e18ee5](https://github.com/popstas/chords-viewer/commit/6e18ee5))
+* авторизация Google для хранения счётчика просмотров ([ddb1150](https://github.com/popstas/chords-viewer/commit/ddb1150))
+* сортировка по популярности ([150ab88](https://github.com/popstas/chords-viewer/commit/150ab88))
+* сортировка по просмотрам ([477f61f](https://github.com/popstas/chords-viewer/commit/477f61f))
+
+
+
 # [1.22.0](https://github.com/popstas/chords-viewer/compare/v1.21.0...v1.22.0) (2020-07-09)
 
 
