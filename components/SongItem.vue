@@ -71,7 +71,11 @@
           v-for="genre in genres" :key="genre"
           @click="changeFilter('q', 'жанр: ' + genre)"
         >{{ genre }}</li>
-        <li v-if="$store.state.shows[safeUrl]" class="song-categories__item song-categories__item_shows">просмотров: {{ $store.state.shows[safeUrl] }}</li>
+        <li class="song-categories__item song-categories__item_shows">просмотров:
+          <el-button size="mini" disabled>{{ shows }}</el-button>
+          <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
+          <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
+        </li>
       </ul>
 
     </div>
@@ -222,6 +226,12 @@
     &_date, &_shows {
       cursor: default;
     }
+
+    &_shows .el-button {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
   }
 }
 
@@ -273,6 +283,10 @@ export default {
 
     safeUrl() {
       return this.song.url.replace(/[\/\.]/g, '_');
+    },
+
+    shows() {
+      return this.$store.state.shows[this.safeUrl] || 0;
     },
 
     genres() {
@@ -358,6 +372,10 @@ export default {
           url: window.location.href
         });
       }
+    },
+
+    addShows(count) {
+      this.$store.commit('setShow', { url: this.safeUrl, shows: this.shows + count });
     }
   },
 

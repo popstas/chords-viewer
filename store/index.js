@@ -130,6 +130,9 @@ export const mutations = {
     const current = state.shows[url] || 0;
     state.shows[url] = current + 1;
   },
+  setShow(state, options) {
+    state.shows[options.url] = options.shows;
+  },
   setShows(state, newValue) {
     state.shows = newValue;
   },
