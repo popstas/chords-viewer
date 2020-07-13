@@ -137,6 +137,7 @@ export default {
   mounted() {
     if (this.$route.query["url"]) {
       this.changeSong(this.$route.query["url"]);
+      setTimeout(() => clearTimeout(this.showTimer), 100); // первый переход не считаем
     }
 
     this.$router.afterEach((to, from) => {
