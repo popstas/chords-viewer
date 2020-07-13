@@ -126,7 +126,12 @@ export default {
     },
 
     replacedChord() {
-      return this.chord.replace("H", "B").replace("m#", "#m").replace(/[()]/g, '');
+      return this.chord
+      .replace("H", "B")
+      .replace("m#", "#m")
+      .replace("Bb", "A#")
+      .replace("Eb", "F#")
+      .replace(/[()]/g, '');
     },
 
     transposedChord() {
