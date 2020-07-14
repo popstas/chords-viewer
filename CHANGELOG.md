@@ -1,3 +1,19 @@
+# [2.1.0](https://github.com/popstas/chords-viewer/compare/v2.0.0...v2.1.0) (2020-07-14)
+
+
+### Bug Fixes
+
+* Bb -> A#, Eb -> F# ([fba5dea](https://github.com/popstas/chords-viewer/commit/fba5dea))
+* картинки для аккордов укулеле и пианино типа G#, G#m ([b45b85a](https://github.com/popstas/chords-viewer/commit/b45b85a))
+* при открытии песни по урлу просмотр не учитывается ([a32d88e](https://github.com/popstas/chords-viewer/commit/a32d88e))
+
+
+### Features
+
+* возможность менять просмотры ([2749415](https://github.com/popstas/chords-viewer/commit/2749415))
+
+
+
 # [2.0.0](https://github.com/popstas/chords-viewer/compare/v1.22.0...v2.0.0) (2020-07-12)
 
 
