@@ -129,8 +129,10 @@ export const mutations = {
   addShow(state, url) {
     const current = state.shows[url] || 0;
     state.shows[url] = current + 1;
+    console.log('addShow: ', current + 1);
   },
   setShow(state, options) {
+    console.log('setShow: ', options);
     state.shows[options.url] = options.shows;
   },
   setShows(state, newValue) {
@@ -312,6 +314,7 @@ export const actions = {
         .update({
           shows: state.shows
         });
+      console.log('update remote shows');
     }
   }
 };

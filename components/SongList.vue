@@ -88,7 +88,7 @@ export default {
         const safeUrl = val.url.replace(/[\/\.]/g, '_');
         this.$store.dispatch("addShow", safeUrl);
       }, 60000);
-    }
+    },
   },
 
   methods: {
@@ -137,7 +137,9 @@ export default {
   mounted() {
     if (this.$route.query["url"]) {
       this.changeSong(this.$route.query["url"]);
-      setTimeout(() => clearTimeout(this.showTimer), 100); // первый переход не считаем
+      setTimeout(() => {
+        clearTimeout(this.showTimer); // первый переход не считаем
+      }, 100)
     }
 
     this.$router.afterEach((to, from) => {

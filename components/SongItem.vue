@@ -2,7 +2,7 @@
   <el-collapse-item :title="title" :name="song.url" :class="{'song-item': true, active: active}">
     <template slot="title">
       <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
-      <span v-if="$store.state.filter.sortByShows" class="song-item__shows">{{ $store.state.shows[safeUrl] }}</span>
+      <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
       <i v-if="song.popular && $store.state.showBadges" class="el-icon-star-off" title="popular song"></i>
       <span class="song-item__badges" v-if="$store.state.showBadges">
@@ -72,7 +72,7 @@
           @click="changeFilter('q', 'жанр: ' + genre)"
         >{{ genre }}</li>
         <li class="song-categories__item song-categories__item_shows">просмотров:
-          <el-button size="mini" disabled>{{ shows }}</el-button>
+          <el-button size="mini" disabled v-html="shows"></el-button>
           <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
           <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
         </li>
@@ -250,7 +250,8 @@ export default {
   data() {
     return {
       transposeLevel: 0,
-      isShare: false
+      isShare: false,
+      shows: 0
     };
   },
 
@@ -268,6 +269,10 @@ export default {
     transposeLevel(val) {
       // cycle transpose
       if (Math.abs(val) == 12) this.transposeLevel = 0;
+    },
+
+    showsStore(val) {
+      this.shows = this.showsStore;
     }
   },
 
@@ -285,7 +290,7 @@ export default {
       return this.song.url.replace(/[\/\.]/g, '_');
     },
 
-    shows() {
+    showsStore() {
       return this.$store.state.shows[this.safeUrl] || 0;
     },
 
@@ -375,12 +380,14 @@ export default {
     },
 
     addShows(count) {
-      this.$store.commit('setShow', { url: this.safeUrl, shows: this.shows + count });
+      this.shows = this.shows + count;
+      this.$store.commit('setShow', { url: this.safeUrl, shows: this.shows });
     }
   },
 
   mounted() {
     this.isShare = !!navigator.share;
+    this.shows = this.$store.state.shows[this.safeUrl] || 0;
   }
 };
 </script>
