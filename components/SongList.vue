@@ -79,13 +79,14 @@ export default {
       }
     },
 
-    activeSong(val) {
-      const query = { url: val.url };
+    activeSong(song) {
+      if (!song) return;
+      const query = { url: song.url };
       this.$router.push({ query });
 
       clearTimeout(this.showTimer);
       this.showTimer = setTimeout(() => {
-        const safeUrl = val.url.replace(/[\/\.]/g, '_');
+        const safeUrl = song.url.replace(/[\/\.]/g, '_');
         this.$store.dispatch("addShow", safeUrl);
       }, 60000);
     },
