@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/popstas/chords-viewer/compare/v2.1.0...v2.2.0) (2020-10-16)
+
+
+### Features
+
+* webhookShow, send http request on song view ([0b6d328](https://github.com/popstas/chords-viewer/commit/0b6d328))
+
+
+
 # [2.1.0](https://github.com/popstas/chords-viewer/compare/v2.0.0...v2.1.0) (2020-07-14)
 
 
