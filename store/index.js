@@ -56,7 +56,9 @@ export const state = () => ({
     sortByDate: true,
     sortByShows: false,
     popular: -1
-  }
+  },
+
+  webhookShow: ''
 });
 
 export const getters = {
@@ -113,6 +115,9 @@ export const mutations = {
   autoScrollSpeed(state, newValue) {
     state.autoScrollSpeed = newValue;
   },
+  webhookShow(state, newValue) {
+    state.webhookShow = newValue;
+  },
   setFilteredSongs(state, newValue) {
     state.filteredSongs = newValue;
   },
@@ -145,7 +150,7 @@ export const mutations = {
 
 const debouncedFilterSongs = debounce(dispatch => {
   dispatch("filterSongs");
-}, 100);
+}, 500);
 
 export const actions = {
   changeFilter({ commit, dispatch }, options) {
@@ -155,8 +160,31 @@ export const actions = {
 
   },
 
-  filterSongs({ commit, state }) {
+  async filterSongs({ commit, state }) {
     // console.log("FilterSongs");
+
+    // webhookShow
+    const webhookCommand = state.filter.q.match(/^webhookShow=(.*)$/);
+    if (webhookCommand) {
+      const webhookShow = webhookCommand[1];
+      console.log('set webhookShow: ', webhookShow);
+      commit('webhookShow', webhookShow);
+
+      // store to firebase
+      if (state.user) {
+        const db = firebase.database().ref("users/" + state.user.uid);
+        const snapshot = await db.once("value");
+        const settings = {
+          ...snapshot.val().settings || {},
+          ... { webhookShow }
+        };
+
+        db.update({ settings });
+      }
+
+      return;
+    }
+
     const q = state.filter.q.toLowerCase();
     let result = state.songs;
 
@@ -299,6 +327,15 @@ export const actions = {
             console.log('Update shows from firebase:', shows);
             commit("setShows", shows);
           }
+
+          const settings = (snapshot.val() && snapshot.val().settings) || false;
+          if (settings) {
+            // console.log('Update settings from firebase:', settings);
+            if (settings.webhookShow && state.webhookShow !== settings.webhookShow) {
+              console.log('Update webhookShow from firebase:', settings);
+              commit('webhookShow', settings.webhookShow);
+            }
+          }
         });
     } else {
       commit("setUser", false);
@@ -307,6 +344,37 @@ export const actions = {
 
   addShow({ commit, state }, url) {
     commit("addShow", url);
+
+    // webhookShow send
+    const isWebhook = !!state.webhookShow;
+    if (isWebhook) {
+      // compute title, duplicate with SongItem
+      let title = state.activeSong.title;
+      if (state.activeSong.details.title) {
+        title = state.activeSong.details.artist + " - " + state.activeSong.details.title;
+      }
+      title = title.trim(",");
+
+      const obj = {
+        title: title,
+        url: state.activeSong.url
+      }
+
+      const opts = {};
+
+      // basic auth from url
+      const urlObj = new URL(state.webhookShow);
+      if (urlObj.username && urlObj.password) {
+        opts.auth = {
+          username: urlObj.username,
+          password: urlObj.password,
+        }
+      }
+
+      console.log('webhook: ', state.webhookShow, obj);
+      this.$axios.$post(state.webhookShow, obj, opts);
+    }
+
     if (state.user) {
       firebase
         .database()

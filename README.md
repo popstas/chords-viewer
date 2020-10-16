@@ -85,6 +85,15 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 `chords.json` should be placed in project root. You can download my data with command `npm run update-data`.
 
 
+## Webhook on song show
+Enter your url to query input:
+
+```
+webhookShow=https://your-https-url
+```
+
+Webhook fire after 60 seconds of song view.
+
 
 ## Build Setup
 

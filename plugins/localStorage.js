@@ -11,7 +11,8 @@ export default ({ store }) => {
       "instrument",
       "artistsSort",
       "showImages",
-      "showBadges"
+      "showBadges",
+      "webhookShow"
     ]
   })(store);
 };
