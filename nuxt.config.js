@@ -1,5 +1,6 @@
 module.exports = {
   ssr: false,
+  target: 'static',
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/pwa'
