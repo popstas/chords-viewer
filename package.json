@@ -33,7 +33,7 @@
     "firebaseui": "^4.7.1",
     "fuse.js": "^6.4.0",
     "lodash": "^4.17.20",
-    "nosleep.js": "^0.12.0",
+    "nosleep.js": "^0.11.0",
     "nuxt": "^2.14.12",
     "vue-awesome": "^4.0.2",
     "vue-qrcode-reader": "^2.3.16",
