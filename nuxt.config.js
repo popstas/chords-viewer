@@ -14,6 +14,7 @@ module.exports = {
   plugins: [
     { src: '@/plugins/element-ui', ssr: false },
     { src: '@/plugins/vue-awesome', ssr: false },
+    { src: '@/plugins/vue-qrcode-reader', ssr: false },
     { src: '@/plugins/vue-shortkey', ssr: false },
     { src: '@/plugins/yametrika', ssr: false },
     { src: '~/plugins/localStorage.js', ssr: false }

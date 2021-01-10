@@ -14,9 +14,11 @@
           <el-header height="42px">
             <button class="menu-toggle">☰</button><!-- коммент, чтобы кодировка не переключалась -->
             <button class="input-clear" @click="onInputClear">&cross;</button>
+            <button class="input-clear" @click="showQrCode = !showQrCode"><icon name="qrcode"></icon></button>
             <Profile></Profile>
           </el-header>
           <el-main>
+            <div class="qrcode-wrapper" v-if="showQrCode"><qrcode-stream @decode="onDecode"></qrcode-stream></div>
             <nuxt />
           </el-main>
         </div>
@@ -74,6 +76,10 @@ html {
       max-width: calc(100vw - (100vw - var(--container-width-lg)) - (var(--main-padding) * 2));
     }
   }
+}
+
+.qrcode-wrapper {
+  height: 80vh;
 }
 
 .slideout-panel {
@@ -156,6 +162,8 @@ html {
 import Profile from "~/components/Profile";
 import Sidebar from "~/components/Sidebar";
 import Slideout from "vue-slideout";
+import "vue-awesome/icons/qrcode";
+import Icon from "vue-awesome/components/Icon";
 
 import firebase from "firebase";
 const firebaseConfig = {
@@ -174,7 +182,8 @@ export default {
   components: { Slideout, Sidebar, Profile },
   data() {
     return {
-      chordsHeight: 0
+      chordsHeight: 0,
+      showQrCode: false,
     };
   },
 
@@ -199,7 +208,12 @@ export default {
       const input = this.$el.querySelector(".search-input input");
       input.value = "";
       // this.$store.dispatch("filterSongs");
-    }
+    },
+
+    onDecode(url) {
+      this.showQrCode = false;
+      alert(url);
+    },
   },
 
   head() {
