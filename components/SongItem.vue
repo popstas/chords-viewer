@@ -59,6 +59,13 @@
       <a v-if="isShare" class="song-item__link" @click.prevent="share">
         <icon name="share-alt"></icon>
       </a>
+      <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
+        <icon name="qrcode"></icon>
+      </a>
+
+      <div v-if="showQrCode">
+        <qr-code :size="340" :text="song.url"></qr-code>
+      </div>
 
       <ul v-if="active" class="song-categories">
         <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
@@ -240,6 +247,7 @@
 <script>
 import Chord from "~/components/Chord";
 import { transposeMap } from "~/store";
+import "vue-awesome/icons/qrcode";
 import "vue-awesome/icons/share-alt";
 import "vue-awesome/icons/link";
 
@@ -251,7 +259,8 @@ export default {
     return {
       transposeLevel: 0,
       isShare: false,
-      shows: 0
+      shows: 0,
+      showQrCode: false,
     };
   },
 

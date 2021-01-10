@@ -287,6 +287,15 @@ export const actions = {
     commit("setFilteredSongs", result);
   },
 
+  changeSong({ commit, state }, url) {
+    let activeSong = state.songs.find(song => song.url == url) || {};
+    if (state.activeSong.url == url) return;
+
+    commit("activeSong", activeSong);
+    commit("playlistCurrent", state.playlistCurrent + 1);
+    commit("playlist", [...state.playlist, activeSong]);
+  },
+
   setPrevSong({ commit, state }, payload) {
     if (state.playlistCurrent <= 0) return;
     commit("activeSong", state.playlist[state.playlistCurrent - 1]);

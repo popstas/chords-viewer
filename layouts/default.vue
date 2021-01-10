@@ -18,7 +18,14 @@
             <Profile></Profile>
           </el-header>
           <el-main>
-            <div class="qrcode-wrapper" v-if="showQrCode"><qrcode-stream @decode="onDecode"></qrcode-stream></div>
+            <div class="qrcode-wrapper" v-if="showQrCode">
+              <qrcode-drop-zone v-if="isDesktop" @decode="onDecode">
+                <div class="drop-area">
+                  Drop QR code here
+                </div>
+              </qrcode-drop-zone>
+              <qrcode-stream @decode="onDecode"></qrcode-stream>
+            </div>
             <nuxt />
           </el-main>
         </div>
@@ -80,6 +87,12 @@ html {
 
 .qrcode-wrapper {
   height: 80vh;
+}
+.drop-area {
+  height: 300px;
+  background: #ccc;
+  line-height: 300px;
+  text-align: center;
 }
 
 .slideout-panel {
@@ -192,7 +205,10 @@ export default {
       return this.$store.state.activeSong.title
         ? this.$store.state.activeSong.title
         : this.$store.state.name;
-    }
+    },
+    isDesktop() {
+      return window.innerWidth > 768;
+    },
   },
 
   methods: {
@@ -212,7 +228,7 @@ export default {
 
     onDecode(url) {
       this.showQrCode = false;
-      alert(url);
+      this.$store.dispatch('changeSong', url);
     },
   },
 
