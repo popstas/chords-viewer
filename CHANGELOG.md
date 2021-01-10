@@ -1,3 +1,18 @@
+# [2.3.0](https://github.com/popstas/chords-viewer/compare/v2.2.1...v2.3.0) (2021-01-10)
+
+
+### Bug Fixes
+
+* try to downgrade nosleep.js (freezes while autoscroll) ([a850fc7](https://github.com/popstas/chords-viewer/commit/a850fc7))
+
+
+### Features
+
+* qr code generate, go to song on qrcode read ([630c6e8](https://github.com/popstas/chords-viewer/commit/630c6e8))
+* qr code scanner ([c8d7a6c](https://github.com/popstas/chords-viewer/commit/c8d7a6c))
+
+
+
 ## [2.2.1](https://github.com/popstas/chords-viewer/compare/v2.2.0...v2.2.1) (2020-12-17)
 
 
