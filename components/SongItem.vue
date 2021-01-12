@@ -63,7 +63,7 @@
         <icon name="qrcode"></icon>
       </a>
 
-      <div v-if="showQrCode">
+      <div class="song-item__qrcode" v-if="showQrCode">
         <qr-code :size="340" :text="song.url"></qr-code>
       </div>
 
@@ -202,6 +202,11 @@
     text-decoration: none;
     margin-right: 10px;
     padding: 10px;
+  }
+
+  &__qrcode img{
+    padding: 5px;
+    background: #fff;
   }
 }
 
