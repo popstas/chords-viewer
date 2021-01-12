@@ -1,3 +1,14 @@
+## [2.4.1](https://github.com/popstas/chords-viewer/compare/v2.4.0...v2.4.1) (2021-01-12)
+
+
+### Bug Fixes
+
+* increase sidebar width ([8d47a32](https://github.com/popstas/chords-viewer/commit/8d47a32))
+* less saruration for primary color in dark mode ([f072eb9](https://github.com/popstas/chords-viewer/commit/f072eb9))
+* qr code in dark mode ([aabee6c](https://github.com/popstas/chords-viewer/commit/aabee6c))
+
+
+
 # [2.4.0](https://github.com/popstas/chords-viewer/compare/v2.3.0...v2.4.0) (2021-01-12)
 
 
