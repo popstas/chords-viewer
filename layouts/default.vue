@@ -7,7 +7,7 @@
         panel="#panel"
         menu="#menu"
         side="left"
-        :padding="130"
+        :padding="140"
         :touch="false"
       >
         <div id="panel">
@@ -159,7 +159,7 @@ html {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 130px;
+  width: 140px;
   height: 100vh;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
