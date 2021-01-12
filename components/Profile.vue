@@ -13,7 +13,7 @@
   margin: 10px 3px -10px 0;
 
   a {
-    color: #000;
+    color: var(--link);
   }
 }
 .profile-avatar {

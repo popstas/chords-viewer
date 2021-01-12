@@ -34,8 +34,8 @@
     width: 100%;
     padding: 0 30px 0 15px;
     border-radius: 4px;
-    border: 1px solid #dcdfe6;
-    color: #606266;
+    border: 1px solid var(--bg-hover);
+    color: var(--link);
     height: 40px;
     line-height: 40px;
 

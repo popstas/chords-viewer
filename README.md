@@ -80,6 +80,8 @@ View chords.json generated with [chords-parser](https://github.com/popstas/chord
 - PWA (offline access, when deployed to https domain)
 - Highlight odd chords sequences
 - Display song complexity
+- Share song via QR code without internet
+- Dark mode
 
 ### Requirements
 `chords.json` should be placed in project root. You can download my data with command `npm run update-data`.

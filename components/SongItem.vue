@@ -107,7 +107,7 @@
     display: block;
 
     &:hover {
-      background: #fbfbfb;
+      background: var(--bg-hover);
     }
   }
 
@@ -154,7 +154,7 @@
     left: auto;
     right: 0;
     text-align: center;
-    background: #fff;
+    background: var(--bg);
     padding: 5px;
 
     &_images {

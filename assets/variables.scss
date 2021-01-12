@@ -20,4 +20,20 @@ $main-padding: 5px;
 
   --container-width-md: #{$container-width-md};
   --container-width-lg: #{$container-width-lg};
+
+  --bg: #fff;
+  --bg-hover: #f5f5f5;
+  --color: #303133;
+  --link: #666;
+  --link-hover: #999;
+  --link-disabled: #eee;
+}
+
+.dark-mode {
+  --bg: #222933;
+  --bg-hover:#29313d;
+  --color: #eee;
+  --link: #999;
+  --link-hover: #ccc;
+  --link-disabled: #333;
 }

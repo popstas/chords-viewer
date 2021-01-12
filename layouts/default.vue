@@ -1,5 +1,5 @@
 <template>
-  <div class="container-wrap" :style="{ paddingTop: chordsHeight + 'px' }">
+  <div :class="{'container-wrap': true}" :style="{ paddingTop: chordsHeight + 'px' }">
     <el-container>
       <!-- https://github.com/Mango/slideout#user-content-slideoutoptions -->
       <Slideout
@@ -39,6 +39,7 @@
 
 <style lang="scss">
 @import "@/assets/variables.scss";
+@import "@/assets/dark-theme.scss";
 
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -53,7 +54,7 @@ html {
 }
 .el-main {
   max-width: 100vw;
-  padding: $main-padding;
+  padding: $main-padding !important;
 }
 
 *,
@@ -65,7 +66,7 @@ html {
 
 .container-wrap {
   margin: 0 auto;
-  background: #fff;
+  background: var(--bg);
   position: relative;
   max-width: $container-width-xs;
   @media (min-width: $min-width-sm) {
@@ -100,7 +101,7 @@ html {
   z-index: 1;
   // will-change: transform; - it breaks position: fixed
   min-height: 100vh;
-  background: #fff;
+  background: var(--bg);
   @media (min-width: $container-width-xs) {
     min-width: $container-width-xs;
   }
@@ -137,7 +138,7 @@ html {
 }
 
 .el-header {
-  padding: 0 5px;
+  padding: 0 5px !important;
   .menu-toggle,
   .input-clear {
     background: none;
@@ -145,6 +146,13 @@ html {
     line-height: 42px;
     outline: none;
     cursor: pointer;
+  }
+
+  button {
+    color: var(--link);
+    &:hover {
+      color: var(--link-hover);
+    }
   }
 }
 .slideout-menu {
@@ -169,6 +177,21 @@ html {
     display: block;
   }
 }
+
+input {
+  background-color: var(--bg-hover);
+}
+
+.dark-mode {
+  .el-popover {
+    background: #fff;
+    color: #303133;
+  }
+}
+/* .el-radio-button__orig-radio:checked+.el-radio-button__inner {
+  background-color: #84a1bd !important;
+  border-color: #84a1bd !important;
+} */
 </style>
 
 <script>
@@ -235,6 +258,9 @@ export default {
   head() {
     return {
       title: this.title,
+      bodyAttrs: {
+        class: this.$store.state.darkMode ? 'dark-mode' : ''
+      },
       link: [
         { rel: "manifest", href: "/site.webmanifest" },
         { rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5" },

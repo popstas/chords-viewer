@@ -3,9 +3,9 @@
     <SearchInput class="toolbar__search" v-model="q"></SearchInput>
 
     <div class="toolbar__current-song">
-          <el-button class="toolbar__up" @click="toTop">
-            <icon name="chevron-up"></icon>
-          </el-button>
+      <el-button class="toolbar__up" @click="toTop">
+        <icon name="chevron-up"></icon>
+      </el-button>
       <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
     </div>
 
@@ -90,7 +90,7 @@
 @import "@/assets/variables.scss";
 
 .toolbar {
-  background: #fff;
+  background: var(--bg);
   text-align: center;
   margin: 0 auto;
   max-width: $container-width-xs;
@@ -105,7 +105,7 @@
   }
 
   &__up {
-    display: none;
+    display: none !important;
   }
 
   &_fixed {
@@ -117,7 +117,7 @@
     box-shadow: 0 0 1px #ccc;
 
     .toolbar__up {
-      display: block;
+      display: block !important;
       float: left;
       margin-left: 7px;
     }
@@ -246,9 +246,9 @@
     border: none !important;
     border-radius: 4px !important;
     background: none !important;
-    color: #999 !important;
+    color: var(--link) !important;
     &:disabled {
-      color: #eee !important;
+      color: var(--bg-hover) !important;
     }
     padding: 7px;
     // float: right;
@@ -261,7 +261,7 @@
 
     .el-radio-button__inner {
       @media (max-width: 800px) {
-        padding: 7px 8px;
+        padding: 7px 8px !important;
       }
     }
   }
@@ -274,7 +274,7 @@
       background: none;
       cursor: pointer;
       outline: none;
-      color: #666;
+      color: var(--link);
     }
   }
 }

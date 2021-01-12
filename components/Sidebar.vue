@@ -34,6 +34,9 @@
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
     </el-row>
     <el-row>
+      <el-switch v-model="darkMode" active-text="dark mode"></el-switch>
+    </el-row>
+    <el-row>
       <el-switch v-model="showImages" active-text="images"></el-switch>
     </el-row>
     <el-row>
@@ -83,7 +86,7 @@
   }
 
   .el-radio-button--mini .el-radio-button__inner {
-    padding: 7px;
+    padding: 7px !important;
   }
 
   // font size radiobuttons
@@ -99,9 +102,9 @@
     display: inline-block;
     margin-right: 15px;
     text-decoration: none;
-    color: #333;
+    color: var(--link);
     &:hover {
-      color: #666;
+      color: var(--link-hover);
     }
   }
 
@@ -127,6 +130,7 @@ export default {
       sortByDate: false,
       sortByShows: false,
       noSleep: false,
+      darkMode: false,
       fontSize: 1,
       showImages: false,
       showBadges: false
@@ -155,6 +159,10 @@ export default {
     noSleep(val) {
       this.$store.commit("setNoSleep", val);
       val ? nosleep.enable() : nosleep.disable();
+    },
+
+    darkMode(val) {
+      this.$store.commit("darkMode", val);
     },
 
     showImages(val) {
@@ -186,6 +194,7 @@ export default {
     this.fontSize = this.$store.state.fontSize;
     this.showImages = this.$store.state.showImages;
     this.noSleep = this.$store.state.noSleep;
+    this.darkMode = this.$store.state.darkMode;
   },
 
   mounted() {

@@ -47,6 +47,8 @@ export const state = () => ({
   artistsSort: "name",
   showImages: false,
   showBadges: false,
+  noSleep: false,
+  darkMode: false,
 
   // filters
   filter: {
@@ -130,6 +132,9 @@ export const mutations = {
   },
   setNoSleep(state, newValue) {
     state.noSleep = newValue;
+  },
+  darkMode(state, newValue) {
+    state.darkMode = newValue;
   },
   addShow(state, url) {
     const current = state.shows[url] || 0;

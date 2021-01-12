@@ -6,6 +6,7 @@ export default ({ store }) => {
       "filter",
       "shows",
       "noSleep",
+      "darkMode",
       "fontSize",
       "autoScrollSpeed",
       "instrument",
