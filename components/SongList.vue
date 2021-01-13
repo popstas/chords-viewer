@@ -9,6 +9,7 @@
         :key="song.url"
         :active="song.url == activeSong.url"
         @active="scrollTo"
+        @change="changeSong(song.url == activeSong.url ? '' : song.url)"
       ></SongItem>
     </el-collapse>
   </div>
@@ -86,7 +87,7 @@ export default {
 
       clearTimeout(this.showTimer);
       this.showTimer = setTimeout(() => {
-        if (!song) return; // fix empty song addShow error
+        if (!song.url) return; // fix empty song addShow error
         const safeUrl = song.url.replace(/[\/\.]/g, '_');
         this.$store.dispatch("addShow", safeUrl);
       }, 60000);
@@ -95,6 +96,7 @@ export default {
 
   methods: {
     changeSong(url) {
+      console.log('url: ', url);
       this.$store.dispatch('changeSong', url);
     },
 

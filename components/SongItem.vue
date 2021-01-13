@@ -1,6 +1,6 @@
 <template>
-  <el-collapse-item :title="title" :name="song.url" :class="{'song-item': true, active: active}">
-    <template slot="title">
+  <div :class="{'el-collapse-item': true, 'song-item': true, active: active}">
+    <div role="button" class="el-collapse-item__header" @click="$emit('change')">
       <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
@@ -9,84 +9,86 @@
         <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity" title="song complexity"></span>
         <i v-if="song.text" class="el-icon-tickets" title="with text"></i>
       </span>
-    </template>
-
-    <div class="song-item__content" v-if="active">
-      <div v-if="active" class="song-transpose">
-        <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
-        <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
-        <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
-        <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
-        <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
-      </div>
-
-      <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
-        <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
-          <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
-            <Chord
-              v-for="(chord, key) in sequence"
-              :chord="chord"
-              :transposeLevel="transposeLevel - defaultTransposeLevel"
-              :key="key"
-              :image="$store.state.showImages"
-            ></Chord>
-          </span>
-        </span>
-      </div>
-
-      <div v-if="song.text" class="song-text">
-        <template class="song-text__line" v-for="(line, lineKey) in textLines">
-          <div v-if="line.type == 'chords'" class="song-item__line_chords" :key="lineKey">
-            <template v-for="(chord, chordKey) in line.data">
-              <template v-if="chord != ''">
-                <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
-              </template>
-              <template v-else>&nbsp;</template>
-            </template>
-          </div>
-          <div
-            v-if="line.type == 'text'"
-            class="song-item__line_text"
-            v-html="line.data"
-            :key="lineKey"
-          ></div>
-        </template>
-      </div>
-
-      <a class="song-item__link" target="_blank" :href="song.url">
-        <icon name="link"></icon>
-      </a>
-      <a v-if="isShare" class="song-item__link" @click.prevent="share">
-        <icon name="share-alt"></icon>
-      </a>
-      <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
-        <icon name="qrcode"></icon>
-      </a>
-
-      <div class="song-item__qrcode" v-if="showQrCode">
-        <qr-code :size="340" :text="song.url"></qr-code>
-      </div>
-
-      <ul v-if="active" class="song-categories">
-        <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
-        <li
-          class="song-categories__item song-categories__item_artist"
-          @click="changeFilter('q', '^' + song.details.artist)"
-        >{{ song.details.artist }}</li>
-        <li
-          class="song-categories__item song-categories__item_genre"
-          v-for="genre in genres" :key="genre"
-          @click="changeFilter('q', 'жанр: ' + genre)"
-        >{{ genre }}</li>
-        <li class="song-categories__item song-categories__item_shows">просмотров:
-          <el-button size="mini" disabled v-html="shows"></el-button>
-          <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
-          <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
-        </li>
-      </ul>
-
     </div>
-  </el-collapse-item>
+
+    <div role="tabpanel" class="el-collapse-item__wrap" v-if="active"><div class="el-collapse-item__content">
+      <div class="song-item__content">
+        <div v-if="active" class="song-transpose">
+          <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
+          <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
+          <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
+          <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
+          <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+        </div>
+
+        <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
+          <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
+            <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
+              <Chord
+                v-for="(chord, key) in sequence"
+                :chord="chord"
+                :transposeLevel="transposeLevel - defaultTransposeLevel"
+                :key="key"
+                :image="$store.state.showImages"
+              ></Chord>
+            </span>
+          </span>
+        </div>
+
+        <div v-if="song.text" class="song-text">
+          <template class="song-text__line" v-for="(line, lineKey) in textLines">
+            <div v-if="line.type == 'chords'" class="song-item__line_chords" :key="lineKey">
+              <template v-for="(chord, chordKey) in line.data">
+                <template v-if="chord != ''">
+                  <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
+                </template>
+                <template v-else>&nbsp;</template>
+              </template>
+            </div>
+            <div
+              v-if="line.type == 'text'"
+              class="song-item__line_text"
+              v-html="line.data"
+              :key="lineKey"
+            ></div>
+          </template>
+        </div>
+
+        <a class="song-item__link" target="_blank" :href="song.url">
+          <icon name="link"></icon>
+        </a>
+        <a v-if="isShare" class="song-item__link" @click.prevent="share">
+          <icon name="share-alt"></icon>
+        </a>
+        <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
+          <icon name="qrcode"></icon>
+        </a>
+
+        <div class="song-item__qrcode" v-if="showQrCode">
+          <qr-code :size="340" :text="song.url"></qr-code>
+        </div>
+
+        <ul v-if="active" class="song-categories">
+          <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
+          <li
+            class="song-categories__item song-categories__item_artist"
+            @click="changeFilter('q', '^' + song.details.artist)"
+          >{{ song.details.artist }}</li>
+          <li
+            class="song-categories__item song-categories__item_genre"
+            v-for="genre in genres" :key="genre"
+            @click="changeFilter('q', 'жанр: ' + genre)"
+          >{{ genre }}</li>
+          <li class="song-categories__item song-categories__item_shows">просмотров:
+            <el-button size="mini" disabled v-html="shows"></el-button>
+            <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
+            <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
+          </li>
+        </ul>
+
+      </div>
+    </div></div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -122,6 +124,7 @@
   &__complexity {
     padding: 2px 4px;
     border-radius: 100%;
+    color: #000;
     &_1 {
       background: #aaffaa;
     }
