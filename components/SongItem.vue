@@ -117,6 +117,10 @@
     display: none;
   }
 
+  .el-collapse-item__header {
+    overflow: hidden;
+  }
+
   &__date, &__shows {
     color: #999;
   }

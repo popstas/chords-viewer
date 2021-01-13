@@ -7,6 +7,13 @@
         <icon name="chevron-up"></icon>
       </el-button>
       <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
+
+      <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
+        <qr-code :size="340" :text="$store.state.activeSong.url"></qr-code>
+      </div>
+      <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link" @click.prevent="showQrCode = !showQrCode">
+        <icon name="qrcode"></icon>
+      </a>
     </div>
 
     <div class="toolbar__filters">
@@ -106,6 +113,21 @@
 
   &__up {
     display: none !important;
+  }
+
+  &__qrcode {
+    text-align: center;
+
+    > div {
+      display: inline-block !important;
+      padding: 5px;
+      background: #fff;
+    }
+  }
+  &__qrcode-link {
+    float: right;
+    padding: 10px;
+    color: var(--link);
   }
 
   &_fixed {
@@ -312,7 +334,9 @@ export default {
       toolbarFixed: false,
       lastScrollTop: 0,
 
-      artist: ""
+      artist: "",
+
+      showQrCode: false,
     };
   },
 

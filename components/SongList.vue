@@ -96,7 +96,6 @@ export default {
 
   methods: {
     changeSong(url) {
-      console.log('url: ', url);
       this.$store.dispatch('changeSong', url);
     },
 
