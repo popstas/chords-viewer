@@ -155,18 +155,45 @@ export const mutations = {
 
 const debouncedFilterSongs = debounce(dispatch => {
   dispatch("filterSongs");
-}, 500);
+}, 100);
+
+let isFirstFilter = true;
+const startTime = Date.now();
 
 export const actions = {
-  changeFilter({ commit, dispatch }, options) {
-    // console.log('options: ', options);
+  changeFilter({ commit, dispatch, state }, options) {
+    // console.log('changeFilter: ', options);
     commit("changeFilter", options);
-    debouncedFilterSongs(dispatch);
 
+    if (isFirstFilter) {
+      dispatch("filterSongs");
+      isFirstFilter = false;
+    } else {
+      const uptime = Date.now() - startTime;
+      if (uptime < 2000) return; // fix double filter on start
+
+      // loading placeholder if all songs filter
+      if (state.filter.q === '') {
+        commit("setFilteredSongs", [{
+          title: 'Loading...',
+          url: 'loading',
+          text: 'loading',
+          created: '',
+          details: {
+            artist: 'Songs',
+            title: 'Loading...',
+          }
+        }]);
+      }
+
+      debouncedFilterSongs(dispatch);
+      // dispatch("filterSongs");
+    }
   },
 
   async filterSongs({ commit, state }) {
     // console.log("FilterSongs");
+    const t0 = Date.now();
 
     // webhookShow
     const webhookCommand = state.filter.q.match(/^webhookShow=(.*)$/);
@@ -289,6 +316,8 @@ export const actions = {
       });
     }
 
+    const t1 = Date.now();
+    // console.log(`filter songs time: ${ t1 - t0 }`);
     commit("setFilteredSongs", result);
   },
 
