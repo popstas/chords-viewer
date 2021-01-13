@@ -1,3 +1,14 @@
+## [2.4.2](https://github.com/popstas/chords-viewer/compare/v2.4.1...v2.4.2) (2021-01-13)
+
+
+### Bug Fixes
+
+* always show scroll, for avoid interface jumps while filter ([e2cd5be](https://github.com/popstas/chords-viewer/commit/e2cd5be))
+* faster startup, change filter, songs loading indicator ([eab755b](https://github.com/popstas/chords-viewer/commit/eab755b))
+* group controls in sidebar ([4e3d0ba](https://github.com/popstas/chords-viewer/commit/4e3d0ba))
+
+
+
 ## [2.4.1](https://github.com/popstas/chords-viewer/compare/v2.4.0...v2.4.1) (2021-01-12)
 
 
