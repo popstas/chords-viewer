@@ -5,7 +5,7 @@
 
 Мои аккорды: https://chords.popstas.ru
 
-![demo](static/demo.gif)
+![demo](assets/demo.gif)
 
 ### Возможности
 
