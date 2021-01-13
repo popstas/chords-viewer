@@ -86,6 +86,7 @@ export default {
 
       clearTimeout(this.showTimer);
       this.showTimer = setTimeout(() => {
+        if (!song) return; // fix empty song addShow error
         const safeUrl = song.url.replace(/[\/\.]/g, '_');
         this.$store.dispatch("addShow", safeUrl);
       }, 60000);
