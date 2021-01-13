@@ -52,6 +52,9 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
+body {
+  overflow-y: scroll;
+}
 .el-main {
   max-width: 100vw;
   padding: $main-padding !important;
@@ -161,7 +164,7 @@ html {
   bottom: 0;
   width: 140px;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   z-index: 0;
   display: none;
