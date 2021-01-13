@@ -405,6 +405,10 @@ export default {
       this.lastScrollTop = window.scrollY;
       this.toolbarFixed = window.scrollY > 0;
 
+      if (window.scrollY === 0) {
+        this.autoScroll = false;
+      }
+
       // console.log('window.scrollY:', window.scrollY);
       // console.log('delta:', delta);
       if (delta == 1) {
