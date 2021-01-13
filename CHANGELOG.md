@@ -1,3 +1,13 @@
+## [2.4.3](https://github.com/popstas/chords-viewer/compare/v2.4.2...v2.4.3) (2021-01-13)
+
+
+### Bug Fixes
+
+* fix empty song addShow error ([9e9de60](https://github.com/popstas/chords-viewer/commit/9e9de60))
+* stop autoscroll when scroll to top ([9834f3d](https://github.com/popstas/chords-viewer/commit/9834f3d))
+
+
+
 ## [2.4.2](https://github.com/popstas/chords-viewer/compare/v2.4.1...v2.4.2) (2021-01-13)
 
 
