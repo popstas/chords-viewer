@@ -1,3 +1,12 @@
+## [2.4.4](https://github.com/popstas/chords-viewer/compare/v2.4.3...v2.4.4) (2021-01-13)
+
+
+### Bug Fixes
+
+* fix qrcod ([9877246](https://github.com/popstas/chords-viewer/commit/9877246))
+
+
+
 ## [2.4.3](https://github.com/popstas/chords-viewer/compare/v2.4.2...v2.4.3) (2021-01-13)
 
 
