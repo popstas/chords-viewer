@@ -187,6 +187,10 @@ input {
     background: #fff;
     color: #303133;
   }
+
+  .el-divider {
+    background-color: var(--link-disabled);
+  }
 }
 /* .el-radio-button__orig-radio:checked+.el-radio-button__inner {
   background-color: #84a1bd !important;

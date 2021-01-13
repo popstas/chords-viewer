@@ -1,5 +1,40 @@
 <template>
   <div class="sidebar">
+    <el-row>
+      <el-switch v-model="sortByDate" active-text="by date"></el-switch>
+    </el-row>
+    <el-row>
+      <el-switch v-model="sortByShows" active-text="by shows"></el-switch>
+    </el-row>
+
+    <el-divider></el-divider>
+
+    <el-row>
+      <el-switch v-model="darkMode" active-text="dark mode"></el-switch>
+    </el-row>
+    <el-row style="text-align:center">
+      <label>font size:</label>
+      <el-radio-group class="sidebar__font-size" v-model="fontSize" size="mini" @change="changeFontSize">
+        <el-radio-button label="1"></el-radio-button>
+        <el-radio-button label="2"></el-radio-button>
+        <el-radio-button label="3"></el-radio-button>
+      </el-radio-group>
+    </el-row>
+
+    <el-divider></el-divider>
+
+    <el-row>
+      <el-switch v-model="showImages" active-text="images"></el-switch>
+    </el-row>
+    <el-row>
+      <el-switch v-model="showBadges" active-text="badges"></el-switch>
+    </el-row>
+    <el-row>
+      <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
+    </el-row>
+
+    <el-divider></el-divider>
+
     <el-row style="text-align:center">
       <label>chords:</label>
       <el-radio-group v-model="withChords" size="mini">
@@ -24,32 +59,8 @@
         <el-radio-button label="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
-    <el-row>
-      <el-switch v-model="sortByDate" active-text="by date"></el-switch>
-    </el-row>
-    <el-row>
-      <el-switch v-model="sortByShows" active-text="by shows"></el-switch>
-    </el-row>
-    <el-row>
-      <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
-    </el-row>
-    <el-row>
-      <el-switch v-model="darkMode" active-text="dark mode"></el-switch>
-    </el-row>
-    <el-row>
-      <el-switch v-model="showImages" active-text="images"></el-switch>
-    </el-row>
-    <el-row>
-      <el-switch v-model="showBadges" active-text="badges"></el-switch>
-    </el-row>
-    <el-row style="text-align:center">
-      <label>font size:</label>
-      <el-radio-group class="sidebar__font-size" v-model="fontSize" size="mini" @change="changeFontSize">
-        <el-radio-button label="1"></el-radio-button>
-        <el-radio-button label="2"></el-radio-button>
-        <el-radio-button label="3"></el-radio-button>
-      </el-radio-group>
-    </el-row>
+
+    <el-divider></el-divider>
 
     <el-row style="text-align:center">
       <a class="sidebar__link" href="https://github.com/popstas/chords-viewer/blob/master/CHANGELOG.md" target="_blank">
@@ -73,7 +84,6 @@
         </el-popover>
       </span>
     </el-row>
-
   </div>
 </template>
 
