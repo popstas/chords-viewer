@@ -61,7 +61,7 @@
     margin-right: -4px;
   }
   &_separator_bracket_right {
-    margin-left: -5px;
+    margin-left: -7px;
   }
 }
 
