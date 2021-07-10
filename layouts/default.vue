@@ -232,9 +232,10 @@ export default {
 
   computed: {
     title() {
-      return this.$store.state.activeSong.title
-        ? this.$store.state.activeSong.title
-        : this.$store.state.name;
+      const t = [];
+      if (this.$store.state.activeSong.title) t.push(this.$store.state.activeSong.title);
+      t.push(this.$store.state.name);
+      return t.join(' - ');
     },
     isDesktop() {
       return window.innerWidth > 768;
