@@ -107,7 +107,7 @@ export default {
         case 'guitar':
         default:
           chord = this.amdmReplace(chord);
-          return `https://amdm.ru/images/chords/${chord}_0.gif`;
+          return `https://cs.amdm.ru/images/chords/${chord}_0.gif`;
       }
 
     },
