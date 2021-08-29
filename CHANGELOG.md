@@ -1,3 +1,15 @@
+## [2.4.5](https://github.com/popstas/chords-viewer/compare/v2.4.4...v2.4.5) (2021-08-29)
+
+
+### Bug Fixes
+
+* уменьшено расстояние между аккордами с точкой ([eff9769](https://github.com/popstas/chords-viewer/commit/eff9769))
+* add app name to title ([81a1999](https://github.com/popstas/chords-viewer/commit/81a1999))
+* amdm chords images url fix ([5c649de](https://github.com/popstas/chords-viewer/commit/5c649de))
+* try to fix autoscroll freeze on mobile ([80fad9f](https://github.com/popstas/chords-viewer/commit/80fad9f))
+
+
+
 ## [2.4.4](https://github.com/popstas/chords-viewer/compare/v2.4.3...v2.4.4) (2021-01-13)
 
 
@@ -81,9 +93,9 @@
 
 ### Bug Fixes
 
-* Bb -> A#, Eb -> F# ([fba5dea](https://github.com/popstas/chords-viewer/commit/fba5dea))
 * картинки для аккордов укулеле и пианино типа G#, G#m ([b45b85a](https://github.com/popstas/chords-viewer/commit/b45b85a))
 * при открытии песни по урлу просмотр не учитывается ([a32d88e](https://github.com/popstas/chords-viewer/commit/a32d88e))
+* Bb -> A#, Eb -> F# ([fba5dea](https://github.com/popstas/chords-viewer/commit/fba5dea))
 
 
 ### Features
@@ -108,10 +120,10 @@
 
 ### Features
 
-* ctrl+up/down - транспонирование ([6e18ee5](https://github.com/popstas/chords-viewer/commit/6e18ee5))
 * авторизация Google для хранения счётчика просмотров ([ddb1150](https://github.com/popstas/chords-viewer/commit/ddb1150))
 * сортировка по популярности ([150ab88](https://github.com/popstas/chords-viewer/commit/150ab88))
 * сортировка по просмотрам ([477f61f](https://github.com/popstas/chords-viewer/commit/477f61f))
+* ctrl+up/down - транспонирование ([6e18ee5](https://github.com/popstas/chords-viewer/commit/6e18ee5))
 
 
 
