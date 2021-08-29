@@ -320,6 +320,14 @@ const speedMapping = {
   5: 64,
   6: 32
 };
+const speedMapping2 = {
+  1: 8000,
+  2: 5000,
+  3: 3000,
+  4: 2000,
+  5: 1000,
+  6: 700
+};
 
 export default {
   components: {
@@ -419,8 +427,12 @@ export default {
 
       if (this.autoScroll) {
         this.scrollInterval = setInterval(() => {
-          window.scrollBy(0, 1);
-        }, speedMapping[this.autoScrollSpeed]);
+          window.scrollBy({
+            left: 0,
+            top: 20,
+            behavior : 'smooth',
+          });
+        }, speedMapping2[this.autoScrollSpeed]);
       }
     },
 
