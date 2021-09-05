@@ -51,6 +51,11 @@
               v-html="line.data"
               :key="lineKey"
             ></div>
+            <div
+              v-if="line.type == 'hr'"
+              class="song-item__line_text"
+              :key="lineKey"
+            ><hr></div>
           </template>
         </div>
 
@@ -142,6 +147,11 @@
 
   &__content {
     overflow-x: auto;
+
+    hr {
+      margin: 1.5rem;
+      border-color: var(--bg-hover);
+    }
   }
   &.active .song-item__content {
     @media (min-width: 1200px) {
@@ -353,12 +363,17 @@ export default {
 
     textLines() {
       if (!this.song.text) return "";
-      return this.song.text.split("\n").map(line => {
+      const lines = this.song.text.split("\n").map(line => {
         if (!line.match(/[а-яА-Я]/)) {
+          if (!line.trim()) {
+            return { type: "hr", data: '' };
+          }
           return { type: "chords", data: line.split(" ") };
         }
         return { type: "text", data: line };
       });
+
+      return lines;
     },
 
     chords() {
