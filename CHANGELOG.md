@@ -1,3 +1,12 @@
+## [2.4.6](https://github.com/popstas/chords-viewer/compare/v2.4.5...v2.4.6) (2021-09-05)
+
+
+### Features
+
+* hr as text separator ([7ea7bb3](https://github.com/popstas/chords-viewer/commit/7ea7bb3))
+
+
+
 ## [2.4.5](https://github.com/popstas/chords-viewer/compare/v2.4.4...v2.4.5) (2021-08-29)
 
 
