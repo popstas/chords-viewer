@@ -1,3 +1,7 @@
+## [2.4.7](https://github.com/popstas/chords-viewer/compare/v2.4.6...v2.4.7) (2021-09-05)
+
+
+
 ## [2.4.6](https://github.com/popstas/chords-viewer/compare/v2.4.5...v2.4.6) (2021-09-05)
 
 
