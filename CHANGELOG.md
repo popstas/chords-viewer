@@ -1,3 +1,18 @@
+# [2.5.0](https://github.com/popstas/chords-viewer/compare/v2.4.7...v2.5.0) (2021-12-05)
+
+
+### Bug Fixes
+
+* нечёткий поиск заменён чётким ([57bcf88](https://github.com/popstas/chords-viewer/commit/57bcf88))
+* плюс-минус не были видны на тёмной теме ([88ec2b0](https://github.com/popstas/chords-viewer/commit/88ec2b0))
+
+
+### Features
+
+* выбор тёмной темы при первом открытии, если в системе установлена тёмная тема по умолчанию ([af85869](https://github.com/popstas/chords-viewer/commit/af85869))
+
+
+
 ## [2.4.7](https://github.com/popstas/chords-viewer/compare/v2.4.6...v2.4.7) (2021-09-05)
 
 
