@@ -296,6 +296,12 @@ export default {
 
   created() {
     window.addEventListener("scroll", this.handleScroll);
+
+    console.log('this.$store.state.darkMode: ', this.$store.state.darkMode);
+    if (this.$store.state.darkMode === undefined) {
+      const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.$store.commit('darkMode', isDark);
+    }
   },
 
   destroyed() {

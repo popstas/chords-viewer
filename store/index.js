@@ -48,7 +48,7 @@ export const state = () => ({
   showImages: false,
   showBadges: false,
   noSleep: false,
-  darkMode: false,
+  darkMode: undefined,
 
   // filters
   filter: {
