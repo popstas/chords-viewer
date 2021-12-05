@@ -250,27 +250,34 @@ export const actions = {
         let g = state.filter.q.replace("жанр: ", "");
         result = result.filter(song => song.genres && song.genres.includes(g));
       } else {
-        let fuse = new Fuse(result, {
-          minMatchCharLength: 2,
-          keys: [
-            {
-              name: "title",
-              weight: 0.7
-            },
-            {
-              name: "text",
-              weight: 0.3
-            }
-          ]
-        });
-        result = fuse.search(q).map(r => r.item);
-        /* // without fuse
-        result = result.filter(song => {
-          return (
-            song.title.toLowerCase().search(q) >= 0 ||
-            (!isLetter && song.text && song.text.toLowerCase().search(q) >= 0)
-          );
-        }); */
+        const isFuse = false;
+
+        if (isFuse) {
+          let fuse = new Fuse(result, {
+            minMatchCharLength: 2,
+            keys: [
+              {
+                name: "title",
+                weight: 0.7
+              },
+              {
+                name: "text",
+                weight: 0.5
+              }
+            ]
+          });
+          result = fuse.search(q).map(r => r.item);
+        }
+
+        // without fuse
+        else {
+          result = result.filter(song => {
+            return (
+              song.title.toLowerCase().search(q) >= 0 ||
+              (!isLetter && song.text && song.text.toLowerCase().search(q) >= 0)
+            );
+          });
+        }
       }
     }
 
