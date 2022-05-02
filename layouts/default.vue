@@ -60,6 +60,11 @@ body {
   padding: $main-padding !important;
 }
 
+textarea {
+  background: var(--bg-hover);
+  color: var(--color);
+}
+
 *,
 *:before,
 *:after {

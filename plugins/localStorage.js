@@ -5,6 +5,7 @@ export default ({ store }) => {
     paths: [
       "filter",
       "shows",
+      "comments",
       "noSleep",
       "darkMode",
       "fontSize",

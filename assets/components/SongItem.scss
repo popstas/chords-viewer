@@ -1,0 +1,175 @@
+.song-item {
+  &.active {
+    margin-bottom: 50px;
+  }
+
+  &__badges {
+    float: right;
+  }
+
+  [role="tab"] {
+    overflow: hidden;
+  }
+
+  [role="button"] {
+    display: block;
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+  }
+
+  .el-collapse-item__arrow {
+    display: none;
+  }
+
+  .el-collapse-item__header {
+    overflow: hidden;
+  }
+
+  &__date, &__shows {
+    color: #999;
+  }
+
+  &__complexity {
+    padding: 2px 4px;
+    border-radius: 100%;
+    color: #000;
+    &_1 {
+      background: #aaffaa;
+    }
+    &_2 {
+      background: #ffffaa;
+    }
+    &_3 {
+      background: #ffaaaa;
+    }
+  }
+
+  &__content {
+    overflow-x: auto;
+
+    hr {
+      margin: 1.5rem;
+      border-color: var(--bg-hover);
+    }
+  }
+  &.active .song-item__content {
+    @media (min-width: 1200px) {
+      columns: 2;
+    }
+    @media (min-width: 1400px) {
+      columns: 3;
+    }
+    @media (min-width: 1600px) {
+      columns: 4;
+    }
+  }
+
+  .chords {
+    position: fixed;
+    top: 0;
+    left: auto;
+    right: 0;
+    text-align: center;
+    background: var(--bg);
+    padding: 5px;
+
+    &_images {
+      position: static;
+    }
+
+    @media (min-width: 1200px) {
+      padding: 10px;
+    }
+
+    .slideout-open & {
+      display: none;
+    }
+
+    &__section {
+      display: block;
+    }
+
+    &__sequence {
+      // white-space: nowrap;
+      &:after {
+        content: " .. ";
+      }
+      &:last-child:after {
+        content: "";
+      }
+    }
+  }
+
+  &__line_chords {
+    .chord_known .el-button {
+      color: #999;
+      border: none;
+      background: none;
+    }
+  }
+
+  .song-transpose .el-button {
+    border: none;
+  }
+
+  &__link {
+    display: inline-block;
+    color: #999;
+    text-decoration: none;
+    margin-right: 10px;
+    padding: 10px;
+    cursor: pointer;
+  }
+
+  &__qrcode img{
+    padding: 5px;
+    background: #fff;
+  }
+}
+
+.song-categories {
+  list-style: none;
+  padding: 0;
+
+  &__item {
+    padding: 0 5px 0 0;
+    display: inline-block;
+    color: #999;
+    font-size: 13px;
+    min-width: 23px;
+    height: 28px;
+    line-height: 28px;
+    cursor: pointer;
+    box-sizing: border-box;
+    text-align: center;
+    margin: 0;
+
+    &.active {
+      color: #409eff;
+    }
+
+    &_artist {
+      color: #ccc;
+    }
+
+    &_date, &_shows {
+      cursor: default;
+    }
+
+    &_shows .el-button {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+details {
+  summary {
+    list-style: none !important;
+    cursor: pointer;
+  }
+}
+

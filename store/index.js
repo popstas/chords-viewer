@@ -38,6 +38,7 @@ export const state = () => ({
   playlistCurrent: -1,
   toolbarHidden: false,
   shows: {},
+  comments: {},
   user: false,
 
   // settings
@@ -141,12 +142,19 @@ export const mutations = {
     state.shows[url] = current + 1;
     console.log('addShow: ', current + 1);
   },
-  setShow(state, options) {
-    console.log('setShow: ', options);
-    state.shows[options.url] = options.shows;
+  setShow(state, params) {
+    console.log('setShow: ', params);
+    state.shows[params.url] = params.shows;
   },
   setShows(state, newValue) {
     state.shows = newValue;
+  },
+  setComment(state, params) {
+    console.log('setComment: ', params);
+    state.comments[params.url] = params.comment;
+  },
+  setComments(state, newValue) {
+    state.comments = newValue;
   },
   setUser(state, newValue) {
     state.user = newValue;
@@ -373,9 +381,16 @@ export const actions = {
         .once("value")
         .then(snapshot => {
           const shows = (snapshot.val() && snapshot.val().shows) || false;
+          const comments = (snapshot.val() && snapshot.val().comments) || false;
+
           if (shows) {
             console.log('Update shows from firebase:', shows);
             commit("setShows", shows);
+          }
+
+          if (comments) {
+            console.log('Update comments from firebase:', comments);
+            commit("setComments", comments);
           }
 
           const settings = (snapshot.val() && snapshot.val().settings) || false;
@@ -434,7 +449,22 @@ export const actions = {
         });
       console.log('update remote shows');
     }
-  }
+  },
+
+  addComment({ commit, state }, {url, comment}) {
+    commit("setComment", {url, comment});
+
+    if (state.user) {
+      console.log('state.comments: ', state.comments);
+      firebase
+        .database()
+        .ref("users/" + state.user.uid)
+        .update({
+          comments: state.comments
+        });
+      console.log('update remote comments');
+    }
+  },
 };
 
 export const strict = true;

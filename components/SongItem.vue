@@ -68,6 +68,9 @@
         <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
         </a>
+        <a class="song-item__link" @click.prevent="showComment = !showComment">
+          <icon name="edit"> </icon>
+        </a>
 
         <div class="song-item__qrcode" v-if="showQrCode">
           <qr-code :size="340" :text="song.url"></qr-code>
@@ -91,187 +94,25 @@
           </li>
         </ul>
 
+        <details :open="showComment || !!this.comment">
+          <summary v-html="this.comment ? 'Заметка' : ''" />
+          <div>
+            <textarea ref="comment" class="song-item__comment" v-model="comment" v-shortkey.avoid />
+          </div>
+        </details>
       </div>
     </div></div>
   </div>
 </template>
 
-<style lang="scss">
-.song-item {
-  &.active {
-    margin-bottom: 50px;
-  }
-
-  &__badges {
-    float: right;
-  }
-
-  [role="tab"] {
-    overflow: hidden;
-  }
-
-  [role="button"] {
-    display: block;
-
-    &:hover {
-      background: var(--bg-hover);
-    }
-  }
-
-  .el-collapse-item__arrow {
-    display: none;
-  }
-
-  .el-collapse-item__header {
-    overflow: hidden;
-  }
-
-  &__date, &__shows {
-    color: #999;
-  }
-
-  &__complexity {
-    padding: 2px 4px;
-    border-radius: 100%;
-    color: #000;
-    &_1 {
-      background: #aaffaa;
-    }
-    &_2 {
-      background: #ffffaa;
-    }
-    &_3 {
-      background: #ffaaaa;
-    }
-  }
-
-  &__content {
-    overflow-x: auto;
-
-    hr {
-      margin: 1.5rem;
-      border-color: var(--bg-hover);
-    }
-  }
-  &.active .song-item__content {
-    @media (min-width: 1200px) {
-      columns: 2;
-    }
-    @media (min-width: 1400px) {
-      columns: 3;
-    }
-    @media (min-width: 1600px) {
-      columns: 4;
-    }
-  }
-
-  .chords {
-    position: fixed;
-    top: 0;
-    left: auto;
-    right: 0;
-    text-align: center;
-    background: var(--bg);
-    padding: 5px;
-
-    &_images {
-      position: static;
-    }
-
-    @media (min-width: 1200px) {
-      padding: 10px;
-    }
-
-    .slideout-open & {
-      display: none;
-    }
-
-    &__section {
-      display: block;
-    }
-
-    &__sequence {
-      // white-space: nowrap;
-      &:after {
-        content: " .. ";
-      }
-      &:last-child:after {
-        content: "";
-      }
-    }
-  }
-
-  &__line_chords {
-    .chord_known .el-button {
-      color: #999;
-      border: none;
-      background: none;
-    }
-  }
-
-  .song-transpose .el-button {
-    border: none;
-  }
-
-  &__link {
-    display: inline-block;
-    color: #999;
-    text-decoration: none;
-    margin-right: 10px;
-    padding: 10px;
-  }
-
-  &__qrcode img{
-    padding: 5px;
-    background: #fff;
-  }
-}
-
-.song-categories {
-  list-style: none;
-  padding: 0;
-
-  &__item {
-    padding: 0 5px 0 0;
-    display: inline-block;
-    color: #999;
-    font-size: 13px;
-    min-width: 23px;
-    height: 28px;
-    line-height: 28px;
-    cursor: pointer;
-    box-sizing: border-box;
-    text-align: center;
-    margin: 0;
-
-    &.active {
-      color: #409eff;
-    }
-
-    &_artist {
-      color: #ccc;
-    }
-
-    &_date, &_shows {
-      cursor: default;
-    }
-
-    &_shows .el-button {
-      border: none;
-      padding: 0;
-      margin: 0;
-    }
-  }
-}
-
-</style>
-
 <script>
 import Chord from "~/components/Chord";
 import { transposeMap } from "~/store";
+import "vue-awesome/icons/edit";
 import "vue-awesome/icons/qrcode";
 import "vue-awesome/icons/share-alt";
 import "vue-awesome/icons/link";
+import "assets/components/SongItem.scss"
 
 export default {
   components: { Chord },
@@ -283,6 +124,7 @@ export default {
       isShare: false,
       shows: 0,
       showQrCode: false,
+      showComment: false,
     };
   },
 
@@ -304,6 +146,10 @@ export default {
 
     showsStore(val) {
       this.shows = this.showsStore;
+    },
+
+    showComment(val) {
+      if (val) setTimeout(() => { this.$refs.comment.focus() }, 100);
     }
   },
 
@@ -396,6 +242,13 @@ export default {
 
     toolbarHidden() {
       return this.$store.state.toolbarHidden;
+    },
+
+    comment: {
+      get() { return this.$store.state.comments[this.safeUrl] || ""; },
+      set(val) {
+        this.$store.dispatch('addComment', { url: this.safeUrl, comment: val })
+      }
     }
   },
 
