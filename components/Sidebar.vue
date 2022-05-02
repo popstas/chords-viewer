@@ -59,6 +59,14 @@
         <el-radio-button label="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
+    <el-row style="text-align:center">
+      <label>comments:</label>
+      <el-radio-group v-model="comments" size="mini">
+        <el-radio-button label="-1">any</el-radio-button>
+        <el-radio-button label="1">yes</el-radio-button>
+        <el-radio-button label="0">no</el-radio-button>
+      </el-radio-group>
+    </el-row>
 
     <el-divider></el-divider>
 
@@ -124,7 +132,7 @@
 <script>
 import "vue-awesome/icons/brands/github";
 import "vue-awesome/icons/calendar-alt";
-import Icon from "vue-awesome/components/Icon";
+// import Icon from "vue-awesome/components/Icon";
 
 import NoSleep from "nosleep.js";
 const nosleep = new NoSleep();
@@ -137,6 +145,7 @@ export default {
       withChords: -1,
       withTexts: -1,
       popular: -1,
+      comments: -1,
       sortByDate: false,
       sortByShows: false,
       noSleep: false,
@@ -158,6 +167,9 @@ export default {
     },
     popular(val) {
       this.changeFilter("popular", val);
+    },
+    comments(val) {
+      this.changeFilter("comments", val);
     },
     sortByDate(val) {
       this.changeFilter("sortByDate", val);
@@ -208,7 +220,7 @@ export default {
   },
 
   mounted() {
-    ["withChords", "withTexts", "popular", "sortByDate", "sortByShows"].forEach(name => {
+    ["withChords", "withTexts", "popular", "comments", "sortByDate", "sortByShows"].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
   }

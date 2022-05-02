@@ -58,7 +58,8 @@ export const state = () => ({
     withTexts: -1,
     sortByDate: true,
     sortByShows: false,
-    popular: -1
+    popular: -1,
+    comments: -1,
   },
 
   webhookShow: ''
@@ -313,6 +314,20 @@ export const actions = {
 
     if (state.filter.popular === "0") {
       result = result.filter(song => !song.popular);
+    }
+
+    
+    if (state.filter.comments === "1") {
+      result = result.filter(song => {
+        const safeUrl = song.url.replace(/[\/\.]/g, '_');
+        return !!state.comments[safeUrl]
+      });
+    }
+    if (state.filter.comments === "0") {
+      result = result.filter(song => {
+        const safeUrl = song.url.replace(/[\/\.]/g, '_');
+        return !state.comments[safeUrl]
+      });
     }
 
     if (state.filter.sortByDate) {
