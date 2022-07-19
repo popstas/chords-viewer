@@ -270,7 +270,7 @@ export default {
 
     addShows(count) {
       this.shows = this.shows + count;
-      this.$store.commit('setShow', { url: this.safeUrl, shows: this.shows });
+      this.$store.dispatch('setShow', { url: this.safeUrl, shows: this.shows });
     }
   },
 

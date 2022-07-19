@@ -422,6 +422,20 @@ export const actions = {
     }
   },
 
+  setShow({ commit, state }, { url, shows }) {
+    commit('setShow', { url, shows });
+
+    if (state.user) {
+      firebase
+        .database()
+        .ref("users/" + state.user.uid)
+        .update({
+          [`shows/${url}`]: shows
+        });
+      console.log('update remote shows');
+    }
+  },
+
   addShow({ commit, state }, url) {
     commit("addShow", url);
 
@@ -460,7 +474,7 @@ export const actions = {
         .database()
         .ref("users/" + state.user.uid)
         .update({
-          shows: state.shows
+          [`shows/${url}`]: state.shows[url]
         });
       console.log('update remote shows');
     }
