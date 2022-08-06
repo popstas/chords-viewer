@@ -14,11 +14,7 @@
     </el-row>
     <el-row style="text-align:center">
       <label>font size:</label>
-      <el-radio-group class="sidebar__font-size" v-model="fontSize" size="mini" @change="changeFontSize">
-        <el-radio-button label="1"></el-radio-button>
-        <el-radio-button label="2"></el-radio-button>
-        <el-radio-button label="3"></el-radio-button>
-      </el-radio-group>
+      <FontSize></FontSize>
     </el-row>
 
     <el-divider></el-divider>
@@ -108,7 +104,7 @@
   }
 
   // font size radiobuttons
-  &__font-size {
+  .font-size .el-radio-group{
     text-align: right;
 
     .el-radio-button__inner {
@@ -130,6 +126,7 @@
 </style>
 
 <script>
+import FontSize from "~/components/FontSize";
 import "vue-awesome/icons/brands/github";
 import "vue-awesome/icons/calendar-alt";
 // import Icon from "vue-awesome/components/Icon";
@@ -138,7 +135,7 @@ import NoSleep from "nosleep.js";
 const nosleep = new NoSleep();
 
 export default {
-  components: {},
+  components: { FontSize },
 
   data() {
     return {
@@ -150,7 +147,6 @@ export default {
       sortByShows: false,
       noSleep: false,
       darkMode: false,
-      fontSize: 1,
       showImages: false,
       showBadges: false
     };
@@ -206,14 +202,9 @@ export default {
       this.$store.dispatch("changeFilter", { name, value });
       // this.$emit("changeFilter", { name, value });
     },
-
-    changeFontSize(size) {
-      this.$store.commit("fontSize", size);
-    }
   },
 
   created() {
-    this.fontSize = this.$store.state.fontSize;
     this.showImages = this.$store.state.showImages;
     this.noSleep = this.$store.state.noSleep;
     this.darkMode = this.$store.state.darkMode;

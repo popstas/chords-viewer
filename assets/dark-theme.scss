@@ -9730,8 +9730,8 @@
       position: absolute;
       z-index: -1; }
       .el-radio-button__orig-radio:checked + .el-radio-button__inner {
-        color: #222933;
-        background-color: #598ea6;
+        color: inherit;
+        background-color: transparent;
         border-color: #598ea6;
         -webkit-box-shadow: -1px 0 0 0 #598ea6;
         box-shadow: -1px 0 0 0 #598ea6; }

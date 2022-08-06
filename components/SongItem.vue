@@ -19,6 +19,7 @@
           <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
           <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
           <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+          <FontSize style="float: right"></FontSize>
         </div>
 
         <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
@@ -107,6 +108,7 @@
 
 <script>
 import Chord from "~/components/Chord";
+import FontSize from "~/components/FontSize";
 import { transposeMap } from "~/store";
 import "vue-awesome/icons/edit";
 import "vue-awesome/icons/qrcode";
@@ -115,7 +117,7 @@ import "vue-awesome/icons/link";
 import "assets/components/SongItem.scss"
 
 export default {
-  components: { Chord },
+  components: { Chord, FontSize },
   props: ["song", "active"],
 
   data() {
