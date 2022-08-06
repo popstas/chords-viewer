@@ -1,0 +1,2 @@
+# https://github.com/github-changelog-generator/github-changelog-generator/issues/316
+configure-sections={"summary": {"prefix": "**Update notes**", "body_only": true, "labels": ["release-summary"]}, "new_features": {"prefix": "**New features**","labels": ["enhancement"]},"deprecated": {"prefix": "**Deprecated**","labels": ["deprecated"]},"bug_fixes": {"prefix": "**Bug fixes**","labels": ["bug"]},"critical": {"prefix": "**Critical updates**","labels": ["critical"]},"breaking_changes": {"prefix": "**Breaking changes**","labels": ["breaking"]}}

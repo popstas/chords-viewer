@@ -21,27 +21,30 @@ module.exports = {
     { src: '~/plugins/localStorage.js', ssr: false }
   ],
 
-  /*
-  ** Headers of the page
-  */
   head: {
     title: 'chords-viewer',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'View chords generated with popstas/chords-parser' }
+      //{ name: 'viewport', content: 'width=device-width, initial-scale=1' }, // pwa.meta.nativeUI делает лучше
+      //{ hid: 'description', name: 'description', content: 'View chords generated with popstas/chords-parser' } // pwa.meta делает
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
-  /*
-  ** Customize the progress bar color
-  */
+
+  pwa: {
+    meta: {
+      nativeUI: true,
+    },
+    manifest: {
+      short_name: 'Аккорды',
+    }
+  },
+
+  // progress bar color
   loading: { color: '#333333' },
-  /*
-  ** Build configuration
-  */
+
   build: {
     transpile: [/^vue-awesome/],
     /*

@@ -1,7 +1,7 @@
 {
   "name": "chords-viewer",
   "version": "2.5.0",
-  "description": "View chords generated with chords generator",
+  "description": "Offline chords app",
   "author": "Stanislav Popov <popstas@gmail.com>",
   "homepage": "https://github.com/popstas/chords-viewer",
   "private": true,
