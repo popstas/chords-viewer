@@ -216,7 +216,10 @@ export default {
           if (!line.trim()) {
             return { type: "hr", data: '' };
           }
-          return { type: "chords", data: line.split(" ") };
+          // find something like chords in line
+          if (line.match(/[A-H]{1,2}[a-z0-9#]{0,4}(\s|$)/)) {
+            return { type: "chords", data: line.split(" ") };
+          }
         }
         return { type: "text", data: line };
       });

@@ -127,7 +127,9 @@ export default {
 
     replacedChord() {
       return this.chord
-      .replace("H", "B")
+      // .replace("H", "B")
+      .replace(/H(\s)/, /B$1/)
+      .replace("Hm", "Bm")
       .replace("m#", "#m")
       .replace("Bb", "A#")
       .replace("Eb", "F#")
