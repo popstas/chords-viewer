@@ -1,3 +1,12 @@
+## [2.6.1](https://github.com/popstas/chords-viewer/compare/v2.6.0...v2.6.1) (2023-01-01)
+
+
+### Bug Fixes
+
+* better detect of chords line for english songs ([fc0223f](https://github.com/popstas/chords-viewer/commit/fc0223f0d0a2a14f57eac227402d9b371ede99c4))
+
+
+
 # [2.6.0](https://github.com/popstas/chords-viewer/compare/v2.5.0...v2.6.0) (2022-08-06)
 
 
