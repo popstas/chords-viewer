@@ -34,7 +34,7 @@
     "fuse.js": "^6.4.0",
     "lodash": "^4.17.20",
     "nosleep.js": "^0.11.0",
-    "nuxt": "^2.14.12",
+    "nuxt": "^3.0.0",
     "sass": "^1.47.0",
     "vue-awesome": "^4.0.2",
     "vue-qr-generator": "^3.0.1",
