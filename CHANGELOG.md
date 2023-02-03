@@ -1,3 +1,17 @@
+## [2.6.2](https://github.com/popstas/chords-viewer/compare/v2.6.1...v2.6.2) (2023-02-03)
+
+
+### Bug Fixes
+
+* remove debug background ([f6a8563](https://github.com/popstas/chords-viewer/commit/f6a85639cb1076d67af7147ea178aeb44c579cfb))
+
+
+### Features
+
+* get url with filtered songs, read from get query ?q=... ([1fdc42a](https://github.com/popstas/chords-viewer/commit/1fdc42a3ab220cf757d7684a8aaaf8f1879b8b60))
+
+
+
 ## [2.6.1](https://github.com/popstas/chords-viewer/compare/v2.6.0...v2.6.1) (2023-01-01)
 
 
