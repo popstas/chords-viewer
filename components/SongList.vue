@@ -134,6 +134,11 @@ export default {
       }, 100)
     }
 
+    // get url with filtered songs, read from get query ?q=...
+    if (this.$route.query["q"]) {
+      this.$store.state.filter.q = this.$route.query["q"];
+    }
+
     this.$router.afterEach((to, from) => {
       if (this.$route.query["url"]) {
         this.changeSong(this.$route.query["url"]);
