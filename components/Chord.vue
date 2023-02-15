@@ -129,6 +129,7 @@ export default {
       return this.chord
       // .replace("H", "B")
       .replace(/H(\s)/, /B$1/)
+      .replace(/^H$/, "B")
       .replace("Hm", "Bm")
       .replace("m#", "#m")
       .replace("Bb", "A#")
