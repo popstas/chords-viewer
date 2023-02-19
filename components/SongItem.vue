@@ -66,6 +66,9 @@
         <a v-if="isShare" class="song-item__link" @click.prevent="share">
           <icon name="share-alt"></icon>
         </a>
+        <a class="song-item__link" @click.prevent="copyText">
+          <i class="el-icon-copy-document"></i>
+        </a>
         <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
         </a>
@@ -115,6 +118,7 @@ import "vue-awesome/icons/qrcode";
 import "vue-awesome/icons/share-alt";
 import "vue-awesome/icons/link";
 import "assets/components/SongItem.scss"
+import copy from 'copy-to-clipboard';
 
 export default {
   components: { Chord, FontSize },
@@ -271,6 +275,10 @@ export default {
           url: window.location.href
         });
       }
+    },
+
+    copyText(){
+      copy(this.song.text);
     },
 
     addShows(count) {
