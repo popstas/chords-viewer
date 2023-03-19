@@ -38,7 +38,7 @@
 
         <div v-if="song.text" class="song-text">
           <template class="song-text__line" v-for="(line, lineKey) in textLines">
-            <div v-if="line.type == 'chords'" class="song-item__line_chords" :key="lineKey">
+            <div v-if="line.type == 'chords'" :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type == 'text'}" :key="lineKey">
               <template v-for="(chord, chordKey) in line.data">
                 <template v-if="chord != ''">
                   <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
@@ -221,7 +221,7 @@ export default {
             return { type: "hr", data: '' };
           }
           // find something like chords in line
-          if (line.match(/[A-H]{1,2}[a-z0-9#]{0,4}(\s|$)/)) {
+          if (line.match(/[A-H]{1}#{0,1}[a-z]{0,1}[0-9#]{0,1}(\s|$)/)) {
             return { type: "chords", data: line.split(" ") };
           }
         }

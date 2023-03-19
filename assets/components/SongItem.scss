@@ -110,6 +110,14 @@
     }
   }
 
+  &__line_chords_glue {
+    height: 2em;
+    margin-bottom: -2em;
+  }
+  &__line_text {
+    margin-top: 2em;
+  }
+
   .song-transpose .el-button {
     border: none;
   }
