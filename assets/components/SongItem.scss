@@ -112,10 +112,13 @@
 
   &__line_chords_glue {
     height: 2em;
-    margin-bottom: -2em;
+    margin-bottom: -2.8em;
   }
   &__line_text {
     margin-top: 2em;
+  }
+  &__line_text + &__line_text {
+    margin-top: 0;
   }
 
   .song-transpose .el-button {
