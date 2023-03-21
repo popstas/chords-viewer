@@ -1,3 +1,19 @@
+# [2.7.0](https://github.com/popstas/chords-viewer/compare/v2.6.2...v2.7.0) (2023-03-21)
+
+
+### Bug Fixes
+
+* better chords glue to text ([c1a7b25](https://github.com/popstas/chords-viewer/commit/c1a7b25b64ca6b5bb96825ead334d8f9b47135da))
+* remove margin between two text lines ([335a20b](https://github.com/popstas/chords-viewer/commit/335a20b31ec79b0aff00287b2e2c45b32d9231c6))
+* replace chord H to B ([190a22f](https://github.com/popstas/chords-viewer/commit/190a22ffcb0fbd3de6cdec10d7dcaf2c7e647553))
+
+
+### Features
+
+* copy song text to clipboard ([7820eb0](https://github.com/popstas/chords-viewer/commit/7820eb06724b42e59c5717759340acd6fc012de4))
+
+
+
 ## [2.6.2](https://github.com/popstas/chords-viewer/compare/v2.6.1...v2.6.2) (2023-02-03)
 
 
