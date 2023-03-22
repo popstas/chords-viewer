@@ -48,6 +48,7 @@ export const state = () => ({
   artistsSort: "name",
   showImages: false,
   showBadges: false,
+  showShows: true,
   noSleep: false,
   darkMode: undefined,
 
@@ -115,6 +116,9 @@ export const mutations = {
   },
   showBadges(state, newValue) {
     state.showBadges = newValue;
+  },
+  showShows(state, newValue) {
+    state.showShows = newValue;
   },
   autoScrollSpeed(state, newValue) {
     state.autoScrollSpeed = newValue;

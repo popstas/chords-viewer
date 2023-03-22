@@ -5,6 +5,11 @@
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
       <i v-if="song.popular && $store.state.showBadges" class="el-icon-star-off" title="popular song"></i>
+
+      <span class="song-item__badges" v-if="$store.state.showShows">
+        <span class="song-item__shows" v-html="shows || ''"></span>
+      </span>
+
       <span class="song-item__badges" v-if="$store.state.showBadges">
         <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity" title="song complexity"></span>
         <i v-if="song.text" class="el-icon-tickets" title="with text"></i>

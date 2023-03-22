@@ -26,6 +26,9 @@
       <el-switch v-model="showBadges" active-text="badges"></el-switch>
     </el-row>
     <el-row>
+      <el-switch v-model="showShows" active-text="shows"></el-switch>
+    </el-row>
+    <el-row>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
     </el-row>
 
@@ -148,7 +151,8 @@ export default {
       noSleep: false,
       darkMode: false,
       showImages: false,
-      showBadges: false
+      showBadges: false,
+      showShows: true,
     };
   },
 
@@ -188,7 +192,10 @@ export default {
     },
     showBadges(val) {
       this.$store.commit("showBadges", val);
-    }
+    },
+    showShows(val) {
+      this.$store.commit("showShows", val);
+    },
   },
 
   methods: {
