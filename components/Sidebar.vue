@@ -51,14 +51,6 @@
       </el-radio-group>
     </el-row>
     <el-row style="text-align:center">
-      <label>popular:</label>
-      <el-radio-group v-model="popular" size="mini">
-        <el-radio-button label="-1">any</el-radio-button>
-        <el-radio-button label="1">yes</el-radio-button>
-        <el-radio-button label="0">no</el-radio-button>
-      </el-radio-group>
-    </el-row>
-    <el-row style="text-align:center">
       <label>comments:</label>
       <el-radio-group v-model="comments" size="mini">
         <el-radio-button label="-1">any</el-radio-button>
@@ -144,7 +136,6 @@ export default {
     return {
       withChords: -1,
       withTexts: -1,
-      popular: -1,
       comments: -1,
       sortByDate: false,
       sortByShows: false,
@@ -164,9 +155,6 @@ export default {
     },
     withTexts(val) {
       this.changeFilter("withTexts", val);
-    },
-    popular(val) {
-      this.changeFilter("popular", val);
     },
     comments(val) {
       this.changeFilter("comments", val);
@@ -218,7 +206,7 @@ export default {
   },
 
   mounted() {
-    ["withChords", "withTexts", "popular", "comments", "sortByDate", "sortByShows"].forEach(name => {
+    ["withChords", "withTexts", "comments", "sortByDate", "sortByShows"].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
   }

@@ -59,7 +59,6 @@ export const state = () => ({
     withTexts: -1,
     sortByDate: true,
     sortByShows: false,
-    popular: -1,
     comments: -1,
   },
 
@@ -235,8 +234,6 @@ export const actions = {
 
     // data modify
     result = result.map(song => {
-      song.popular = song.tags.indexOf("аккорды популярные") != -1;
-
       // song.genre
       let g = song.tags.map(tag => {
         if (tag.indexOf("жанр:") === 0) return tag.replace("жанр: ", "");
@@ -310,14 +307,6 @@ export const actions = {
 
     if (state.filter.withTexts === "0") {
       result = result.filter(song => !song.text);
-    }
-
-    if (state.filter.popular === "1") {
-      result = result.filter(song => song.popular);
-    }
-
-    if (state.filter.popular === "0") {
-      result = result.filter(song => !song.popular);
     }
 
     
