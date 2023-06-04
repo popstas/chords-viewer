@@ -130,6 +130,7 @@ export default {
       // .replace("H", "B")
       .replace(/H(\s)/, /B$1/)
       .replace(/^H$/, "B")
+      .replace(/^H7$/, "B7")
       .replace("Hm", "Bm")
       .replace("m#", "#m")
       .replace("Bb", "A#")
