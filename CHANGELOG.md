@@ -1,3 +1,19 @@
+# [2.8.0](https://github.com/popstas/chords-viewer/compare/v2.7.0...v2.8.0) (2023-06-04)
+
+
+### Bug Fixes
+
+* Display of chord "H7" ([61aa1c1](https://github.com/popstas/chords-viewer/commit/61aa1c1a0f8642cc564361959f6adbfc82fe5289))
+* multiline chords overlaps with text ([cd0ea4f](https://github.com/popstas/chords-viewer/commit/cd0ea4ff7aea93a112b343bf2ad136d277feaa8c))
+
+
+### Features
+
+* customizable show shows ([b03a972](https://github.com/popstas/chords-viewer/commit/b03a9724cb5e0b37449e8236e456acc497e3edd9))
+* remove filter "popular", it replaced by genre filters ([29489a0](https://github.com/popstas/chords-viewer/commit/29489a0c4faf202207f612d2a2f8f042c977fdd7))
+
+
+
 # [2.7.0](https://github.com/popstas/chords-viewer/compare/v2.6.2...v2.7.0) (2023-03-21)
 
 
