@@ -1,97 +1,100 @@
 <template>
   <div :class="{toolbar: true, toolbar_fixed: toolbarFixed, toolbar_hidden: toolbarHidden}">
-    <SearchInput class="toolbar__search" v-model="q"></SearchInput>
+    <div class="toolbar-spacer"></div>
+    <div class="toolbar-body">
+      <SearchInput class="toolbar__search" v-model="q"></SearchInput>
 
-    <div class="toolbar__current-song">
-      <el-button class="toolbar__up" @click="toTop">
-        <icon name="chevron-up"></icon>
-      </el-button>
-      <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
+      <div class="toolbar__current-song">
+        <el-button class="toolbar__up" @click="toTop">
+          <icon name="chevron-up"></icon>
+        </el-button>
+        <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
 
-      <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
-        <qr-code :size="340" :text="$store.state.activeSong.url"></qr-code>
+        <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
+          <qr-code :size="340" :text="$store.state.activeSong.url"></qr-code>
+        </div>
+        <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link" @click.prevent="showQrCode = !showQrCode">
+          <icon name="qrcode"></icon>
+        </a>
       </div>
-      <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link" @click.prevent="showQrCode = !showQrCode">
-        <icon name="qrcode"></icon>
-      </a>
+
+      <div class="toolbar__filters">
+        <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
+        <el-row class="toolbar__controls" :gutter="20">
+          <el-col :span="6" class="toolbar__autoscroll">
+            <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
+          </el-col>
+          <el-col :span="4">
+            <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong">
+              <icon name="backward"></icon>
+            </el-button>
+            <input
+              type="hidden"
+              v-shortkey="{k:['k'], kRus: ['л'], left: ['arrowleft']}"
+              @shortkey="prevSong"
+            >
+          </el-col>
+          <el-col :span="4">
+            <el-checkbox-button class="toolbar__play" v-model="autoScroll">
+              <icon :name="autoScroll ? 'pause' : 'play'"></icon>
+            </el-checkbox-button>
+            <input type="hidden" v-shortkey="['space']" @shortkey="autoScroll = !autoScroll">
+          </el-col>
+          <el-col :span="4">
+            <el-button class="toolbar__next" @click="nextSong">
+              <icon name="forward"></icon>
+            </el-button>
+            <input
+              type="hidden"
+              v-shortkey="{j:['j'], jRus: ['о'], right: ['arrowright']}"
+              @shortkey="nextSong"
+            >
+          </el-col>
+          <el-col :span="7" class="toolbar__instrument">
+            <el-radio-group v-model="instrument" size="mini">
+              <el-radio-button title="guitar" label="guitar">G</el-radio-button>
+              <el-radio-button title="ukulele" label="ukulele">U</el-radio-button>
+              <el-radio-button title="piano" label="piano">P</el-radio-button>
+            </el-radio-group>
+          </el-col>
+        </el-row>
+      </div>
+
+      <ul class="toolbar__search-letters search-letters">
+        <li
+          :class="{'search-letters__letter': true, active: q == '^' + letter}"
+          v-for="letter in letters"
+          :key="letter"
+          @click="q = '^' + letter"
+        >{{ letter }}</li>
+      </ul>
+
+      <ul class="toolbar__search-genres search-genres">
+        <li
+          :class="{'search-genres__genre': true, active: q == 'жанр: ' + genre}"
+          v-for="genre in genres"
+          :key="genre"
+          @click="q = q=='жанр: ' + genre ? '' : 'жанр: ' + genre"
+        >{{ genre }}</li>
+      </ul>
+
+      <el-select class="toolbar__search-artists search-artists" placeholder="Select artist" v-model="artist">
+        <el-option
+          v-for="item in artists"
+          :key="item.name"
+          :value="item.name">
+          <span style="float: left">{{ item.name }}</span>
+          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'count' }">{{ item.count }}</span>
+          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'shows' }">{{ item.shows }}</span>
+        </el-option>
+      </el-select>
+
+      <el-radio-group class="search-artists-sort" v-model="artistsSort" size="mini">
+        <el-radio-button label="name">name</el-radio-button>
+        <el-radio-button label="shows">shows</el-radio-button>
+        <el-radio-button label="count">count</el-radio-button>
+      </el-radio-group>
     </div>
-
-    <div class="toolbar__filters">
-      <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
-      <el-row class="toolbar__controls" :gutter="20">
-        <el-col :span="6" class="toolbar__autoscroll">
-          <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
-        </el-col>
-        <el-col :span="4">
-          <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong">
-            <icon name="backward"></icon>
-          </el-button>
-          <input
-            type="hidden"
-            v-shortkey="{k:['k'], kRus: ['л'], left: ['arrowleft']}"
-            @shortkey="prevSong"
-          >
-        </el-col>
-        <el-col :span="4">
-          <el-checkbox-button class="toolbar__play" v-model="autoScroll">
-            <icon :name="autoScroll ? 'pause' : 'play'"></icon>
-          </el-checkbox-button>
-          <input type="hidden" v-shortkey="['space']" @shortkey="autoScroll = !autoScroll">
-        </el-col>
-        <el-col :span="4">
-          <el-button class="toolbar__next" @click="nextSong">
-            <icon name="forward"></icon>
-          </el-button>
-          <input
-            type="hidden"
-            v-shortkey="{j:['j'], jRus: ['о'], right: ['arrowright']}"
-            @shortkey="nextSong"
-          >
-        </el-col>
-        <el-col :span="7" class="toolbar__instrument">
-          <el-radio-group v-model="instrument" size="mini">
-            <el-radio-button title="guitar" label="guitar">G</el-radio-button>
-            <el-radio-button title="ukulele" label="ukulele">U</el-radio-button>
-            <el-radio-button title="piano" label="piano">P</el-radio-button>
-          </el-radio-group>
-        </el-col>
-      </el-row>
-    </div>
-
-    <ul class="toolbar__search-letters search-letters">
-      <li
-        :class="{'search-letters__letter': true, active: q == '^' + letter}"
-        v-for="letter in letters"
-        :key="letter"
-        @click="q = '^' + letter"
-      >{{ letter }}</li>
-    </ul>
-
-    <ul class="toolbar__search-genres search-genres">
-      <li
-        :class="{'search-genres__genre': true, active: q == 'жанр: ' + genre}"
-        v-for="genre in genres"
-        :key="genre"
-        @click="q = q=='жанр: ' + genre ? '' : 'жанр: ' + genre"
-      >{{ genre }}</li>
-    </ul>
-
-    <el-select class="toolbar__search-artists search-artists" placeholder="Select artist" v-model="artist">
-      <el-option
-        v-for="item in artists"
-        :key="item.name"
-        :value="item.name">
-        <span style="float: left">{{ item.name }}</span>
-        <span style="width: 40px; text-align: right; float: right; color: #8492a6; font-size: 13px">{{ item.count }}</span>
-        <span style="width: 40px; text-align: right; float: right; color: #8492a6; font-size: 13px">{{ item.shows }}</span>
-      </el-option>
-    </el-select>
-
-    <el-radio-group class="search-artists-sort" v-model="artistsSort" size="mini">
-      <el-radio-button label="name">name</el-radio-button>
-      <el-radio-button label="shows">shows</el-radio-button>
-      <el-radio-button label="count">count</el-radio-button>
-    </el-radio-group>
   </div>
 </template>
 
@@ -132,38 +135,56 @@
     color: var(--link);
   }
 
+  &__artists-counter {
+    width: 40px;
+    text-align: right;
+    float: right;
+    color: #8492a6;
+    font-size: 13px;
+
+    &_active {
+      color: #ccc;
+    }
+  }
+
   &_fixed {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 5px;
-    box-shadow: 0 0 1px #ccc;
-
-    .toolbar__up {
-      display: block !important;
-      float: left;
-      margin-left: 7px;
+    .toolbar-spacer {
+      height: 212px;
     }
+    .toolbar-body {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 5px;
+      box-shadow: 0 0 1px #ccc;
 
-    .search-letters {
-      display: none;
-    }
+      .toolbar__up {
+        display: block !important;
+        float: left;
+        margin-left: 7px;
+      }
 
-    .search-genres {
-      display: none;
-    }
+      .search-letters {
+        display: none;
+      }
 
-    .search-artists {
-      display: none;
-    }
+      .search-genres {
+        display: none;
+      }
 
-    .search-artists-sort {
-      display: none;
-    }
+      .search-artists {
+        display: none;
+      }
 
-    .toolbar__search {
-      display: none;
+      .search-artists-sort {
+        display: none;
+      }
+
+      .toolbar__search {
+        display: none;
+      }
+
     }
   }
 
@@ -247,7 +268,7 @@
 
   .search-artists {
     margin-bottom: 15px;
-    margin-right: 15px;
+    margin-right: 0; // for 3rd button "count"
 
     $input-height: 30px;
     .el-input__icon, input {
