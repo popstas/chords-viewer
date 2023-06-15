@@ -82,12 +82,14 @@
         :key="item.name"
         :value="item.name">
         <span style="float: left">{{ item.name }}</span>
-        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.count }}</span>
+        <span style="width: 40px; text-align: right; float: right; color: #8492a6; font-size: 13px">{{ item.count }}</span>
+        <span style="width: 40px; text-align: right; float: right; color: #8492a6; font-size: 13px">{{ item.shows }}</span>
       </el-option>
     </el-select>
 
     <el-radio-group class="search-artists-sort" v-model="artistsSort" size="mini">
       <el-radio-button label="name">name</el-radio-button>
+      <el-radio-button label="shows">shows</el-radio-button>
       <el-radio-button label="count">count</el-radio-button>
     </el-radio-group>
   </div>
@@ -504,6 +506,11 @@ export default {
 
     buildArtists() {
       let artists = [];
+      const shows = this.$store.state.shows || {};
+
+      const safeUrl = url => url.replace(/[\/\.]/g, '_');
+      const songShows = song => shows[safeUrl(song.url)] || 0;
+
       this.$store.state.songs.map(song => {
         if(!song.details || !song.details.artist) return;
 
@@ -511,16 +518,23 @@ export default {
           return artist && artist.name == song.details.artist;
         });
         if(foundIndex == -1) {
-          artists.push({ name: song.details.artist, count: 1 });
+          artists.push({ name: song.details.artist, count: 1, shows: songShows(song) });
         }
         else {
           artists[foundIndex].count++;
+          artists[foundIndex].shows += songShows(song);
         }
       });
 
       if(this.artistsSort == 'count'){
         artists.sort((a, b) => {
           return a.count > b.count ? 1 : a.count < b.count ? -1 : 0;
+        }).reverse();
+      }
+
+      if(this.artistsSort == 'shows'){
+        artists.sort((a, b) => {
+          return a.shows > b.shows ? 1 : a.shows < b.shows ? -1 : 0;
         }).reverse();
       }
 
