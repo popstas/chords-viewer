@@ -144,17 +144,17 @@ export const mutations = {
   addShow(state, url) {
     const current = state.shows[url] || 0;
     state.shows[url] = current + 1;
-    console.log('addShow: ', current + 1);
+    // console.log('addShow: ', current + 1);
   },
   setShow(state, params) {
-    console.log('setShow: ', params);
+    // console.log('setShow: ', params);
     state.shows[params.url] = params.shows;
   },
   setShows(state, newValue) {
     state.shows = newValue;
   },
   setComment(state, params) {
-    console.log('setComment: ', params);
+    // console.log('setComment: ', params);
     state.comments[params.url] = params.comment;
   },
   setComments(state, newValue) {
