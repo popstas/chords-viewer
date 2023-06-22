@@ -158,6 +158,7 @@
       right: 0;
       padding: 5px;
       box-shadow: 0 0 1px #ccc;
+      background: rgba(0,0,0,0.2);
 
       .toolbar__up {
         display: block !important;
@@ -319,7 +320,7 @@
       background: none;
       cursor: pointer;
       outline: none;
-      color: var(--link);
+      color: var(--color);
     }
   }
 }
