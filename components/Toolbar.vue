@@ -197,7 +197,7 @@
     }
   }
 
-  &_hidden {
+  &_hidden .toolbar-body{
     display: none;
   }
 
