@@ -1,3 +1,21 @@
+## [2.8.1](https://github.com/popstas/chords-viewer/compare/v2.8.0...v2.8.1) (2023-08-21)
+
+
+### Bug Fixes
+
+* display improvements: semi-opacity toolbar, song padding, overflow hidden ([a9e5849](https://github.com/popstas/chords-viewer/commit/a9e58498b5064fa2d4d6e40fe0090fce6d983a9f))
+* don't hide toolbar spacer ([21ffe5b](https://github.com/popstas/chords-viewer/commit/21ffe5bd832c8ed07c943a35d961b27236d4720a))
+* remove console.log ([3eecbb3](https://github.com/popstas/chords-viewer/commit/3eecbb3665492f6d72d190da1b188216c709320c))
+* remove toolbar layout shift, highlight active artist's sort number ([6566217](https://github.com/popstas/chords-viewer/commit/656621775b12b8e489c58c2b85036972be3f9685))
+
+
+### Features
+
+* add hide button to toolbar ([868cc01](https://github.com/popstas/chords-viewer/commit/868cc011a0e5e1318f4fb94567ac622bafcbb841))
+* shows by artists ([3aaf46c](https://github.com/popstas/chords-viewer/commit/3aaf46c806c35f5a4fe33646d0aee0ac705204ed))
+
+
+
 # [2.8.0](https://github.com/popstas/chords-viewer/compare/v2.7.0...v2.8.0) (2023-06-04)
 
 
