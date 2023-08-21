@@ -8,6 +8,9 @@
         <el-button class="toolbar__up" @click="toTop">
           <icon name="chevron-up"></icon>
         </el-button>
+        <el-button class="toolbar__hide" @click="hideToolbar">
+          <icon name="chevron-down"></icon>
+        </el-button>
         <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
 
         <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
@@ -164,6 +167,11 @@
         display: block !important;
         float: left;
         margin-left: 7px;
+      }
+      .toolbar__hide {
+        display: block !important;
+        float: left;
+        margin-left: 0px;
       }
 
       .search-letters {
@@ -334,6 +342,7 @@ import "vue-awesome/icons/pause";
 import "vue-awesome/icons/backward";
 import "vue-awesome/icons/forward";
 import "vue-awesome/icons/chevron-up";
+import "vue-awesome/icons/chevron-down";
 import Icon from "vue-awesome/components/Icon";
 
 const speedMapping = {
@@ -491,6 +500,10 @@ export default {
       if(this.$el.parentElement.offsetWidth > 1200) {
         this.autoScroll = false;
       }
+    },
+
+    hideToolbar() {
+      this.$store.commit("setToolbarHidden", true);
     },
 
     buildLetters() {
