@@ -87,6 +87,7 @@
           :key="item.name"
           :value="item.name">
           <span style="float: left">{{ item.name }}</span>
+          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'rate' }">{{ item.rate }}</span>
           <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'count' }">{{ item.count }}</span>
           <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'shows' }">{{ item.shows }}</span>
         </el-option>
@@ -96,6 +97,7 @@
         <el-radio-button label="name">name</el-radio-button>
         <el-radio-button label="shows">shows</el-radio-button>
         <el-radio-button label="count">count</el-radio-button>
+        <el-radio-button label="rate">rate</el-radio-button>
       </el-radio-group>
     </div>
   </div>
@@ -119,7 +121,7 @@
     max-width: $container-width-lg;
   }
 
-  &__up {
+  &__up, &__hide {
     display: none !important;
   }
 
@@ -561,6 +563,14 @@ export default {
         }
       });
 
+      // rate calculate
+      artists = artists.map(a => {
+        // rounded to 1 decimal place
+        a.rate = Math.round(a.shows / a.count * 10) / 10;
+        if (a.count < 3) a.rate = 0;
+        return a;
+      });
+
       if(this.artistsSort == 'count'){
         artists.sort((a, b) => {
           return a.count > b.count ? 1 : a.count < b.count ? -1 : 0;
@@ -570,6 +580,12 @@ export default {
       if(this.artistsSort == 'shows'){
         artists.sort((a, b) => {
           return a.shows > b.shows ? 1 : a.shows < b.shows ? -1 : 0;
+        }).reverse();
+      }
+
+      if(this.artistsSort == 'rate'){
+        artists.sort((a, b) => {
+          return a.rate > b.rate ? 1 : a.rate < b.rate ? -1 : 0;
         }).reverse();
       }
 
