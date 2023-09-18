@@ -1,3 +1,13 @@
+# [2.9.0](https://github.com/popstas/chords-viewer/compare/v2.8.1...v2.9.0) (2023-09-18)
+
+
+### Features
+
+* sort artists by rate shows/songs ([b49144f](https://github.com/popstas/chords-viewer/commit/b49144f5b437fae5bdc0c4e68344c499f8828bd7))
+* xl screen size (2000+ px) ([3422436](https://github.com/popstas/chords-viewer/commit/3422436a281b3fd865fe80ec88a420ee8f7ba790))
+
+
+
 ## [2.8.1](https://github.com/popstas/chords-viewer/compare/v2.8.0...v2.8.1) (2023-08-21)
 
 
