@@ -92,6 +92,12 @@ textarea {
       max-width: calc(100vw - (100vw - var(--container-width-lg)) - (var(--main-padding) * 2));
     }
   }
+  @media (min-width: $min-width-xl) {
+    max-width: $container-width-xl;
+    .song-list {
+      max-width: calc(100vw - (100vw - var(--container-width-xl)) - (var(--main-padding) * 2));
+    }
+  }
 }
 
 .qrcode-wrapper {
@@ -121,6 +127,9 @@ textarea {
   }
   @media (min-width: $container-width-lg) {
     min-width: $container-width-lg;
+  }
+  @media (min-width: $container-width-xl) {
+    min-width: $container-width-xl;
   }
 
   .slideout-open & {

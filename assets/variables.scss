@@ -2,11 +2,13 @@
 $min-width-sm: 1200px;
 $min-width-md: 1400px;
 $min-width-lg: 1600px;
+$min-width-xl: 2000px;
 
 $container-width-xs: 640px;
 $container-width-sm: 1200px;
 $container-width-md: 1400px;
 $container-width-lg: 1600px;
+$container-width-xl: 2000px;
 
 // font sizes
 $font-size-1: 13px;
@@ -20,6 +22,7 @@ $main-padding: 5px;
 
   --container-width-md: #{$container-width-md};
   --container-width-lg: #{$container-width-lg};
+  --container-width-xl: #{$container-width-xl};
 
   --bg: #fff;
   --bg-hover: #f5f5f5;
