@@ -1,3 +1,12 @@
+# [3.0.0](https://github.com/popstas/chords-viewer/compare/v2.9.0...v3.0.0) (2023-12-01)
+
+
+### Features
+
+* virtual scroll for mobile, allow unlimited song collection (1000+) ([32b3ef1](https://github.com/popstas/chords-viewer/commit/32b3ef1b86c28725d8d4f1793f88a5e511b84138))
+
+
+
 # [2.9.0](https://github.com/popstas/chords-viewer/compare/v2.8.1...v2.9.0) (2023-09-18)
 
 
