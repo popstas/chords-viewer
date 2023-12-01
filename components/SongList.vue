@@ -1,16 +1,39 @@
 <template>
   <div :class="['song-list', 'size' + this.$store.state.fontSize]">
-    <div class="search-total">total: {{ count }}</div>
-    <Toolbar @scrollToLast="scrollTo(lastOffset)"></Toolbar>
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
-      <SongItem
-        v-for="song in filteredSongs"
-        :song="song"
-        :key="song.url"
-        :active="song.url == activeSong.url"
+      <DynamicScroller v-if="isMobile()"
+        class="scroller"
+        :items="filteredSongs"
+        :min-item-size="itemHeight"
+        keyField="url"
+        :page2Mode="true"
+        ref="scroller"
+      >
+        <template v-slot="{ item, index, active }">
+          <DynamicScrollerItem
+            :item="item"
+            :active="active"
+            :size-dependencies="[item.active]"
+          >
+            <SongItem
+              :song="item"
+              :key="item.url"
+              :active="item.url == activeSong.url"
+              @active="scrollTo"
+              @change="changeSong(item.url == activeSong.url ? '' : item.url)"
+            ></SongItem>
+          </DynamicScrollerItem>
+        </template>
+      </DynamicScroller>
+      <SongItem v-else
+        v-for="item in filteredSongs"
+        :song="item"
+        :key="item.url"
+        :active="item.url == activeSong.url"
         @active="scrollTo"
-        @change="changeSong(song.url == activeSong.url ? '' : song.url)"
+        @change="changeSong(item.url == activeSong.url ? '' : item.url)"
       ></SongItem>
+
     </el-collapse>
   </div>
 </template>
@@ -18,6 +41,15 @@
 <style lang="scss">
 @import "@/assets/variables.scss";
 
+.scroller {
+  height: 100vh;
+}
+.el-collapse {
+  border: none !important;
+}
+.el-collapse-item__header {
+  border: none !important;
+}
 // global text size
 .el-collapse-item__content {
   font-size: 13px;
@@ -35,23 +67,31 @@
 
 <script>
 import SongItem from "~/components/SongItem";
-import Toolbar from "~/components/Toolbar";
-// import mapState from "vuex";
+const itemHeight = 48;
 
 export default {
   components: {
     SongItem,
-    Toolbar
   },
 
   data() {
     return {
-      lastOffset: 0,
-      showTimer: null
+      // lastOffset: 0,
+      showTimer: null,
+      itemHeight: 48,
+      // itemComponent: ItemComponent,
     };
   },
 
   computed: {
+    lastOffset: {
+      get() {
+        return this.$store.state.lastOffset;
+      },
+      set(value) {
+        this.$store.commit('lastOffset', value);
+      },
+    },
     filter() {
       return this.$store.state.filter;
     },
@@ -65,36 +105,28 @@ export default {
     songs() {
       return this.$store.state.songs;
     },
-
-    count() {
-      return this.$store.state.filteredSongs.length;
-    }
-    //...mapState(['songs', 'activeSong']) // TODO
   },
 
   watch: {
     // open single filtered chords
     filteredSongs(val) {
-      if (val.length == 1) {
+      if (val.length == 1 && val[0].title !== "Loading...") {
         this.changeSong(val[0].url);
       }
     },
-
-    activeSong(song) {
-      if (!song) return;
-      const query = { url: song.url };
-      this.$router.push({ query });
-
-      clearTimeout(this.showTimer);
-      this.showTimer = setTimeout(() => {
-        if (!song.url) return; // fix empty song addShow error
-        const safeUrl = song.url.replace(/[\/\.]/g, '_');
-        this.$store.dispatch("addShow", safeUrl);
-      }, 60000);
+    activeSong(val) {
+      if (this.$refs.scroller) {
+        const index = this.filteredSongs.findIndex(song => song.url == val.url);
+        if (index !== -1) this.$refs.scroller.scrollToItem(index);
+      }
     },
   },
 
   methods: {
+    isMobile() {
+      return screen.width <= 600;
+    },
+
     changeSong(url) {
       this.$store.dispatch('changeSong', url);
     },
@@ -103,7 +135,7 @@ export default {
       this.lastOffset = offset;
       const fixedTopOffset = 0;
       window.scrollTo(0, offset - fixedTopOffset);
-    }
+    },
 
     /* handleAddToHomeScreen(event) {
       this.$store.dispatch('setRandomSong');

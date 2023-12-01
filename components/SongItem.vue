@@ -26,20 +26,6 @@
           <FontSize style="float: right"></FontSize>
         </div>
 
-        <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
-          <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
-            <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
-              <Chord
-                v-for="(chord, key) in sequence"
-                :chord="chord"
-                :transposeLevel="transposeLevel - defaultTransposeLevel"
-                :key="key"
-                :image="$store.state.showImages"
-              ></Chord>
-            </span>
-          </span>
-        </div>
-
         <div v-if="song.text" class="song-text">
           <template class="song-text__line" v-for="(line, lineKey) in textLines">
             <div v-if="line.type == 'chords'" :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type == 'text'}" :key="lineKey">
@@ -130,7 +116,6 @@ export default {
 
   data() {
     return {
-      transposeLevel: 0,
       isShare: false,
       shows: 0,
       showQrCode: false,
@@ -145,8 +130,6 @@ export default {
       setTimeout(() => {
         this.$emit("active", this.$el.offsetTop);
       }, 1000);
-
-      this.transposeLevel = this.defaultTransposeLevel;
     },
 
     transposeLevel(val) {
@@ -181,6 +164,16 @@ export default {
       return this.$store.state.shows[this.safeUrl] || 0;
     },
 
+    transposeLevel: {
+      get(){
+        return this.$store.state.transposeLevel;
+      },
+      set(val){
+        console.log('transposeLevel: ', val);
+        this.$store.commit('transposeLevel', val);
+      },
+    },
+
     genres() {
       if (!this.song.tags) return [];
       let genres = this.song.tags.map(tag => {
@@ -196,13 +189,6 @@ export default {
       genres.sort();
 
       return genres;
-    },
-
-    defaultTransposeLevel() {
-      const transpose = this.song.title.match(
-        /\((капо|кап|capo|cap)\.? (\d+)\)/
-      );
-      return transpose ? transpose[2] * -1 : 0;
     },
 
     complexity() {
@@ -233,24 +219,6 @@ export default {
       });
 
       return lines;
-    },
-
-    chords() {
-      if (!this.song.details) return [];
-      // split by ' - ', then by ' .. ', then by ' '
-      return this.song.details.chords
-        .split(" - ")
-        .map(section =>
-          section.split(" .. ").map(subsection => {
-            return subsection
-            .replace(/\(([A-Z])/g, '( $1') // (C
-            .replace(/([A-Zm0-9#])\)/g, '$1 )') // C)
-            .replace(/\(кап\.? ([0-9]) \)/, '(кап.\xa0$1)') // (кап. 2 )
-            .replace(/\((x[0-9]) \)/g, '($1)') // (x3 )
-            .replace(/([A-Zm#])\.\.?([A-Z])/g, '$1 . $2') // C..G
-            .split(" ")
-          })
-        );
     },
 
     toolbarHidden() {

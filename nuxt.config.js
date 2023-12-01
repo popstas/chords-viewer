@@ -8,7 +8,8 @@ module.exports = {
 
   css: [
     'element-ui/lib/theme-chalk/index.css',
-    'element-ui/lib/theme-chalk/display.css'
+    'element-ui/lib/theme-chalk/display.css',
+    'vue-virtual-scroller/dist/vue-virtual-scroller.css',
   ],
 
   plugins: [
@@ -17,6 +18,7 @@ module.exports = {
     { src: '@/plugins/vue-qr-generator', ssr: false },
     { src: '@/plugins/vue-qrcode-reader', ssr: false },
     { src: '@/plugins/vue-shortkey', ssr: false },
+    { src: '@/plugins/vue-virtual-scroller.js', ssr: false },
     { src: '@/plugins/yametrika', ssr: false },
     { src: '~/plugins/localStorage.js', ssr: false }
   ],

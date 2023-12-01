@@ -11,8 +11,9 @@
         :touch="false"
       >
         <div id="panel">
+          <!-- коммент, чтобы кодировка не переключалась -->
           <el-header height="42px">
-            <button class="menu-toggle">☰</button><!-- коммент, чтобы кодировка не переключалась -->
+            <button class="menu-toggle">☰</button>
             <button class="input-clear" @click="onInputClear">&cross;</button>
             <button class="input-clear" @click="showQrCode = !showQrCode"><icon name="qrcode"></icon></button>
             <Profile></Profile>
@@ -53,11 +54,14 @@ html {
   box-sizing: border-box;
 }
 body {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .el-main {
   max-width: 100vw;
   padding: $main-padding !important;
+  @media (max-width: $container-width-xs) {
+    width: 100vw;
+  }
 }
 
 textarea {
@@ -257,17 +261,17 @@ export default {
   },
 
   methods: {
-    handleScroll() {
-      const chords = this.$el.querySelector(".song-item.active .chords");
-      if (!chords) return;
-      this.chordsHeight = chords.clientHeight;
-    },
+    // handleScroll() {
+    //   const chords = this.$el.querySelector(".song-item.active .chords");
+    //   if (!chords) return;
+    //   this.chordsHeight = chords.clientHeight;
+    // },
 
     onInputClear() {
       const options = { name: "q", value: "" };
       this.$store.dispatch("changeFilter", options);
       const input = this.$el.querySelector(".search-input input");
-      input.value = "";
+      if (input) input.value = "";
       // this.$store.dispatch("filterSongs");
     },
 
@@ -309,7 +313,7 @@ export default {
   },
 
   created() {
-    window.addEventListener("scroll", this.handleScroll);
+    // window.addEventListener("scroll", this.handleScroll);
 
     // console.log('this.$store.state.darkMode: ', this.$store.state.darkMode);
     if (this.$store.state.darkMode === undefined) {
@@ -319,7 +323,7 @@ export default {
   },
 
   destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
+    // window.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>

@@ -77,42 +77,6 @@
     }
   }
 
-  .chords {
-    position: fixed;
-    top: 0;
-    left: auto;
-    right: 0;
-    text-align: center;
-    background: var(--bg);
-    padding: 5px;
-
-    &_images {
-      position: static;
-    }
-
-    @media (min-width: 1200px) {
-      padding: 10px;
-    }
-
-    .slideout-open & {
-      display: none;
-    }
-
-    &__section {
-      display: block;
-    }
-
-    &__sequence {
-      // white-space: nowrap;
-      &:after {
-        content: " .. ";
-      }
-      &:last-child:after {
-        content: "";
-      }
-    }
-  }
-
   &__line_chords {
     overflow: hidden;
     .chord_known .el-button {

@@ -34,12 +34,16 @@ export const state = () => ({
 
   // app state
   activeSong: { title: "" },
+  transposeLevel: 0,
+  defaultTransposeLevel: 0,
+  scroller: false,
   playlist: [],
   playlistCurrent: -1,
   toolbarHidden: false,
   shows: {},
   comments: {},
   user: false,
+  lastOffset: 0,
 
   // settings
   fontSize: 1,
@@ -94,6 +98,15 @@ export const mutations = {
   },
   activeSong(state, newValue) {
     state.activeSong = newValue;
+  },
+  transposeLevel(state, newValue) {
+    state.transposeLevel = newValue;
+  },
+  defaultTransposeLevel(state, newValue) {
+    state.defaultTransposeLevel = newValue;
+  },
+  scroller(state, newValue) {
+    state.scroller = newValue;
   },
   playlist(state, newValue) {
     state.playlist = newValue;
@@ -162,7 +175,10 @@ export const mutations = {
   },
   setUser(state, newValue) {
     state.user = newValue;
-  }
+  },
+  lastOffset(state, newValue) {
+    state.lastOffset = newValue;
+  },
 };
 
 const debouncedFilterSongs = debounce(dispatch => {
@@ -344,22 +360,41 @@ export const actions = {
     commit("setFilteredSongs", result);
   },
 
-  changeSong({ commit, state }, url) {
+  updateTranspose({ commit, state }) {
+    const songTranspose = state.activeSong.title?.match(
+      /\((капо|кап|capo|cap)\.? (\d+)\)/
+    );
+    const transpose = songTranspose ? songTranspose[2] * -1 : 0;
+    commit("defaultTransposeLevel", transpose);
+    commit("transposeLevel", transpose);
+  },
+
+  changeSong({ commit, state, dispatch }, url) {
     let activeSong = state.songs.find(song => song.url == url) || {};
     if (state.activeSong.url == url) return;
 
+
     commit("activeSong", activeSong);
+    dispatch("updateTranspose");
     commit("playlistCurrent", state.playlistCurrent + 1);
     commit("playlist", [...state.playlist, activeSong]);
+
+    commit("setFilteredSongs", state.filteredSongs.map(song => {
+      song.active = song.url === url;
+      return song;
+    }));
+
+    commit("setToolbarHidden", false);
   },
 
-  setPrevSong({ commit, state }, payload) {
+  setPrevSong({ commit, state, dispatch }, payload) {
     if (state.playlistCurrent <= 0) return;
     commit("activeSong", state.playlist[state.playlistCurrent - 1]);
+    dispatch("updateTranspose");
     commit("playlistCurrent", state.playlistCurrent - 1);
   },
 
-  setNextSong({ commit, state }, payload) {
+  setNextSong({ commit, state, dispatch }, payload) {
     if (state.playlist[state.playlistCurrent + 1]) {
       // next known
       commit("activeSong", state.playlist[state.playlistCurrent + 1]);
@@ -371,6 +406,7 @@ export const actions = {
       commit("playlist", [...state.playlist, randomSong]);
     }
     commit("playlistCurrent", state.playlistCurrent + 1);
+    dispatch("updateTranspose");
   },
 
   setUser({ commit, state }, user) {
