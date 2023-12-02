@@ -58,6 +58,14 @@
         <el-radio-button label="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
+    <el-row style="text-align:center">
+      <label>beats:</label>
+      <el-radio-group v-model="beats" size="mini">
+        <el-radio-button label="-1">any</el-radio-button>
+        <el-radio-button label="1">yes</el-radio-button>
+        <el-radio-button label="0">no</el-radio-button>
+      </el-radio-group>
+    </el-row>
 
     <el-divider></el-divider>
 
@@ -137,6 +145,7 @@ export default {
       withChords: -1,
       withTexts: -1,
       comments: -1,
+      beats: -1,
       sortByDate: false,
       sortByShows: false,
       noSleep: false,
@@ -158,6 +167,9 @@ export default {
     },
     comments(val) {
       this.changeFilter("comments", val);
+    },
+    beats(val) {
+      this.changeFilter("beats", val);
     },
     sortByDate(val) {
       this.changeFilter("sortByDate", val);

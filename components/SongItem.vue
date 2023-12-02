@@ -26,6 +26,10 @@
           <FontSize style="float: right"></FontSize>
         </div>
 
+        <div v-if="song.beat" class="song-midi">
+          <BeatPlayer :beat="song.beat" name="beat"></BeatPlayer>
+        </div>
+
         <div v-if="song.text" class="song-text">
           <template class="song-text__line" v-for="(line, lineKey) in textLines">
             <div v-if="line.type == 'chords'" :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type == 'text'}" :key="lineKey">
@@ -102,6 +106,7 @@
 <script>
 import Chord from "~/components/Chord";
 import FontSize from "~/components/FontSize";
+import BeatPlayer from "~/components/BeatPlayer";
 import { transposeMap } from "~/store";
 import "vue-awesome/icons/edit";
 import "vue-awesome/icons/qrcode";
@@ -111,7 +116,7 @@ import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
 
 export default {
-  components: { Chord, FontSize },
+  components: { Chord, FontSize, BeatPlayer },
   props: ["song", "active"],
 
   data() {

@@ -61,6 +61,7 @@ export const state = () => ({
     q: "",
     withChords: -1,
     withTexts: -1,
+    beats: -1,
     sortByDate: true,
     sortByShows: false,
     comments: -1,
@@ -325,7 +326,7 @@ export const actions = {
       result = result.filter(song => !song.text);
     }
 
-    
+
     if (state.filter.comments === "1") {
       result = result.filter(song => {
         const safeUrl = song.url.replace(/[\/\.]/g, '_');
@@ -337,6 +338,10 @@ export const actions = {
         const safeUrl = song.url.replace(/[\/\.]/g, '_');
         return !state.comments[safeUrl]
       });
+    }
+
+    if (state.filter.beats === "1") {
+      result = result.filter(song => !!song.beat);
     }
 
     if (state.filter.sortByDate) {
@@ -416,7 +421,6 @@ export const actions = {
         photoURL: user.photoURL,
         displayName: user.displayName,
         email: user.email,
-        uid: user.uid
       });
 
       firebase

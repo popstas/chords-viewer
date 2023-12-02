@@ -16,3 +16,7 @@ chords.json
 sw.*
 
 data
+
+assets/instruments_raw/*
+assets/midi/other/*
+assets/wav/*
