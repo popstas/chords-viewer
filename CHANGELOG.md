@@ -1,3 +1,12 @@
+# [4.0.0](https://github.com/popstas/chords-viewer/compare/v3.0.0...v4.0.0) (2023-12-12)
+
+
+### Features
+
+* beats midi player ([b26e8c0](https://github.com/popstas/chords-viewer/commit/b26e8c0ef093af584fd913a6f04659a2aaffdb8d))
+
+
+
 # [3.0.0](https://github.com/popstas/chords-viewer/compare/v2.9.0...v3.0.0) (2023-12-01)
 
 
