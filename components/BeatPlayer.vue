@@ -65,6 +65,17 @@ export default {
 		activeSong() {
       return this.$store.state.activeSong;
     },
+		midiBpm() {
+			// get bpm from beat.name, e.g. 'loop-2-tum-tum-120-bpm', with regex
+			const parsedBpm = this.beat.name.match(/(\d+)-bpm/);
+			return parsedBpm && parseInt(parsedBpm[1]) || 100;
+		},
+		bpm() {
+			return this.beat.bpm || this.midiBpm;
+		},
+		bpmMultiplier() {
+			return this.midiBpm / this.bpm;
+		},
   },
 	watch: {
 		activeSong(val) {
@@ -96,6 +107,17 @@ export default {
       const midiFile = new MIDIFile(midiArrayBuffer);
       // console.log('midiFile: ', midiFile);
       const song = midiFile.parseSong();
+
+			song.duration = song.duration * this.bpmMultiplier;
+
+			// const origNotes = [...song.tracks[0].notes];
+			// console.log('origNotes: ', origNotes);
+			const bpmNotes = song.tracks[0].notes.map(note => {
+				note.when = note.when * this.bpmMultiplier;
+				return note;
+			});
+			song.tracks[0].notes = bpmNotes;
+			// console.log('bpmNotes: ', bpmNotes);
       this.startLoad(song);
     },
 
@@ -106,7 +128,6 @@ export default {
 		},
 
     startLoad(song) {
-			console.log(song);
 			var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
 			this.audioContext = new AudioContextFunc();
 			this.player = new WebAudioFontPlayer();
@@ -132,8 +153,26 @@ export default {
 				song.beats[i].id = nn;
 				this.player.loader.startLoad(this.audioContext, info.url, info.variable);
 			}
+
       const onLoad = () => {
-        this.startPlay(song);
+				// this.sendNotes(song, this.songStart, this.currentSongTime, this.currentSongTime + stepDuration, this.audioContext, this.input, this.player);
+				setTimeout(() => {
+					const pitch = 42;
+					const instr = instrMap[pitch];
+					const duration = 0.5;
+					// const vol = 1 / 7;
+					const offset = 60000 / this.bpm;
+					for (let i = 0; i < 5; i++) {
+						setTimeout(() => {
+							const vol = i == 0 ? 0.001 : 1 / 7;
+							this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, pitch, duration, vol, []);
+						}, offset*i);
+					}
+
+					setTimeout(() => {
+						this.startPlay(song);
+					}, offset * 5);
+				}, 100);
       }
 			this.player.loader.waitLoad(onLoad);
 		},
@@ -194,7 +233,8 @@ export default {
 						instr = instrMap[pitch] || track.info.variable;
 						// console.log('instr: ', instr);
 						// console.log('note: ', track.notes[i].pitch);
-						var v = track.volume / 7;
+						// var v = track.volume / 7;
+						var v = track.volume;
 						player.queueWaveTable(audioContext, input, window[instr], when, track.notes[i].pitch, duration, v, track.notes[i].slides);
 					}
 				}

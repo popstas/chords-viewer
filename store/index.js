@@ -341,7 +341,7 @@ export const actions = {
     }
 
     if (state.filter.beats === "1") {
-      result = result.filter(song => !!song.beat);
+      result = result.filter(song => !!song.beat?.name);
     }
 
     if (state.filter.sortByDate) {

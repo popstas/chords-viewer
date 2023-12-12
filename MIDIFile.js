@@ -1065,7 +1065,7 @@ MIDIFile.prototype.parseSong = function () {
 		beats: []
 	};
 	var events = this.getMidiEvents();
-	console.log(events);
+	// console.log(events);
 	// To set the pitch-bend range, three to four consecutive EVENT_MIDI_CONTROLLER messages must have consistent contents.
 	var expectedPitchBendRangeMessageNumber = 1; // counts which pitch-bend range message can be expected next: number 1 (can be sent any time, except after pitch-bend range messages number 1 or 2), number 2 (required after number 1), number 3 (required after number 2), or number 4 (optional)
 	var expectedPitchBendRangeChannel = null;
