@@ -162,6 +162,15 @@ export default {
 					const duration = 0.5;
 					// const vol = 1 / 7;
 					const offset = 60000 / this.bpm;
+
+					const uniqNotes = [...new Set(song.tracks[0].notes.map(note => note.pitch))];
+					// play uniqNotes with volume 0.001
+					for (let i = 0; i < uniqNotes.length; i++) {
+						const vol = 0.001;
+						const instr = instrMap[uniqNotes[i]];
+						this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, uniqNotes[i], duration, vol, []);
+					}
+					
 					for (let i = 0; i < 5; i++) {
 						setTimeout(() => {
 							const vol = i == 0 ? 0.001 : 1 / 7;
