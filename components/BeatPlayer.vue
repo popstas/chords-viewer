@@ -168,6 +168,7 @@ export default {
 					for (let i = 0; i < uniqNotes.length; i++) {
 						const vol = 0.001;
 						const instr = instrMap[uniqNotes[i]];
+						// TODO: replace with player.loader.decodeAfterLoading(audioContext, instr);
 						this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, uniqNotes[i], duration, vol, []);
 					}
 					

@@ -10,6 +10,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
+    "build-beats": "node scripts/build-beats.js",
     "update-data": "curl https://raw.githubusercontent.com/popstas/chords-data/master/chords.json > chords.json",
     "version": "npm run changelog && git add CHANGELOG.md",
     "postversion": "git push && npm run release",
