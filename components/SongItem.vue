@@ -27,8 +27,12 @@
         </div>
 
         <div v-if="song.beat.name" class="song-midi">
-          <BeatPlayer :beat="song.beat" name="beat" :rever="true"></BeatPlayer>
+          <BeatPlayer :beat="song.beat" name="beat" :rever="true" :chords="song.details.chords"></BeatPlayer>
         </div>
+        <div v-if="!song.beat.name && chordsList.length === 4" class="song-midi">
+          <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true" :chords="song.details.chords"></BeatPlayer>
+        </div>
+
 
         <div v-if="song.text" class="song-text">
           <template class="song-text__line" v-for="(line, lineKey) in textLines">
@@ -160,6 +164,10 @@ export default {
       title = title.trim(",");
       return title;
     },
+
+		chordsList() {
+			return this.song.details?.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
+		},
 
     safeUrl() {
       return this.song.url.replace(/[\/\.]/g, '_');

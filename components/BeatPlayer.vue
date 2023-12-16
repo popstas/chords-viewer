@@ -14,6 +14,18 @@
 				<el-slider v-model="bpmCurrent" :min="bpm * 0.8" :max="bpm * 1.2"></el-slider>
 			</el-col>
 		</el-row>
+		<el-row v-if="pianoAllowed" class="piano" :gutter="20">
+			<el-col :span="24" class="beat__left">
+				<el-checkbox v-model="pianoCurrent">piano</el-checkbox>
+					<el-radio-group  v-model="chordBeats" size="mini">
+						<el-radio-button title="2" label="2">2</el-radio-button>
+						<el-radio-button title="4" label="4">4</el-radio-button>
+						<el-radio-button title="8" label="8">8</el-radio-button>
+					</el-radio-group>
+				</el-col>
+		</el-row>
+		<div v-if="error">{{ error }}</div>
+
   </div>
 </template>
 
@@ -28,13 +40,52 @@
 </style>
 
 <script>
+import debounce from "lodash/debounce";
 import WebAudioFontPlayer from 'webaudiofont';
 import MIDIFile from '../MIDIFile.js';
 
 import beats from "~/assets/beats.json";
 import "../assets/instruments/drums0.js";
+import "../assets/instruments/piano0.js";
+// import "../assets/instruments/piano1.js";
 
-const instrMap = {
+const bpmDefault = 100;
+const chordNotesMap = {
+	'E': [40, 44, 47],
+	'E7': [40, 44, 47], // [40, 44, 47, 50],
+	'Em': [40, 43, 47],
+	'Em7': [40, 43, 47], // [40, 43, 47, 50],
+	'C': [36, 40, 43],
+	'Cm': [36, 39, 43],
+	'Cmaj': [36, 40, 43], // [36, 40, 43, 47]
+	'Cmaj7': [36, 40, 43], // [36, 40, 43, 47]
+	'C#': [37, 41, 44],
+	'D': [38, 42, 45],
+	'Dm': [38, 41, 45],
+	'Hm': [35, 38, 42],
+	'Bm': [35, 38, 42],
+	'H': [35, 39, 42], // [47, 51, 54],
+	'B7': [35, 39, 42], // [47, 51, 54],
+	'H7': [35, 39, 42], // [47, 51, 54],
+	'G': [43, 47, 50],
+	'Gm': [43, 46, 50],
+	'G6': [43, 47, 50], // [43, 47, 50, 52],
+	'G#': [44, 48, 51],
+	'F': [41, 45, 48],
+	'F#': [42, 46, 49],
+	'A': [45, 49, 52],
+	'Am': [45, 48, 52],
+	'Am7': [45, 48, 52], // [45, 48, 52, 55],
+	'A#': [46, 50, 53],
+	// дальше не точно
+	'D#m': [39, 42, 46],
+	'C#m': [37, 40, 44],
+	'F#m': [42, 45, 49],
+	'G#m': [44, 47, 51],
+	'A#m': [46, 49, 53],
+	'D#': [51, 54, 58],
+};
+const instrDrumsMap = {
   33: '_drum_35_0_JCLive_sf2_file',
   35: '_drum_35_0_JCLive_sf2_file',
   36: '_drum_36_0_JCLive_sf2_file',
@@ -64,7 +115,7 @@ const instrMap = {
 };
 
 export default {
-  props: ["beat", "name", "rever"],
+  props: ["beat", "name", "rever", "piano", "chords"],
   data() {
     return {
 			equalizer: null,
@@ -77,6 +128,10 @@ export default {
 			stopped: true,
 			bpmCurrent: 0,
 			reverCurrent: false,
+			pianoAllowed: false,
+			pianoCurrent: this.piano,
+			chordBeats: 4,
+			error: '',
     };
   },
   computed: {
@@ -85,19 +140,53 @@ export default {
     },
 		midiBpm() {
 			// get bpm from beat.name, e.g. 'loop-2-tum-tum-120-bpm', with regex
+			if (this.pianoCurrent) return bpmDefault;
 			const parsedBpm = this.beat.name.match(/(\d+)-bpm/);
-			return parsedBpm && parseInt(parsedBpm[1]) || 100;
+			return parsedBpm && parseInt(parsedBpm[1]) || bpmDefault;
 		},
 		bpm() {
 			return this.beat.bpm || this.midiBpm;
 		},
 		bpmMultiplier() {
+			// console.log('this.midiBpm: ', this.midiBpm);
+			// console.log('this.bpm: ', this.bpm);
 			return this.midiBpm / this.bpmCurrent;
+		},
+		chordsList() {
+			let chords = this.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
+			if (chords.length === 2) {
+				chords = [chords[0], chords[0], chords[1], chords[1]];
+			}
+			return chords;
 		},
   },
 	watch: {
 		activeSong(val) {
 			if (!val) this.stop();
+		},
+		pianoCurrent(val) {
+			this.replay(this);
+		},
+		bpmCurrent(val) {
+			this.replay(this);
+		},
+		reverCurrent(val) {
+			// this.replay(this);
+			if (!this.player) return;
+			if (val) {
+				this.equalizer = this.player.createChannel(this.audioContext);
+				this.input = this.equalizer.input;
+				const reverberator = this.player.createReverberator(this.audioContext);
+				this.equalizer.output.connect(reverberator.input);
+				reverberator.output.connect(this.audioContext.destination);
+			}
+			// simple
+			else {
+				this.input = this.audioContext.destination;
+			}
+		},
+		chordBeats(val) {
+			this.replay(this);
 		},
 	},
   methods: {
@@ -106,25 +195,30 @@ export default {
 			else this.stop();
 		},
     play() {
-      /* var Player = new MidiPlayer.Player(function(event) {
-        console.log(event);
-      }); */
-      const beat = beats.find(b => b.name === this.beat.name);
-      if (!beat) return;
+			this.stop();
+			let song;
+			this.error = '';
+			if (!this.pianoCurrent) {
+				const beat = beats.find(b => b.name === this.beat.name);
+				if (!beat) {
+					this.error = 'Cannot find beat.';
+					return;
+				}
 
-      // midi-player-js
-      /* Player.loadFile(filename);
-      Player.play(); */
+				this.player = new WebAudioFontPlayer();
+				const midiArrayBuffer = this.base64ToArrayBuffer(beat.data);
+				const midiFile = new MIDIFile(midiArrayBuffer);
+				// console.log('midiFile: ', midiFile);
+				song = midiFile.parseSong();
+			}
+			else {
+				song = this.buildSongFromChords();
+			}
 
-      // webaudiofont
-      // console.log('WebAudioFontPlayer: ', WebAudioFontPlayer);
-      // console.log('MIDIFile: ', MIDIFile);
-      this.player = new WebAudioFontPlayer();
-      // console.log('webaudiofont: ', webaudiofont);
-      const midiArrayBuffer = this.base64ToArrayBuffer(beat.data);
-      const midiFile = new MIDIFile(midiArrayBuffer);
-      // console.log('midiFile: ', midiFile);
-      const song = midiFile.parseSong();
+			if (!song) {
+				console.log('song is empty, cancel play');
+				return;
+			}
 
 			song.duration = song.duration * this.bpmMultiplier;
 
@@ -136,8 +230,16 @@ export default {
 			});
 			song.tracks[0].notes = bpmNotes;
 			// console.log('bpmNotes: ', bpmNotes);
+
+			console.log('song: ', song);
       this.startLoad(song);
     },
+
+		replay: debounce((self) => {
+  		if (!self.stopped) self.play();
+		}, 500),
+
+		// replayDebounced: debounce(this.replay, 100),
 
 		stop() {
 			if (!this.player) return;
@@ -171,32 +273,43 @@ export default {
 				song.tracks[i].id = nn;
 				this.player.loader.startLoad(this.audioContext, info.url, info.variable);
 			}
-			for (let i = 0; i < song.beats.length; i++) {
+			/* for (let i = 0; i < song.beats.length; i++) {
 				const nn = this.player.loader.findDrum(song.beats[i].n);
 				const info = this.player.loader.drumInfo(nn);
 				song.beats[i].info = info;
 				song.beats[i].id = nn;
 				this.player.loader.startLoad(this.audioContext, info.url, info.variable);
-			}
+			} */
 
       const onLoad = () => {
 				// this.sendNotes(song, this.songStart, this.currentSongTime, this.currentSongTime + stepDuration, this.audioContext, this.input, this.player);
 				setTimeout(() => {
-					const pitch = 42;
-					const instr = instrMap[pitch];
 					const duration = 0.5;
 					// const vol = 1 / 7;
-					const offset = 60000 / this.bpmCurrent;
 
-					const uniqNotes = [...new Set(song.tracks[0].notes.map(note => note.pitch))];
-					// play uniqNotes with volume 0.001
-					for (let i = 0; i < uniqNotes.length; i++) {
-						const vol = 0.001;
-						const instr = instrMap[uniqNotes[i]];
-						// TODO: replace with player.loader.decodeAfterLoading(audioContext, instr); // https://github.com/surikov/webaudiofont/issues/23
-						this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, uniqNotes[i], duration, vol, []);
+					// show all notes
+					/* song.tracks[0].notes.map(note => {
+						console.log('note: ', note.pitch);
+					}); */
+
+					// play uniqNotes with volume 0.001 for preload
+					if (!this.pianoCurrent) {
+						const uniqNotes = [...new Set(song.tracks[0].notes.map(note => note.pitch))];
+						for (let i = 0; i < uniqNotes.length; i++) {
+							const vol = 0.001;
+							const instr = instrDrumsMap[uniqNotes[i]];
+							this.player.loader.decodeAfterLoading(this.audioContext, instr); // https://github.com/surikov/webaudiofont/issues/23
+							// this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, uniqNotes[i], duration, vol, []);
+						}
+					}
+					else {
+						this.player.loader.decodeAfterLoading(this.audioContext, song.tracks[0].info.variable); // https://github.com/surikov/webaudiofont/issues/23
 					}
 					
+					// intro 4 beats (1st for preload)
+					const pitch = 42;
+					const instr = instrDrumsMap[pitch];
+					const offset = 60000 / this.bpmCurrent;
 					for (let i = 0; i < 5; i++) {
 						setTimeout(() => {
 							const vol = i == 0 ? 0.001 : 1 / 7;
@@ -220,6 +333,77 @@ export default {
       }
       return bytes.buffer;
     },
+
+		buildSongFromChords() {
+			const chords = this.chordsList;
+			if (chords.length !== 4) {
+				this.error = `Chords count should be 4, but ${chords.length} given.`
+				return;
+			}
+
+			const bpm = bpmDefault;
+
+			const ticksPerBeat = 2;
+			const repeats = 4; // for avoid loop issues
+
+			const chordBeats = this.chordBeats; // 2 beats per chord
+			// const ticks = chords.length * ticksPerBeat;
+			const beatDuration = 60 / bpm;
+			const tickDuration = beatDuration / ticksPerBeat;
+			const totalBeats = chords.length * chordBeats;
+
+			const song = {
+				tracks: [{
+					id: 0,
+					program: 0,
+					n: 0,
+					volume: 1,
+					info: {
+						title: "Acoustic Grand Piano: Piano",
+						url: "https://surikov.github.io/webaudiofontdata/sound/0000_JCLive_sf2_file.js",
+						variable: "_tone_0000_JCLive_sf2_file",
+						// variable: "_tone_0000_Aspirin_sf2_file", // piano1
+					},
+					notes: [],
+				}],
+				beats: [],
+				duration: totalBeats * beatDuration * repeats,
+			};
+
+			const duration = 0.5;
+
+			const songNotes = [];
+			// build notes from chord for chordBeats
+			for (let i = 0; i < chords.length; i++) {
+				const chordNotes = chordNotesMap[chords[i]];
+				if (!chordNotes) {
+					this.error = `Chord ${chords[i]} not found.`
+					// console.log('cannot find notes for chord: ', );
+					return;
+				}
+				const notesPerChord = chordBeats * ticksPerBeat;
+				for (let j = 0; j < notesPerChord; j++) {
+					const pitch = chordNotes[j % chordNotes.length];
+					songNotes.push(pitch);
+				}
+			}
+
+			let offset = 0;
+			for (let r = 0; r < repeats; r++) {
+				for (let t = 0; t < songNotes.length; t++) {
+					const pitch = songNotes[t];
+					song.tracks[0].notes.push({
+						when: offset * tickDuration,
+						pitch,
+						duration,
+						slides: [],
+					});
+					offset++;
+				}
+			}
+
+			return song;
+		},
 
   	startPlay(song) {
 			this.stopped = false;
@@ -253,6 +437,7 @@ export default {
 			});
 		},
     sendNotes(song, songStart, start, end, audioContext, input, player) {
+			const isDrums = !this.pianoCurrent;
 			for (var t = 0; t < song.tracks.length; t++) {
 				var track = song.tracks[t];
 				for (var i = 0; i < track.notes.length; i++) {
@@ -265,7 +450,7 @@ export default {
 						var instr = track.info.variable;
 
 						const pitch = track.notes[i].pitch;
-						instr = instrMap[pitch] || track.info.variable;
+						if (isDrums) instr = instrDrumsMap[pitch] || track.info.variable;
 						// console.log('instr: ', instr);
 						// console.log('note: ', track.notes[i].pitch);
 						// var v = track.volume / 7;
@@ -291,6 +476,7 @@ export default {
 	mounted() {
 		this.bpmCurrent = this.bpm;
 		this.reverCurrent = this.rever;
+		this.pianoAllowed = this.chordsList.length === 4;
 	},
 	beforeDestroy() {
 		this.stop();

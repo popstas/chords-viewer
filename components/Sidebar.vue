@@ -218,7 +218,7 @@ export default {
   },
 
   mounted() {
-    ["withChords", "withTexts", "comments", "sortByDate", "sortByShows"].forEach(name => {
+    ["withChords", "withTexts", "comments", "beats", "sortByDate", "sortByShows"].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
   }

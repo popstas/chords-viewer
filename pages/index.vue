@@ -23,6 +23,10 @@
       <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 140}"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-15-rap-vydyhay-100-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-23-rock-fast-tum-tsh-tum-tum-tsh-102-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'piano-em-c-d-hm', bpm: 100}" :rever="true" :piano="true" chords="Em C D Hm"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'piano Em Hm G D', bpm: 120}" :rever="true" :piano="true" chords="Em Hm G D"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'piano Am F C E', bpm: 100}" :rever="true" :piano="true" chords="Am F C E"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'piano Em G D C', bpm: 100}" :rever="true" :piano="true" chords="Em G D C"></BeatPlayer>
     </div>
     <SongList></SongList>
   </div>
