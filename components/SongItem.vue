@@ -26,8 +26,8 @@
           <FontSize style="float: right"></FontSize>
         </div>
 
-        <div v-if="song.beat" class="song-midi">
-          <BeatPlayer :beat="song.beat" name="beat"></BeatPlayer>
+        <div v-if="song.beat.name" class="song-midi">
+          <BeatPlayer :beat="song.beat" name="beat" :rever="true"></BeatPlayer>
         </div>
 
         <div v-if="song.text" class="song-text">

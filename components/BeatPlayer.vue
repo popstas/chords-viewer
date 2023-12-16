@@ -1,13 +1,30 @@
 <template>
   <div class="beat-player">
-    <el-button
-      @click="play"
-    >{{ name || beat.name }}</el-button>
-		<el-button @click="toggle">{{ stopped ? 'Play' : 'Stop' }}</el-button>
+		<el-row class="beat" :gutter="20">
+			<el-col :span="14" class="beat__left">
+				<el-button
+					@click="play"
+				>{{ name || beat.name }}</el-button>
+				<el-button @click="toggle">{{ stopped ? 'Play' : 'Stop' }}</el-button>
+			</el-col>
+			<el-col :span="4" class="beat__rever">
+				<el-checkbox v-model="reverCurrent">rever</el-checkbox>
+			</el-col>
+			<el-col :span="6" class="beat__right">
+				<el-slider v-model="bpmCurrent" :min="bpm * 0.8" :max="bpm * 1.2"></el-slider>
+			</el-col>
+		</el-row>
   </div>
 </template>
 
 <style lang="scss">
+.beat__left {
+	padding-top: 7px;
+}
+.beat__rever {
+	text-align: right;
+	padding-top: 6px;
+}
 </style>
 
 <script>
@@ -47,11 +64,10 @@ const instrMap = {
 };
 
 export default {
-  props: ["beat", "name"],
+  props: ["beat", "name", "rever"],
   data() {
     return {
 			equalizer: null,
-			reverberator: null,
       player: null,
       audioContext: null,
       currentSongTime: 0,
@@ -59,6 +75,8 @@ export default {
       nextStepTime: 0,
 			nextPositionTime: 0,
 			stopped: true,
+			bpmCurrent: 0,
+			reverCurrent: false,
     };
   },
   computed: {
@@ -74,7 +92,7 @@ export default {
 			return this.beat.bpm || this.midiBpm;
 		},
 		bpmMultiplier() {
-			return this.midiBpm / this.bpm;
+			return this.midiBpm / this.bpmCurrent;
 		},
   },
 	watch: {
@@ -132,12 +150,19 @@ export default {
 			this.audioContext = new AudioContextFunc();
 			this.player = new WebAudioFontPlayer();
 
-			this.equalizer = this.player.createChannel(this.audioContext);
-			this.reverberator = this.player.createReverberator(this.audioContext);
-			// input = reverberator.input;
-			this.input = this.equalizer.input;
-			this.equalizer.output.connect(this.reverberator.input);
-			this.reverberator.output.connect(this.audioContext.destination);
+			// with equalizer and reverberator
+			if (this.reverCurrent) {
+				this.equalizer = this.player.createChannel(this.audioContext);
+				this.input = this.equalizer.input;
+				const reverberator = this.player.createReverberator(this.audioContext);
+				this.equalizer.output.connect(reverberator.input);
+				reverberator.output.connect(this.audioContext.destination);
+			}
+			// simple
+			else {
+				this.input = this.audioContext.destination;
+			}
+
 
 			for (let i = 0; i < song.tracks.length; i++) {
 				const nn = this.player.loader.findInstrument(song.tracks[i].program);
@@ -161,14 +186,14 @@ export default {
 					const instr = instrMap[pitch];
 					const duration = 0.5;
 					// const vol = 1 / 7;
-					const offset = 60000 / this.bpm;
+					const offset = 60000 / this.bpmCurrent;
 
 					const uniqNotes = [...new Set(song.tracks[0].notes.map(note => note.pitch))];
 					// play uniqNotes with volume 0.001
 					for (let i = 0; i < uniqNotes.length; i++) {
 						const vol = 0.001;
 						const instr = instrMap[uniqNotes[i]];
-						// TODO: replace with player.loader.decodeAfterLoading(audioContext, instr);
+						// TODO: replace with player.loader.decodeAfterLoading(audioContext, instr); // https://github.com/surikov/webaudiofont/issues/23
 						this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, uniqNotes[i], duration, vol, []);
 					}
 					
@@ -263,6 +288,10 @@ export default {
 			}
 		}
   },
+	mounted() {
+		this.bpmCurrent = this.bpm;
+		this.reverCurrent = this.rever;
+	},
 	beforeDestroy() {
 		this.stop();
 	},

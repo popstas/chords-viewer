@@ -7,17 +7,22 @@
     <ChordsFloating></ChordsFloating>
     <PlayerFloating></PlayerFloating>
     <div v-if="!activeSong.url && isTest">
-      <BeatPlayer :beat="{name: 'loop-2-120-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'loop-10-120-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-1-120-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-2-tum-tum-tsh-ts-100-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-3-not-angels-72-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-4-pachka-90-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-5-tum-tum-tsh-120-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-6-vyhoda-net-85-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-7-gruppa-krovi-120-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-8-tum-tsh-120-bpm'}"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'simple-9-slow-tum-tsh--tum-tum-tsh-85-bpm'}"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-1-120-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-2-tum-tum-tsh-ts-100-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-3-not-angels-72-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-4-rock-slow-tum-tsh--tum-tum-tsh-90-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-4-rock-slow-tum-tsh--tum-tum-tsh-90-bpm', bpm: 120}"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-5-tum-tum-tsh-120-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-6-vyhoda-net-85-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-7-rock-tum-tsh-120-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-8-tum-tsh-120-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-9-slow-tum-tsh--tum--tum-tsh-85-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-10-hard-rap-85-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-11-rock-tum-tsh--tum-tum-tsh-100-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-12-tum-tsh-100-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 140}"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-15-rap-vydyhay-100-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'simple-23-rock-fast-tum-tsh-tum-tum-tsh-102-bpm'}" :rever="true"></BeatPlayer>
     </div>
     <SongList></SongList>
   </div>
