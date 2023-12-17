@@ -5,6 +5,9 @@
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
 
+      <icon v-if="isBeat && $store.state.filter.beats !== '1'" style="margin-left: 5px" name="drum"></icon>
+      <icon v-if="isPiano" style="margin-left: 5px" name="piano"></icon>
+
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
       </span>
@@ -26,10 +29,10 @@
           <FontSize style="float: right"></FontSize>
         </div>
 
-        <div v-if="song.beat.name" class="song-midi">
+        <div v-if="isBeat" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :chords="song.details.chords"></BeatPlayer>
         </div>
-        <div v-if="!song.beat.name && chordsList.length === 4" class="song-midi">
+        <div v-if="isPiano" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true" :chords="song.details.chords"></BeatPlayer>
         </div>
 
@@ -124,6 +127,20 @@ import "vue-awesome/icons/share-alt";
 import "vue-awesome/icons/link";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
+import "vue-awesome/icons/drum";
+import Icon from "vue-awesome/components/Icon.vue";
+
+Icon.register({
+  piano: {
+    width: 64,
+    height: 64,
+    paths: [
+      {
+        d: 'M60,0H4C1.789,0,0,1.789,0,4v56c0,2.211,1.789,4,4,4h56c2.211,0,4-1.789,4-4V4C64,1.789,62.211,0,60,0z M28,56H8V8h12v28c0,2.211,1.789,4,4,4h4V56z M56,56H36V40h4c2.211,0,4-1.789,4-4V8h12V56z'
+      }
+    ]
+  }
+})
 
 export default {
   components: { Chord, FontSize, BeatPlayer },
@@ -169,6 +186,14 @@ export default {
       }
       title = title.trim(",");
       return title;
+    },
+
+    isBeat() {
+      return !!this.song.beat?.name;
+    },
+
+    isPiano() {
+      return !this.isBeat && this.chordsList.length === 4;
     },
 
 		chordsList() {
