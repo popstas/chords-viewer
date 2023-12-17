@@ -1,3 +1,21 @@
+# [4.1.0](https://github.com/popstas/chords-viewer/compare/v4.0.0...v4.1.0) (2023-12-17)
+
+
+### Bug Fixes
+
+* preload all beat notes ([97f2216](https://github.com/popstas/chords-viewer/commit/97f2216c2d55dfcd88d34e1c24aaafca2acee9fa))
+
+
+### Features
+
+* beat rever and bpm tune ([4365272](https://github.com/popstas/chords-viewer/commit/4365272696c1353c0e2ce7fd986054d48eb1fda9))
+* new beats, drums0.sf2 ([6abe6d7](https://github.com/popstas/chords-viewer/commit/6abe6d7591ec02b847e00989ca50cb2b81f07066))
+* piano player for 2-4-chords songs, change rever on the fly ([e3028d4](https://github.com/popstas/chords-viewer/commit/e3028d4057b82223019dee5f02289d0b34f01e56))
+* play drums and piano at the same time ([952b7ff](https://github.com/popstas/chords-viewer/commit/952b7ffc113c00d93ec4f2103fa0e90711a67b1c))
+* support song custom bpm, beat intro ([cc5e50c](https://github.com/popstas/chords-viewer/commit/cc5e50c80cc479ae3d68ca8efdf6a47bad98475d))
+
+
+
 # [4.0.0](https://github.com/popstas/chords-viewer/compare/v3.0.0...v4.0.0) (2023-12-12)
 
 
