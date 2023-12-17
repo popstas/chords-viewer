@@ -121,10 +121,12 @@ export default {
 			equalizer: null,
       player: null,
       audioContext: null,
-      currentSongTime: 0,
+
+			currentSongTime: 0,
       songStart: 0,
       nextStepTime: 0,
 			nextPositionTime: 0,
+
 			stopped: true,
 			bpmCurrent: 0,
 			reverCurrent: false,
@@ -132,6 +134,8 @@ export default {
 			pianoCurrent: this.piano,
 			chordBeats: 4,
 			error: '',
+			songDrums: null,
+			songPiano: null,
     };
   },
   computed: {
@@ -140,7 +144,7 @@ export default {
     },
 		midiBpm() {
 			// get bpm from beat.name, e.g. 'loop-2-tum-tum-120-bpm', with regex
-			if (this.pianoCurrent) return bpmDefault;
+			// if (this.pianoCurrent) return bpmDefault;
 			const parsedBpm = this.beat.name.match(/(\d+)-bpm/);
 			return parsedBpm && parseInt(parsedBpm[1]) || bpmDefault;
 		},
@@ -196,30 +200,53 @@ export default {
 		},
     play() {
 			this.stop();
-			let song;
 			this.error = '';
-			if (!this.pianoCurrent) {
-				const beat = beats.find(b => b.name === this.beat.name);
-				if (!beat) {
-					this.error = 'Cannot find beat.';
-					return;
-				}
+			this.songDrums = this.songInit();
+			this.songPiano = this.songInit();
 
+			const beat = beats.find(b => b.name === this.beat.name);
+			if (beat) {
 				this.player = new WebAudioFontPlayer();
 				const midiArrayBuffer = this.base64ToArrayBuffer(beat.data);
 				const midiFile = new MIDIFile(midiArrayBuffer);
 				// console.log('midiFile: ', midiFile);
-				song = midiFile.parseSong();
-			}
-			else {
-				song = this.buildSongFromChords();
+				this.songDrums.song = midiFile.parseSong();
+				this.songDrums.isDrums = true;
 			}
 
-			if (!song) {
+			if (this.pianoCurrent) this.songPiano.song = this.buildSongFromChords();
+
+			if (!this.pianoCurrent && !this.songDrums.song) {
+				if (!this.error) this.error = 'Cannot find beat.';
+				console.log('song is empty, cancel play');
+				return;
+			}
+			if (this.pianoCurrent && !this.songPiano.song) {
+				if (!this.error) this.error = 'Cannot build song from chords.';
 				console.log('song is empty, cancel play');
 				return;
 			}
 
+			// console.log('this.songDrums: ', this.songDrums.song);
+			// console.log('this.songPiano: ', this.songPiano.song);
+      this.startLoad(this.songDrums.song || this.songPiano.song);
+    },
+
+		replay: debounce((self) => {
+  		if (!self.stopped) self.play();
+		}, 500),
+
+		songInit() {
+			return {
+				song: null,
+				isDrums: false,
+				currentSongTime: 0,
+				songStart: 0,
+				nextStepTime: 0,
+				nextPositionTime: 0,
+			}
+		},
+		applyBpm(song) {
 			song.duration = song.duration * this.bpmMultiplier;
 
 			// const origNotes = [...song.tracks[0].notes];
@@ -231,15 +258,9 @@ export default {
 			song.tracks[0].notes = bpmNotes;
 			// console.log('bpmNotes: ', bpmNotes);
 
-			console.log('song: ', song);
-      this.startLoad(song);
-    },
+			return song;
+		},
 
-		replay: debounce((self) => {
-  		if (!self.stopped) self.play();
-		}, 500),
-
-		// replayDebounced: debounce(this.replay, 100),
 
 		stop() {
 			if (!this.player) return;
@@ -248,7 +269,7 @@ export default {
 		},
 
     startLoad(song) {
-			var AudioContextFunc = window.AudioContext || window.webkitAudioContext;
+			const AudioContextFunc = window.AudioContext || window.webkitAudioContext;
 			this.audioContext = new AudioContextFunc();
 			this.player = new WebAudioFontPlayer();
 
@@ -341,7 +362,7 @@ export default {
 				return;
 			}
 
-			const bpm = bpmDefault;
+			const bpm = this.midiBpm;
 
 			const ticksPerBeat = 2;
 			const repeats = 4; // for avoid loop issues
@@ -407,42 +428,57 @@ export default {
 
   	startPlay(song) {
 			this.stopped = false;
-			this.currentSongTime = 0;
-			this.songStart = this.audioContext.currentTime;
-			this.nextStepTime = this.audioContext.currentTime;
 			const stepDuration = 44 / 1000;
-			this.tick(song, stepDuration);
+
+			for (let s of [this.songDrums, this.songPiano]) {
+				if (!s.song) continue;
+				s.songOrig = s.song;
+				s.song = this.applyBpm(s.song);
+				s.currentSongTime = 0;
+				s.songStart = this.audioContext.currentTime;
+				s.nextStepTime = this.audioContext.currentTime;
+				this.tick(s, stepDuration);
+			}
+			// this.currentSongTime = 0;
+			// this.songStart = this.audioContext.currentTime;
+			// this.nextStepTime = this.audioContext.currentTime;
+			// this.tick(song, stepDuration);
 		},
     tick(song, stepDuration) {
-			if (this.audioContext.currentTime > this.nextStepTime - stepDuration) {
-				this.sendNotes(song, this.songStart, this.currentSongTime, this.currentSongTime + stepDuration, this.audioContext, this.input, this.player);
-				this.currentSongTime = this.currentSongTime + stepDuration;
-				this.nextStepTime = this.nextStepTime + stepDuration;
-				if (this.currentSongTime > song.duration) {
-					// console.log('this.currentSongTime: ', this.currentSongTime);
-					// this.currentSongTime = this.currentSongTime - song.duration; // обнуление лучше высчитывания, не слышно стыка
-					this.currentSongTime = 0
-					this.sendNotes(song, this.songStart, 0, this.currentSongTime, this.audioContext, this.input, this.player);
-					this.songStart = this.songStart + song.duration;
+			if (this.audioContext.currentTime > song.nextStepTime - stepDuration) {
+				this.sendNotes(song.song, song.songStart, song.currentSongTime, song.currentSongTime + stepDuration, this.audioContext, this.input, this.player, song.isDrums);
+				song.currentSongTime = song.currentSongTime + stepDuration;
+				song.nextStepTime = song.nextStepTime + stepDuration;
+				if (song.currentSongTime > song.song.duration) {
+					console.log('song.currentSongTime: ', song.currentSongTime);
+					// song.currentSongTime = song.currentSongTime - song.song.duration; // обнуление лучше высчитывания, не слышно стыка
+					song.currentSongTime = 0
+					this.sendNotes(song.song, song.songStart, 0, song.currentSongTime, this.audioContext, this.input, this.player, song.isDrums);
+					song.songStart = song.songStart + song.song.duration;
 				}
 			}
-			if (this.nextPositionTime < this.audioContext.currentTime) {
+			if (song.nextPositionTime < this.audioContext.currentTime) {
 				// var o = document.getElementById('position');
 				// o.value = 100 * this.currentSongTime / song.duration;
 				// document.getElementById('tmr').innerHTML = '' + Math.round(100 * this.currentSongTime / song.duration) + '%';
-				this.nextPositionTime = this.audioContext.currentTime + 3;
+				song.nextPositionTime = this.audioContext.currentTime + 3;
 			}
 			window.requestAnimationFrame(() => {
 				if (!this.stopped) this.tick(song, stepDuration);
 			});
 		},
-    sendNotes(song, songStart, start, end, audioContext, input, player) {
-			const isDrums = !this.pianoCurrent;
+    sendNotes(song, songStart, start, end, audioContext, input, player, isDrums=false) {
 			for (var t = 0; t < song.tracks.length; t++) {
 				var track = song.tracks[t];
 				for (var i = 0; i < track.notes.length; i++) {
 					if (track.notes[i].when >= start && track.notes[i].when < end) {
 						var when = songStart + track.notes[i].when;
+						if (isNaN(when)){
+							console.log('when is NaN: ');
+							console.log('songStart: ', songStart);
+							console.log('track.notes[i].when: ', track.notes[i].when);
+							continue;
+						}
 						var duration = track.notes[i].duration;
 						if (duration > 3) {
 							duration = 3;
