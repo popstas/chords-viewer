@@ -7,7 +7,8 @@
     <ChordsFloating></ChordsFloating>
     <PlayerFloating></PlayerFloating>
     <div v-if="!activeSong.url && isTest">
-      <BeatPlayer :beat="{name: 'simple-1-120-bpm'}" :rever="true"></BeatPlayer>
+      <BeatPlayerAll :bpm="100" :rever="true"></BeatPlayerAll>
+      <!-- <BeatPlayer :beat="{name: 'simple-1-120-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-2-tum-tum-tsh-ts-100-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-3-not-angels-72-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-4-rock-slow-tum-tsh--tum-tum-tsh-90-bpm'}" :rever="true"></BeatPlayer>
@@ -26,7 +27,7 @@
       <BeatPlayer :beat="{name: 'piano-em-c-d-hm', bpm: 100}" :rever="true" :piano="true" chords="Em C D Hm"></BeatPlayer>
       <BeatPlayer :beat="{name: 'piano Em Hm G D', bpm: 120}" :rever="true" :piano="true" chords="Em Hm G D"></BeatPlayer>
       <BeatPlayer :beat="{name: 'piano Am F C E', bpm: 100}" :rever="true" :piano="true" chords="Am F C E"></BeatPlayer>
-      <BeatPlayer :beat="{name: 'piano Em G D C', bpm: 100}" :rever="true" :piano="true" chords="Em G D C"></BeatPlayer>
+      <BeatPlayer :beat="{name: 'piano Em G D C', bpm: 100}" :rever="true" :piano="true" chords="Em G D C"></BeatPlayer> -->
     </div>
     <SongList></SongList>
   </div>
@@ -41,6 +42,7 @@ import PlayerFloating from "~/components/PlayerFloating";
 import SongList from "~/components/SongList";
 import ChordsFloating from "~/components/ChordsFloating";
 import BeatPlayer from "~/components/BeatPlayer";
+import BeatPlayerAll from "~/components/BeatPlayerAll";
 export default {
   components: {
     Toolbar,
@@ -48,6 +50,7 @@ export default {
     ChordsFloating,
     PlayerFloating,
     BeatPlayer,
+    BeatPlayerAll,
   },
   computed: {
     count() {

@@ -107,11 +107,17 @@
   </div>
 </template>
 
+<style lang="scss">
+.song-midi {
+  margin-top: 10px;
+}
+</style>
+
 <script>
 import Chord from "~/components/Chord";
 import FontSize from "~/components/FontSize";
 import BeatPlayer from "~/components/BeatPlayer";
-import { transposeMap } from "~/store";
+// import { transposeMap } from "~/store";
 import "vue-awesome/icons/edit";
 import "vue-awesome/icons/qrcode";
 import "vue-awesome/icons/share-alt";

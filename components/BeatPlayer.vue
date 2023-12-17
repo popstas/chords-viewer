@@ -11,7 +11,7 @@
 				<el-checkbox v-model="reverCurrent">rever</el-checkbox>
 			</el-col>
 			<el-col :span="6" class="beat__right">
-				<el-slider v-model="bpmCurrent" :min="bpm * 0.8" :max="bpm * 1.2"></el-slider>
+				<el-slider v-model="bpmCurrent" :min="bpmMin" :max="bpmMax"></el-slider>
 			</el-col>
 		</el-row>
 		<el-row v-if="pianoAllowed" class="piano" :gutter="20">
@@ -115,7 +115,7 @@ const instrDrumsMap = {
 };
 
 export default {
-  props: ["beat", "name", "rever", "piano", "chords"],
+  props: ["beat", "name", "rever", "piano", "chords", "bpmForce"],
   data() {
     return {
 			equalizer: null,
@@ -156,6 +156,14 @@ export default {
 			// console.log('this.bpm: ', this.bpm);
 			return this.midiBpm / this.bpmCurrent;
 		},
+		bpmMin() {
+			const min = this.bpm * 0.8;
+			return this.bpmForce ? Math.min(this.bpmForce, min) : min;
+		},
+		bpmMax() {
+			const max = this.bpm * 1.2;
+			return this.bpmForce ? Math.max(this.bpmForce, max) : max;
+		},
 		chordsList() {
 			let chords = this.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
 			if (chords.length === 2) {
@@ -173,6 +181,9 @@ export default {
 		},
 		bpmCurrent(val) {
 			this.replay(this);
+		},
+		bpmForce(val) {
+			this.bpmCurrent = val;
 		},
 		reverCurrent(val) {
 			// this.replay(this);
