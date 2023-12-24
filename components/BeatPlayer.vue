@@ -1,12 +1,20 @@
 <template>
   <div class="beat-player">
-		<el-row class="beat" :gutter="20">
+		<el-row :class="{beat: true, beat__playing: !stopped}" :gutter="20">
 			<el-col :span="14" class="beat__left">
 				<el-button
-					:title="`${beat.name}, bpm: ${bpm}`"
+					:title="`${beat.name}, bpm: ${bpmCurrent}`"
 					@click="play"
 				>{{ name || beat.name }}</el-button>
 				<el-button @click="toggle">{{ stopped ? 'Play' : 'Stop' }}</el-button>
+				<div v-if="isPianoInDrums">
+					octave:
+					<el-radio-group  v-model="pianoPitchOffset" size="mini">
+						<el-radio-button :label="-12">-1</el-radio-button>
+						<el-radio-button :label="0">0</el-radio-button>
+						<el-radio-button :label="+12">+1</el-radio-button>
+					</el-radio-group>
+				</div>
 			</el-col>
 			<el-col :span="4" class="beat__rever">
 				<el-checkbox v-model="reverCurrent">rever</el-checkbox>
@@ -18,12 +26,20 @@
 		<el-row v-if="pianoAllowed" class="piano" :gutter="20">
 			<el-col :span="24" class="beat__left">
 				<el-checkbox v-model="pianoCurrent">piano</el-checkbox>
-					<el-radio-group  v-model="chordBeats" size="mini">
-						<el-radio-button title="2" label="2">2</el-radio-button>
-						<el-radio-button title="4" label="4">4</el-radio-button>
-						<el-radio-button title="8" label="8">8</el-radio-button>
-					</el-radio-group>
-				</el-col>
+				slow:
+				<el-radio-group  v-model="chordBeats" size="mini">
+					<el-radio-button title="2" label="2">2</el-radio-button>
+					<el-radio-button title="4" label="4">4</el-radio-button>
+					<el-radio-button title="8" label="8">8</el-radio-button>
+				</el-radio-group>
+
+				style:
+				<el-radio-group  v-model="pianoStyle" size="mini">
+					<el-radio-button title="12312312" label="12312312">12312312</el-radio-button>
+					<el-radio-button title="all" label="all">all</el-radio-button>
+					<el-radio-button title="1-23--1-23" label="1-23--1-23">1-23--1-23</el-radio-button>
+				</el-radio-group>
+			</el-col>
 		</el-row>
 		<div v-if="error">{{ error }}</div>
 
@@ -31,6 +47,13 @@
 </template>
 
 <style lang="scss">
+@import "@/assets/variables.scss";
+.beat {
+	padding: 0 0 5px 0;
+}
+.beat__playing {
+	background: var(--bg-hover);
+}
 .beat__left {
 	padding-top: 7px;
 }
@@ -135,17 +158,18 @@ export default {
 			currentSongTime: 0,
       songStart: 0,
       nextStepTime: 0,
-			nextPositionTime: 0,
 
 			stopped: true,
 			bpmCurrent: 0,
 			reverCurrent: false,
 			pianoAllowed: false,
 			pianoCurrent: this.piano,
+			pianoStyle: "12312312",
 			chordBeats: 4,
 			error: '',
 			songDrums: null,
 			songPiano: null,
+			pianoPitchOffset: -12,
     };
   },
   computed: {
@@ -167,12 +191,15 @@ export default {
 			return this.midiBpm / this.bpmCurrent;
 		},
 		bpmMin() {
-			const min = this.bpm * 0.8;
+			const min = this.bpm * 0.5;
 			return this.bpmForce ? Math.min(this.bpmForce, min) : min;
 		},
 		bpmMax() {
-			const max = this.bpm * 1.2;
+			const max = this.bpm * 2;
 			return this.bpmForce ? Math.max(this.bpmForce, max) : max;
+		},
+		isPianoInDrums() {
+			return this.songDrums?.highestNote?.pitch >= 60;
 		},
 		chordsList() {
 			let chords = this.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
@@ -261,10 +288,13 @@ export default {
 			return {
 				song: null,
 				isDrums: false,
+				plays: 0,
 				currentSongTime: 0,
+				songStartFirst: 0,
 				songStart: 0,
 				nextStepTime: 0,
-				nextPositionTime: 0,
+				lowestNote: 0,
+				highestNote: 0,
 			}
 		},
 		applyBpm(song) {
@@ -330,6 +360,7 @@ export default {
 					// const vol = 1 / 7;
 
 					// show all notes
+
 					/* song.tracks[0].notes.map(note => {
 						console.log('note: ', note.pitch);
 					}); */
@@ -414,34 +445,108 @@ export default {
 
 			const duration = 0.5;
 
+			// build piano song with style
+
 			const songNotes = [];
-			// build notes from chord for chordBeats
-			for (let i = 0; i < chords.length; i++) {
-				const chordNotes = chordNotesMap[chords[i]];
-				if (!chordNotes) {
-					this.error = `Chord ${chords[i]} not found.`
-					// console.log('cannot find notes for chord: ', );
-					return;
+
+			// style 12312312
+			if (this.pianoStyle == "12312312") {
+				// build notes from chord for chordBeats
+				for (let i = 0; i < chords.length; i++) {
+					const chordNotes = chordNotesMap[chords[i]];
+					if (!chordNotes) {
+						this.error = `Chord ${chords[i]} not found.`
+						// console.log('cannot find notes for chord: ', );
+						return;
+					}
+					const notesPerChord = chordBeats * ticksPerBeat;
+					for (let j = 0; j < notesPerChord; j++) {
+						const pitch = chordNotes[j % chordNotes.length];
+						songNotes.push(pitch);
+					}
 				}
-				const notesPerChord = chordBeats * ticksPerBeat;
-				for (let j = 0; j < notesPerChord; j++) {
-					const pitch = chordNotes[j % chordNotes.length];
-					songNotes.push(pitch);
+
+				// repeat notes
+				let offset = 0;
+				for (let r = 0; r < repeats; r++) {
+					for (let t = 0; t < songNotes.length; t++) {
+						const pitch = songNotes[t];
+						song.tracks[0].notes.push({
+							when: offset * tickDuration,
+							pitch,
+							duration,
+							slides: [],
+						});
+						offset++;
+					}
 				}
 			}
 
-			let offset = 0;
-			for (let r = 0; r < repeats; r++) {
-				for (let t = 0; t < songNotes.length; t++) {
-					const pitch = songNotes[t];
-					song.tracks[0].notes.push({
-						when: offset * tickDuration,
-						pitch,
-						duration,
-						slides: [],
-					});
-					offset++;
+			// style all
+			if (this.pianoStyle == "all") {
+				this.error = "style all is not implemented yet.";
+				return;
+
+				// build notes from chord for chordBeats
+				for (let i = 0; i < chords.length; i++) {
+					const chordNotes = chordNotesMap[chords[i]];
+					if (!chordNotes) {
+						this.error = `Chord ${chords[i]} not found.`
+						// console.log('cannot find notes for chord: ', );
+						return;
+					}
+					const notesPerChord = chordBeats * ticksPerBeat;
+					for (let j = 0; j < notesPerChord; j++) {
+						const pitch = chordNotes[j % chordNotes.length];
+						songNotes.push(pitch);
+					}
 				}
+
+				// repeat notes
+				let offset = 0;
+				for (let r = 0; r < repeats; r++) {
+					for (let t = 0; t < songNotes.length; t++) {
+						const pitch = songNotes[t];
+						song.tracks[0].notes.push({
+							when: offset * tickDuration,
+							pitch,
+							duration,
+							slides: [],
+						});
+						offset++;
+					}
+				}
+			}
+
+			// style 1-23--1-23
+			if (this.pianoStyle === "1-23--1-23") {
+				const styleMidi = beats.find(b => b.name === 'style-piano-1-23--1-23-100-bpm');
+				const midiArrayBuffer = this.base64ToArrayBuffer(styleMidi.data);
+				const midiFile = new MIDIFile(midiArrayBuffer);
+				const songStyle = midiFile.parseSong();
+				console.log('songStyle: ', songStyle);
+
+				const notes = songStyle.tracks[0].notes;
+				console.log('notes: ', notes);
+				// build notes from chord for chordBeats
+				/* let noteIndex = 0;
+				for (let chordNum = 0; chordNum < this.chords.length; chordNum++) {
+					const note = notes[noteIndex + chordNum];
+					const chordNotes = chordNotesMap[chordNum];
+					if (!chordNotes) {
+						this.error = `Chord ${note.pitch} not found.`
+						// console.log('cannot find notes for chord: ', );
+						return;
+					}
+
+					const notesPerChord = 3; //chordBeats * ticksPerBeat;
+					for (let chordNoteNum = 0; chordNoteNum < notesPerChord; chordNoteNum++) {
+						const pitch = chordNotes[chordNoteNum];
+						songNotes.push({...note, ...{
+							pitch,
+						}});
+					}
+				} */
 			}
 
 			return song;
@@ -456,8 +561,28 @@ export default {
 				s.songOrig = s.song;
 				s.song = this.applyBpm(s.song);
 				s.currentSongTime = 0;
+				s.songStartFirst = this.audioContext.currentTime;
 				s.songStart = this.audioContext.currentTime;
 				s.nextStepTime = this.audioContext.currentTime;
+
+				// sorted uniq by note.pitch
+				const allNotesSorted = s.song.tracks[0].notes.sort((a, b) => a.pitch - b.pitch);
+				s.lowestNote = allNotesSorted[0];
+				s.highestNote = allNotesSorted[allNotesSorted.length - 1];
+				// console.log('s.lowestNote: ', s.lowestNote);
+				// console.log('s.highestNote: ', s.highestNote);
+
+				console.log('s.song: ', s.song);
+				console.log('song.info.title: ', s.song?.tracks[0]?.info?.title);
+				console.log('song.info.url: ', s.song?.tracks[0]?.info?.url);
+				console.log('song.info.variable: ', s.song?.tracks[0]?.info?.variable);
+
+				// fix beats, calculate beatsCount from song duration
+				s.beatDuration = 60 / this.bpmCurrent;
+				s.songBeatsCount = Math.round(s.song.duration / s.beatDuration);
+				s.songBeatsDuration = s.songBeatsCount * s.beatDuration;
+				// console.log('songBeatsCount: ', songBeatsCount);
+
 				this.tick(s, stepDuration);
 			}
 			// this.currentSongTime = 0;
@@ -470,19 +595,45 @@ export default {
 				this.sendNotes(song.song, song.songStart, song.currentSongTime, song.currentSongTime + stepDuration, this.audioContext, this.input, this.player, song.isDrums);
 				song.currentSongTime = song.currentSongTime + stepDuration;
 				song.nextStepTime = song.nextStepTime + stepDuration;
-				if (song.currentSongTime > song.song.duration) {
-					console.log('song.currentSongTime: ', song.currentSongTime);
+
+				// the end of the song, loop, sync
+				if (song.currentSongTime > song.songBeatsDuration) {
+					// TODO: sync all songs there
+					// console.log('song.currentSongTime: ', song.currentSongTime);
 					// song.currentSongTime = song.currentSongTime - song.song.duration; // обнуление лучше высчитывания, не слышно стыка
 					song.currentSongTime = 0
 					this.sendNotes(song.song, song.songStart, 0, song.currentSongTime, this.audioContext, this.input, this.player, song.isDrums);
-					song.songStart = song.songStart + song.song.duration;
+					// song.songStart = song.songStart + song.song.duration;
+					song.plays++;
+					console.log('plays: ', song.plays);
+
+					// fix song start but song duration not exaclty matches to bpm
+					// const durationFromPlay = song.plays * song.song.duration;
+					// song.songStart = song.songStartFirst + durationFromPlay;
+
+					const timeFromPlay = song.plays * song.songBeatsDuration;
+					// console.log('timeFromPlay: ', timeFromPlay);
+					song.songStartRounded = timeFromPlay;
+					song.songStartRelative = this.audioContext.currentTime - song.songStartFirst;
+					song.songDelta = song.songStartRelative - song.songStartRounded;
+					
+					// song.songStart = song.songStartFirst + timeFromPlay * beatDuration;
+					song.songStart = song.songStartFirst + timeFromPlay - song.songDelta;
+
+					if (song.isDrums && this.songPiano.song) {
+						// reset piano also
+						this.songPiano.currentSongTime = 0;
+						this.songPiano.songStart = song.songStart;
+						this.sendNotes(this.songPiano.song, this.songPiano.songStart, 0, this.songPiano.currentSongTime, this.audioContext, this.input, this.player, this.songPiano.isDrums);
+					}
+
+					console.log(`songStartFirst: `, song.songStartFirst);
+					console.log(`songStartRounded: `, song.songStartRounded);
+					console.log(`songStartRelative: `, song.songStartRelative);
+					console.log(`songDelta: `, song.songDelta);
+					console.log(`song.songStart (drums: ${song.isDrums ? 'y':'n'}): `, song.songStart);
+					// console.log('this.songPiano.songStart: ', this.songPiano.songStart);
 				}
-			}
-			if (song.nextPositionTime < this.audioContext.currentTime) {
-				// var o = document.getElementById('position');
-				// o.value = 100 * this.currentSongTime / song.duration;
-				// document.getElementById('tmr').innerHTML = '' + Math.round(100 * this.currentSongTime / song.duration) + '%';
-				song.nextPositionTime = this.audioContext.currentTime + 3;
 			}
 			window.requestAnimationFrame(() => {
 				if (!this.stopped) this.tick(song, stepDuration);
@@ -505,14 +656,24 @@ export default {
 							duration = 3;
 						}
 						var instr = track.info.variable;
-
-						const pitch = track.notes[i].pitch;
-						if (isDrums) instr = instrDrumsMap[pitch] || track.info.variable;
-						// console.log('instr: ', instr);
-						// console.log('note: ', track.notes[i].pitch);
+						
+						let pitch = track.notes[i].pitch;
+						if (isDrums) {
+							// piano, pitch > 59 are piano notes, not drums
+							if (pitch >= 60) {
+								// transpose depends of pianoPitchOffset
+								pitch = pitch + this.pianoPitchOffset;
+							}
+							// drums, set instr mapped by notes
+							else {
+								instr = instrDrumsMap[pitch] || track.info.variable;
+							}
+						}
 						// var v = track.volume / 7;
 						var v = track.volume;
-						player.queueWaveTable(audioContext, input, window[instr], when, track.notes[i].pitch, duration, v, track.notes[i].slides);
+						// console.log('instr: ', instr);
+						// console.log('pitch: ', pitch);
+						player.queueWaveTable(audioContext, input, window[instr], when, pitch, duration, v, track.notes[i].slides);
 					}
 				}
 			}

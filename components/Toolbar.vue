@@ -403,6 +403,7 @@ export default {
         return this.$store.state.filter.q;
       },
       set(val) {
+        if (this.$store.state.filter.q === val) return;
         this.changeFilter("q", val);
       }
     },

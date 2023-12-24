@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env HOST=0.0.0.0 PORT=3001 nuxt",
+    "parse-dev": "bash scripts/parse-dev.sh",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",

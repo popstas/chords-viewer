@@ -7,6 +7,7 @@
     <ChordsFloating></ChordsFloating>
     <PlayerFloating></PlayerFloating>
     <div v-if="!activeSong.url && isTest">
+      <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer>
       <BeatPlayerAll :bpm="100" :rever="true"></BeatPlayerAll>
       <!-- <BeatPlayer :beat="{name: 'simple-1-120-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-2-tum-tum-tsh-ts-100-bpm'}" :rever="true"></BeatPlayer>
@@ -62,6 +63,22 @@ export default {
     activeSong() {
       return this.$store.state.activeSong;
     },
+    lastOffset: {
+      get() {
+        return this.$store.state.lastOffset;
+      },
+      set(value) {
+        this.$store.commit('lastOffset', value);
+      },
+    },
   },
+  methods: {
+    scrollTo(offset) {
+      console.log('toolbar scrollTo: ', offset);
+      this.lastOffset = offset;
+      const fixedTopOffset = 0;
+      window.scrollTo(0, offset - fixedTopOffset);
+    },
+  }
 };
 </script>

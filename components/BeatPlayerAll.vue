@@ -2,7 +2,7 @@
   <div class="beat-player-all">
 		<el-row class="beat" :gutter="20">
 			<el-col :span="24" class="">
-				<el-slider v-model="bpmCurrent" :min="bpm * 0.5" :max="bpm * 1.5"></el-slider>
+				<el-slider v-model="bpmCurrent" :min="bpm * 0.25" :max="bpm * 3"></el-slider>
 			</el-col>
 		</el-row>
 		<el-row class="beat" :gutter="20">

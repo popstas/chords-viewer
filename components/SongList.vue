@@ -119,6 +119,7 @@ export default {
         const index = this.filteredSongs.findIndex(song => song.url == val.url);
         if (index !== -1) this.$refs.scroller.scrollToItem(index);
       }
+      this.$router.push({ url: val.url }); // doesn't work
     },
   },
 
@@ -129,6 +130,8 @@ export default {
 
     changeSong(url) {
       this.$store.dispatch('changeSong', url);
+      this.$router.push({ url });
+      // this.$route.query["url"] = url;
     },
 
     scrollTo(offset) {
@@ -172,6 +175,8 @@ export default {
     }
 
     this.$router.afterEach((to, from) => {
+      console.log('from: ', from);
+      console.log('to: ', to);
       if (this.$route.query["url"]) {
         this.changeSong(this.$route.query["url"]);
       }

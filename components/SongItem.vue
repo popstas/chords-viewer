@@ -32,7 +32,7 @@
         <div v-if="isBeat" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :chords="song.details.chords"></BeatPlayer>
         </div>
-        <div v-if="isPiano" class="song-midi">
+        <div v-if="!isBeat && isPiano" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true" :chords="song.details.chords"></BeatPlayer>
         </div>
 
@@ -193,11 +193,15 @@ export default {
     },
 
     isPiano() {
-      return !this.isBeat && this.chordsList.length === 4;
+      return this.chordsList.length === 4;
     },
 
 		chordsList() {
-			return this.song.details?.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
+			let chords = this.song.details?.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
+			if (chords.length === 2) {
+				chords = [chords[0], chords[0], chords[1], chords[1]];
+			}
+			return chords;
 		},
 
     safeUrl() {
