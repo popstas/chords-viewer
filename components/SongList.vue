@@ -120,6 +120,11 @@ export default {
         if (index !== -1) this.$refs.scroller.scrollToItem(index);
       }
       this.$router.push({ url: val.url }); // doesn't work
+        if (index !== -1) {
+          // doesn't scrolling on page load without timeout
+          setTimeout(() => this.$refs.scroller.scrollToItem(index), 100);
+        }
+      }
     },
   },
 
