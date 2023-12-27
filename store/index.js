@@ -90,7 +90,52 @@ export const getters = {
     }
     title = title.trim(",");
     return title;
-  }
+  },
+
+  replacedChord(state) {
+    return (chord) => chord
+    .replace(/H(\s)/, /B$1/)
+    .replace(/^H$/, "B")
+    .replace(/^H7$/, "B7")
+    .replace("Hm", "Bm")
+    .replace("m#", "#m")
+    .replace("Bb", "A#")
+    .replace("Eb", "F#")
+    .replace(/[()]/g, '');
+  },
+  isKnownChord(state, getters) {
+    return (chord) => {
+      return transposeMap.find(chain => chain.indexOf(getters.replacedChord(chord)) != -1) || false;
+    };
+  },
+  transposeChord(state, getters) {
+    return (chord, level) => {
+      chord = getters.replacedChord(chord);
+      if (!chord) return "";
+
+      if (!chord || level == 0)
+      return chord;
+
+      // find chord's chain
+      let chain = transposeMap.find(chain => chain.indexOf(chord) != -1);
+      if (!chain) {
+        return chord;
+      }
+
+      // iterate over chain at level
+      let currentIndex = chain.indexOf(chord);
+      for (let i = 0; i < Math.abs(level); i++) {
+        if (level > 0) {
+          currentIndex =
+            currentIndex + 1 >= chain.length ? 0 : currentIndex + 1;
+        } else {
+          currentIndex =
+            currentIndex - 1 < 0 ? chain.length - 1 : currentIndex - 1;
+        }
+      }
+      return chain[currentIndex];
+    }
+  },
 };
 
 export const mutations = {

@@ -113,10 +113,7 @@ export default {
     },
 
     isKnown() {
-      return (
-        transposeMap.find(chain => chain.indexOf(this.replacedChord) != -1) ||
-        false
-      );
+      return this.$store.getters.isKnownChord(this.chord);
     },
 
     html() {
@@ -126,19 +123,11 @@ export default {
     },
 
     replacedChord() {
-      return this.chord
-      // .replace("H", "B")
-      .replace(/H(\s)/, /B$1/)
-      .replace(/^H$/, "B")
-      .replace(/^H7$/, "B7")
-      .replace("Hm", "Bm")
-      .replace("m#", "#m")
-      .replace("Bb", "A#")
-      .replace("Eb", "F#")
-      .replace(/[()]/g, '');
+      return this.$store.getters.replacedChord(this.chord);
     },
 
     transposedChord() {
+      return this.$store.getters.transposeChord(this.chord, this.transposeLevel);
       if (!this.replacedChord || this.transposeLevel == 0)
         return this.replacedChord;
       let chord = this.replacedChord;

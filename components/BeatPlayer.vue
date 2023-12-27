@@ -220,6 +220,17 @@ export default {
 			if (chords.length === 2) {
 				chords = [chords[0], chords[0], chords[1], chords[1]];
 			}
+
+			// untranspose, for piano
+			let transpose = this.$store.state.defaultTransposeLevel;
+			if (transpose) {
+				transpose = transpose * -1;
+				chords = chords.map(chord => {
+					chord = this.$store.getters.transposeChord(chord, transpose);
+					return chord;
+				});
+			}
+			// console.log('chords: ', chords);
 			return chords;
 		},
   },
