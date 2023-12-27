@@ -217,7 +217,6 @@ export default {
         return this.$store.state.transposeLevel;
       },
       set(val){
-        console.log('transposeLevel: ', val);
         this.$store.commit('transposeLevel', val);
       },
     },
@@ -253,7 +252,8 @@ export default {
 
     textLines() {
       if (!this.song.text) return "";
-      const lines = this.song.text.split("\n").map(line => {
+      const textFixed = this.song.text.replace(/(\[.*?\]:?)/g, '$1\n'); // [куплет 1]:
+      const lines = textFixed.split("\n").map(line => {
         if (!line.match(/[а-яА-Я]/)) {
           if (!line.trim()) {
             return { type: "hr", data: '' };
