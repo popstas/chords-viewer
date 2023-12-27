@@ -7,8 +7,8 @@
     <ChordsFloating></ChordsFloating>
     <PlayerFloating></PlayerFloating>
     <div v-if="!activeSong.url && isTest">
-      <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer>
-      <BeatPlayerAll :bpm="100" :rever="true"></BeatPlayerAll>
+      <!-- <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer> -->
+      <!-- <BeatPlayerAll :bpm="100" :rever="true"></BeatPlayerAll> -->
       <!-- <BeatPlayer :beat="{name: 'simple-1-120-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-2-tum-tum-tsh-ts-100-bpm'}" :rever="true"></BeatPlayer>
       <BeatPlayer :beat="{name: 'simple-3-not-angels-72-bpm'}" :rever="true"></BeatPlayer>
