@@ -30,7 +30,7 @@
         </div>
 
         <div v-if="isBeat" class="song-midi">
-          <BeatPlayer :beat="song.beat" name="beat" :rever="true" :chords="song.details.chords"></BeatPlayer>
+          <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="false" :chords="song.details.chords"></BeatPlayer>
         </div>
         <div v-if="!isBeat && isPianoAllowed" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true" :chords="song.details.chords"></BeatPlayer>

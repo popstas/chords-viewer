@@ -26,35 +26,42 @@
 			</el-col>
 		</el-row>
 
-		<div style="text-align: right" v-if="isPianoInDrums || pianoAllowed">
-			octave:
-			<el-radio-group  v-model="pianoPitchOffset" size="mini">
-				<el-radio-button :label="-12">-2</el-radio-button>
-				<el-radio-button :label="0">-1</el-radio-button>
-				<el-radio-button :label="12">0</el-radio-button>
-				<el-radio-button :label="24">+1</el-radio-button>
-				<el-radio-button :label="36">+2</el-radio-button>
-				<!-- <el-radio-button :label="48">+3</el-radio-button> -->
-			</el-radio-group>
-		</div>
+    <el-row class="beat__octave" v-if="isPianoInDrums || pianoAllowed">
+      <el-col :span="8" class="beat__octave-left">
+        <el-checkbox-button class="beat__checkbutton" v-model="pianoCurrent" v-if="pianoAllowed">piano</el-checkbox-button>
+        <el-checkbox-button class="beat__checkbutton" v-model="pianoSustain">sustain</el-checkbox-button>
+      </el-col>
+      <el-col :span="16" class="beat__octave-right">
+        <span class="beat__label">octave:</span>
+        <el-radio-group  v-model="pianoPitchOffset" size="mini">
+          <el-radio-button :label="-12">-2</el-radio-button>
+          <el-radio-button :label="0">-1</el-radio-button>
+          <el-radio-button :label="12">0</el-radio-button>
+          <el-radio-button :label="24">+1</el-radio-button>
+          <el-radio-button :label="36">+2</el-radio-button>
+          <!-- <el-radio-button :label="48">+3</el-radio-button> -->
+        </el-radio-group>
+      </el-col>
+    </el-row>
 
-		<el-row v-if="pianoAllowed" class="piano" :gutter="20">
+		<el-row v-if="pianoAllowed" class="beat__piano" :gutter="20">
 			<el-col :span="24" class="beat__left">
-				<el-checkbox v-model="pianoCurrent">piano</el-checkbox>
+        <!--<span class="beat__label">slow:</span>-->
+        <el-radio-group  v-model="chordBeats" size="mini">
+          <el-radio-button title="2" label="2">2</el-radio-button>
+          <el-radio-button title="4" label="4">4</el-radio-button>
+          <el-radio-button title="8" label="8">8</el-radio-button>
+        </el-radio-group>
+
 				<el-radio-group v-model="pianoInstrument" size="mini">
 					<el-radio-button v-for="el of pianoInstruments" :key="el.id" :label="el.id">{{ el.label }}</el-radio-button>
 				</el-radio-group>
-				<el-checkbox v-model="pianoSustain">sustain</el-checkbox>
-				<br />
-				slow:
-				<el-radio-group  v-model="chordBeats" size="mini">
-					<el-radio-button title="2" label="2">2</el-radio-button>
-					<el-radio-button title="4" label="4">4</el-radio-button>
-					<el-radio-button title="8" label="8">8</el-radio-button>
-				</el-radio-group>
-				<br />
+      </el-col>
+    </el-row>
 
-				style:
+    <el-row v-if="pianoAllowed" class="beat__piano" :gutter="20">
+      <el-col :span="24" class="beat__left">
+        <span class="beat__label">style:</span>
 				<el-radio-group  v-model="pianoStyle" size="mini">
 					<el-radio-button class="piano-style-button" title="12312312" label="12312312">12312312</el-radio-button>
 					<el-radio-button class="piano-style-button" title="min-3-4" label="min-3-4">min 3/4</el-radio-button>
@@ -70,7 +77,7 @@
 				<!-- <el-slider v-model="pianoVolume" :min="0" :max="1" :step="0.1"></el-slider> -->
 			</el-col>
 		</el-row>
-		<div v-if="error">{{ error }}</div>
+		<div class="beat__error" v-if="error">{{ error }}</div>
 
   </div>
 </template>
@@ -79,6 +86,17 @@
 @import "@/assets/variables.scss";
 .beat {
 	padding: 0 0 5px 0;
+}
+.beat,
+.beat__octave,
+.beat__piano {
+  margin-right: 0 !important; // avoid horizontal scroll
+}
+.beat__label {
+  font-size: 10px;
+}
+.beat__error {
+  color: var(--border-hover);
 }
 .beat__playing {
 	background: var(--bg-hover);
@@ -90,10 +108,12 @@
 	text-align: right;
 	padding-top: 6px;
 }
+.beat__octave-right {
+  text-align: right;
+}
 .piano-style-button .el-radio-button__inner{
 	width: 80px;
 	display: inline-block;
-	border-left: 1;
 	text-align: center;
 }
 .beat__checkbutton {
@@ -121,6 +141,7 @@ import MIDIFile from '../MIDIFile.js';
 import beats from "~/assets/beats.json";
 import "../assets/instruments/drums0.js";
 import "../assets/instruments/piano0.js";
+// import "../assets/instruments/piano1.js";
 import "../assets/instruments/accordion.js";
 import "../assets/instruments/vocal.js";
 import BPMMeter from "@/components/BPMMeter.vue";
