@@ -1,5 +1,5 @@
 <template>
-  <div v-if="chords" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
+  <div v-if="chords.length > 0" :class="{text: true, item: true, chords: true, chords_images: $store.state.showImages}">
     <span class="chords__section" v-for="(sec, secKey) in chords" :key="secKey">
       <span class="chords__sequence" v-for="(sequence, seqKey) in sec" :key="seqKey">
         <Chord
