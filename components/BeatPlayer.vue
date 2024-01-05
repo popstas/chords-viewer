@@ -298,7 +298,14 @@ export default {
 			// this.replay(this);
 		},
 		bpmCurrent(val) {
-			this.replay(this);
+			const debouncedApplyBpm = debounce((self) => {
+				for (const s of [self.songDrums, self.songPiano]) {
+					if (!s || !s.songOrig) continue;
+					s.song = self.applyBpm(s.songOrig);
+				}
+			}, 500);
+			debouncedApplyBpm(this);
+			// this.replay(this);
 		},
 		bpmForce(val) {
 			this.bpmCurrent = val;
@@ -393,8 +400,9 @@ export default {
 		loadPiano() {
 			if (!this.pianoAllowed) return;
 			// console.log('loadPiano: ');
-			this.songPiano.song = this.buildSongFromChords();
-			this.songPiano.songOrig = this.songPiano.song;
+			this.songPiano.songOrig = this.buildSongFromChords();
+			this.songPiano.song = this.applyBpm(this.songPiano.songOrig);
+			if (debug && this.songPiano.song) this.listSongNotes(this.songPiano.song);
 			this.songPiano.active = this.pianoCurrent;
 		},
 
@@ -435,6 +443,7 @@ export default {
 			}
 		},
 		applyBpm(song) {
+			if (!song) return;
 			const songBpm = JSON.parse(JSON.stringify(song));
 			songBpm.duration = song.duration * this.bpmMultiplier;
 
@@ -546,7 +555,7 @@ export default {
 						this.player.loader.decodeAfterLoading(this.audioContext, song.tracks[0].info.variable); // https://github.com/surikov/webaudiofont/issues/23
 					}
 
-          this.stopped = false;
+          setTimeout(() => this.stopped = false, 100); // timeout for correct stop while replay
 
 					// intro 4 beats (1st beat for preload)
 					if (this.forcePlay) {
@@ -946,7 +955,13 @@ export default {
 				if (!s.songOrig) {
 					s.songOrig = {...s.song};
 				}
-				s.song = this.applyBpm(s.songOrig);
+				// if (!s.isDrums) console.log('song ' + (s.isDrums ? 'Drums' : 'Piano') + ': ');
+				if (s.isDrums) s.song = this.applyBpm(s.songOrig);
+				if (!s.isDrums && debug) {
+					console.log('s.song: ', s.song);
+					this.listSongNotes(s.song, true);
+				}
+
 				s.currentSongTime = 0;
 
 				s.songStartFirst = this.audioContext.currentTime;
