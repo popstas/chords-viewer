@@ -169,6 +169,7 @@ const chordNotesMap = {
 	'Cmaj7': [36, 40, 43], // [36, 40, 43, 47]
 	'C#': [37, 41, 44],
 	'D': [38, 42, 45],
+	'D7': [38, 42, 45], // [38, 42, 45, 48]
 	'Dsus2': [38, 42, 45],
 	'D#': [39, 43, 46],
 	'D5': [38, 42, 45], // [38, 45]
@@ -258,7 +259,7 @@ export default {
 			songDrums: null,
 			songPiano: null,
 			pianoPitchOffset: 12,
-			pianoSustain: false,
+			pianoSustain: true,
 			forcePlay: true,
 			playStartTime: 0, // TODO: remove
 			playDelay: '', // TODO: remove
@@ -1120,6 +1121,7 @@ export default {
 							if (pitch >= 60) {
 								// transpose depends of pianoPitchOffset
 								pitch = pitch + this.pianoPitchOffset;
+                if (this.pianoSustain) duration = duration * 2;
 							}
 							// drums, set instr mapped by notes
 							else {
