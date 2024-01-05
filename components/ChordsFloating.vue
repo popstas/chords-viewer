@@ -21,8 +21,8 @@
   top: 0;
   left: auto;
   right: 0;
-  text-align: center;
-  background: var(--bg);
+  text-align: right;
+  background: none;
   padding: 5px;
 
   &_images {
