@@ -215,6 +215,7 @@ export default {
 			forcePlay: true,
 			playStartTime: 0, // TODO: remove
 			playDelay: '', // TODO: remove
+      firstPlay: true,
     };
   },
   computed: {
@@ -331,11 +332,13 @@ export default {
 			if (this.stopped) this.play({force: false});
 			else this.stop();
 		},
+    // force - from the beginning
     play({ force = true }) {
 			this.stop();
 			this.playStartTime = Date.now();
 			this.error = '';
-			this.forcePlay = force || (!this?.songDrums?.song && !this?.songPiano?.song);
+			this.forcePlay = force || (!this?.songDrums?.song && !this?.songPiano?.song) || this.firstPlay;
+      this.firstPlay = false;
 			if (this.forcePlay) {
 				// this.loadDrums();
 				if (this.pianoCurrent) this.loadPiano();
@@ -351,6 +354,9 @@ export default {
 					return;
 				}
 			}
+      else {
+        this.stopped = false; // immediate play only when no force
+      }
 
 			this.startLoad(this.songDrums.song || this.songPiano.song);
     },
@@ -449,6 +455,13 @@ export default {
 			}
 		},
 
+    playIntroSound(vol) {
+      const pitch = 42;
+      const instr = instrDrumsMap[pitch];
+      const duration = 0.5;
+      this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, pitch, duration, vol, []);
+    },
+
 		startLoad(song) {
 			// with equalizer and reverberator
 			if (this.reverCurrent && this.audioContext) {
@@ -481,7 +494,7 @@ export default {
 
       const onLoad = () => {
 				// console.log('Delay before onLoad: ', Date.now() - this.playStartTime);
-				setTimeout(() => {
+				setTimeout(async () => {
 					// preload drums
 					if (!this.pianoCurrent) {
 						const uniqNotes = [...new Set(song.tracks[0].notes.map(note => note.pitch))];
@@ -498,27 +511,36 @@ export default {
 
 					// intro 4 beats (1st beat for preload)
 					if (this.forcePlay) {
-						const pitch = 42;
-						const instr = instrDrumsMap[pitch];
 						const tickDuration = 60000 / this.bpmCurrent;
-            const duration = 0.5;
-						for (let i = 0; i < 5; i++) {
+            let ticks = 5;
+            if (this.$store.state.beatFirstPlay) {
+              ticks = 6;
+            }
+            if (this.audioContext.state == 'suspended') {
+              await this.audioContext.resume();
+            }
+
+            for (let i = 0; i < ticks; i++) {
 							setTimeout(() => {
 								const vol = i === 0 ? 0.001 : 1 / 7;
                 if (this.stopped) return;
-								this.player.queueWaveTable(this.audioContext, this.input, window[instr], 0, pitch, duration, vol, []);
+                this.playIntroSound(vol);
 							}, tickDuration*i);
 						}
 
 						setTimeout(() => {
               if (this.stopped) return;
 							this.startPlay(song);
-						}, tickDuration * 5);
+						}, tickDuration * ticks);
 					}
 					// immediate play
 					else {
 						this.startPlay(song);
 					}
+
+          if (this.$store.state.beatFirstPlay) {
+            this.$store.commit('beatFirstPlay', false);
+          }
 				}, 1);
       }
 			this.player.loader.waitLoad(onLoad);
@@ -858,7 +880,6 @@ export default {
 
 		startPlay() {
 			const stepDuration = 44 / 1000;
-
 			// console.log('Delay before startPlay: ', Date.now() - this.playStartTime);
 			for (let s of [this.songDrums, this.songPiano]) {
 				if (!s.song) continue;

@@ -95,6 +95,7 @@ export const state = () => ({
   comments: {},
   user: false,
   lastOffset: 0,
+  beatFirstPlay: true,
 
   // settings
   fontSize: 1,
@@ -280,6 +281,9 @@ export const mutations = {
   },
   lastOffset(state, newValue) {
     state.lastOffset = newValue;
+  },
+  beatFirstPlay(state, newValue) {
+    state.beatFirstPlay = newValue;
   },
 };
 
