@@ -1,3 +1,30 @@
+# [4.2.0](https://github.com/popstas/chords-viewer/compare/v4.1.0...v4.2.0) (2024-01-05)
+
+
+### Bug Fixes
+
+* bpm change without replay ([1029918](https://github.com/popstas/chords-viewer/commit/102991814aaf0f9e189bc39091cd86992d7a2784))
+* change url on song change ([240c13b](https://github.com/popstas/chords-viewer/commit/240c13bf1025992aee9bb597b7f1d30d45840a71))
+* hide BeatPlayerAll under details ([15eca4a](https://github.com/popstas/chords-viewer/commit/15eca4a71ee5c8fc17764727d505d41134dea224))
+* move chapters like [chorus] to another line ([01735d8](https://github.com/popstas/chords-viewer/commit/01735d862e959a3c49d91d2346907f38313d79bc))
+* replace song url to song_num, for better qr code reading ([685fd45](https://github.com/popstas/chords-viewer/commit/685fd45f3839155a0db4f3ff813df325ce7ce988))
+* scrolling to song on page load on mobile ([cd54d06](https://github.com/popstas/chords-viewer/commit/cd54d060c0c622863331fc9a6aff205d49545fec))
+
+
+### Features
+
+* beat hotkeys, immediate beat mode, piano octave shift, attach piano while drums, preload drums ([8a85db8](https://github.com/popstas/chords-viewer/commit/8a85db88e2d267d58727ebff599aad2b1df27fb2))
+* BeatPlayerAll (for test) ([73fd86a](https://github.com/popstas/chords-viewer/commit/73fd86ae920ef39682afe24464630d4720fce49c))
+* new instruments: accordion, vocal. Fix song text output. Allow piano for all songs (first 4 chords) ([56769fc](https://github.com/popstas/chords-viewer/commit/56769fcd4be3e5f20a29499a84a854b48c075b8d))
+* new piano styles, working midi styles ([ca8a223](https://github.com/popstas/chords-viewer/commit/ca8a2237d91bbe596b80fb29f85cb6dd8628b5d9))
+* piano sustain, volume down for piano, change octave shift ([9841323](https://github.com/popstas/chords-viewer/commit/9841323daa47aec0d5e5f6a898dbe27d1ffdfd13))
+* pianoStyles (just 1 style now), octave shift for piano in drums song, try to fix offset from bpm to 0.1 sec per 2 min ([940cdaf](https://github.com/popstas/chords-viewer/commit/940cdaf836677ad8d2c7bed4e465ad629dcfaeb0))
+* show drum and piano icons in list, show beat title on hover ([7612efb](https://github.com/popstas/chords-viewer/commit/7612efb2d47aefd41b11feb5b6663068b256c759))
+* untranspose chords for piano ([97e59fd](https://github.com/popstas/chords-viewer/commit/97e59fde6e9ca00b002b24fbbcc4b8f2333aac24))
+* url arguments for piano config ([0c64617](https://github.com/popstas/chords-viewer/commit/0c64617dfad5007809aed392c2a7f7b3b4c22db9))
+
+
+
 # [4.1.0](https://github.com/popstas/chords-viewer/compare/v4.0.0...v4.1.0) (2023-12-17)
 
 
