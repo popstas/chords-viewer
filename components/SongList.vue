@@ -140,21 +140,30 @@ export default {
         this.$store.dispatch("addShow", safeUrl);
       }, 60000);
 
-      // scroll to song
-      // to active="scrollTo"
-      if (this.$refs.scroller) {
-        const index = this.filteredSongs.findIndex(s => s.url === song.url);
-        if (index !== -1) {
-          // doesn't scroll on page load without timeout
-          setTimeout(() => this.$refs.scroller.scrollToItem(index), 100);
-        }
-      }
+      this.scrollerToActiveSong();
     },
   },
 
   methods: {
     isMobile() {
       return screen.width <= 600;
+    },
+
+    scrollerToActiveSong() {
+      // scroll to song
+      // to active="scrollTo"
+      if (!this.$refs.scroller) return;
+      const index = this.filteredSongs.findIndex(s => s.url === this.activeSong.url);
+      if (index === -1) return;
+      setTimeout(() => {
+        try {
+          this.$refs.scroller.scrollToItem(index);
+          this.itemToScroll = false;
+        } catch (e) {
+          // second try, on page load
+          setTimeout(() => this.$refs.scroller.scrollToItem(index), 1000);
+        }
+      }, 50);
     },
 
     // TODO: changeSong intersects with watch for activeSong change
