@@ -98,7 +98,7 @@ export const state = () => ({
   beatFirstPlay: true,
 
   // settings
-  fontSize: 1,
+  fontSize: 2,
   autoScrollSpeed: 4,
   instrument: "guitar",
   artistsSort: "name",
