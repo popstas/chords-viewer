@@ -33,6 +33,10 @@
 		<el-row v-if="pianoAllowed" class="piano" :gutter="20">
 			<el-col :span="24" class="beat__left">
 				<el-checkbox v-model="pianoCurrent">piano</el-checkbox>
+				<el-radio-group v-model="pianoInstrument" size="mini">
+					<el-radio-button v-for="el of pianoInstruments" :key="el.id" :label="el.id">{{ el.label }}</el-radio-button>
+				</el-radio-group>
+				<br />
 				slow:
 				<el-radio-group  v-model="chordBeats" size="mini">
 					<el-radio-button title="2" label="2">2</el-radio-button>
@@ -42,9 +46,16 @@
 
 				style:
 				<el-radio-group  v-model="pianoStyle" size="mini">
-					<el-radio-button title="12312312" label="12312312">12312312</el-radio-button>
-					<el-radio-button title="all" label="all">all</el-radio-button>
-					<el-radio-button title="1-23--1-23" label="1-23--1-23">1-23--1-23</el-radio-button>
+					<el-radio-button class="piano-style-button" title="12312312" label="12312312">12312312</el-radio-button>
+					<el-radio-button class="piano-style-button" title="min-3-4" label="min-3-4">min 3/4</el-radio-button>
+					<el-radio-button class="piano-style-button" title="force" label="force">force</el-radio-button>
+					<el-radio-button class="piano-style-button" title="flat" label="flat">flat</el-radio-button>
+					<br/>
+					<el-radio-button class="piano-style-button" title="1232" label="1232">1232</el-radio-button>
+					<el-radio-button class="piano-style-button" title="1-123--1-123" label="1-123--1-123">min</el-radio-button>
+					<el-radio-button class="piano-style-button" title="force_3_4" label="force_3_4">force 3/4</el-radio-button>
+					<el-radio-button class="piano-style-button" title="flat-full" label="flat-full">flat-full</el-radio-button>
+					<!-- <el-radio-button title="test" label="test">test</el-radio-button> -->
 				</el-radio-group>
 			</el-col>
 		</el-row>
@@ -67,6 +78,12 @@
 .beat__rever {
 	text-align: right;
 	padding-top: 6px;
+}
+.piano-style-button .el-radio-button__inner{
+	width: 80px;
+	display: inline-block;
+	border-left: 1;
+	text-align: center;
 }
 </style>
 
@@ -229,6 +246,8 @@ export default {
 				chords = [chords[0], chords[0], chords[1], chords[1]];
 			}
 
+			if (chords.length > 4) chords = chords.slice(0, 4);
+
 			// untranspose, for piano
 			let transpose = this.$store.state.defaultTransposeLevel;
 			if (transpose) {
@@ -256,6 +275,10 @@ export default {
 		pianoCurrent(val) {
 			this.songPiano.active = val;
 			// this.loadPiano();
+			// this.replay(this);
+		},
+		pianoStyle(val) {
+			this.loadPiano();
 			// this.replay(this);
 		},
 		bpmCurrent(val) {
@@ -420,7 +443,40 @@ export default {
 			this.player.cancelQueue(this.audioContext);
 		},
 
-    startLoad(song) {
+		listSongNotes(song, verbose = false) {
+			if (!verbose) {
+				const lines = [];
+				let nn = 1;
+				let line = [];
+				song.tracks[0].notes.map(note => {
+					line.push(note.pitch);
+					if (nn > 0 && nn % 8 === 0) {
+						lines.push(line);
+						line = [];
+					}
+					nn++;
+				});
+				if (line.length > 0) lines.push(line);
+
+				console.log('notes: \n' + lines.map(line => line.join(' ')).join('\n'));
+			}
+
+			else {
+				const notes = [];
+				song.tracks[0].notes.map(note => {
+					const n = {
+						pitch: note.pitch,
+						when: note.when,
+						// duration: note.duration,
+					};
+					if (note.label) n.label = note.label;
+					notes.push(n);
+				});
+				console.log('notes full: \n', notes);
+			}
+		},
+
+		startLoad(song) {
 			// with equalizer and reverberator
 			if (this.reverCurrent && this.audioContext) {
 				this.equalizer = this.player.createChannel(this.audioContext);
@@ -458,10 +514,7 @@ export default {
 					// const vol = 1 / 7;
 
 					// show all notes
-
-					/* song.tracks[0].notes.map(note => {
-						console.log('note: ', note.pitch);
-					}); */
+					// this.listSongNotes(song);
 
 					// play uniqNotes with volume 0.001 for preload
 					if (!this.pianoCurrent) {
@@ -559,6 +612,21 @@ export default {
 
 			const songNotes = [];
 
+			if (this.pianoStyle == "test") {
+				let offset = 0;
+				for (let pitch = 36; pitch < 100; pitch++) {
+					for (let i = 0; i < 1; i++) {
+						song.tracks[0].notes.push({
+							when: offset * tickDuration,
+							pitch,
+							duration,
+							slides: [],
+						});
+						offset++;
+					}
+				}
+			}
+
 			// style 12312312
 			if (this.pianoStyle == "12312312") {
 				// build notes from chord for chordBeats
@@ -592,11 +660,8 @@ export default {
 				}
 			}
 
-			// style all
-			if (this.pianoStyle == "all") {
-				this.error = "style all is not implemented yet.";
-				return;
-
+			// style 1232
+			if (this.pianoStyle == "1232") {
 				// build notes from chord for chordBeats
 				for (let i = 0; i < chords.length; i++) {
 					const chordNotes = chordNotesMap[chords[i]];
@@ -606,8 +671,12 @@ export default {
 						return;
 					}
 					const notesPerChord = chordBeats * ticksPerBeat;
+					const sequence = [0, 1, 2, 1];
 					for (let j = 0; j < notesPerChord; j++) {
-						const pitch = chordNotes[j % chordNotes.length];
+						const noteNum = sequence[j % sequence.length];
+            // octave up for third note
+						const pitchOffset = noteNum === 2 ? 12 : 0;
+						const pitch = chordNotes[noteNum] + pitchOffset;
 						songNotes.push(pitch);
 					}
 				}
@@ -628,41 +697,230 @@ export default {
 				}
 			}
 
-			// style 1-23--1-23
-			if (this.pianoStyle === "1-23--1-23") {
-				const styleMidi = beats.find(b => b.name === 'style-piano-1-23--1-23-100-bpm');
-				const midiArrayBuffer = this.base64ToArrayBuffer(styleMidi.data);
-				const midiFile = new MIDIFile(midiArrayBuffer);
-				const songStyle = midiFile.parseSong();
-				console.log('songStyle: ', songStyle);
+			// style all
+			if (this.pianoStyle == "force" || this.pianoStyle == "force_3_4") {
+				let notes = [];
+				let offset = 0;
+				// repeat notes
+				for (let r = 0; r < repeats; r++) {
+					// every chord
+					for (let i = 0; i < chords.length; i++) {
+						// 4 tacts
+						const tacts = chordBeats * 2;
+						for (let tick = 0; tick < tacts; tick++) {
+							const chordNotes = chordNotesMap[chords[i]];
+							if (!chordNotes) {
+								this.error = `Chord ${chords[i]} not found.`
+								// console.log('cannot find notes for chord: ', );
+								return;
+							}
+							// 3/4 ticks
+							const majorTick = this.pianoStyle === 'force_3_4' ? 2 : 0;
+							if (tick % 4 !== majorTick) {
+								notes.push({
+									when: offset,
+									pitch: chordNotes[0],
+									duration,
+									slides: [],
+								});
+							}
+							// all notes every 1/4
+							else {
+								notes.push(...chordNotes.map(pitch => {
+									const note = {
+										when: offset,
+										pitch,
+										duration,
+										slides: [],
+									};
+									return note;
+								}));
+							}
 
-				const notes = songStyle.tracks[0].notes;
-				console.log('notes: ', notes);
-				// build notes from chord for chordBeats
-				/* let noteIndex = 0;
-				for (let chordNum = 0; chordNum < this.chords.length; chordNum++) {
-					const note = notes[noteIndex + chordNum];
-					const chordNotes = chordNotesMap[chordNum];
-					if (!chordNotes) {
-						this.error = `Chord ${note.pitch} not found.`
-						// console.log('cannot find notes for chord: ', );
-						return;
+							offset += tickDuration;
+						}
+						songNotes.push(...notes);
 					}
+				}
 
-					const notesPerChord = 3; //chordBeats * ticksPerBeat;
-					for (let chordNoteNum = 0; chordNoteNum < notesPerChord; chordNoteNum++) {
-						const pitch = chordNotes[chordNoteNum];
-						songNotes.push({...note, ...{
-							pitch,
-						}});
+				// console.log('notes: ', [...notes]);
+				// song.duration = totalBeats * beatDuration * repeats;
+				song.tracks[0].notes = notes;
+			}
+
+			// style flat
+			if (this.pianoStyle === "flat" || this.pianoStyle === "flat-full") {
+				let notes = [];
+				let offset = 0;
+				// repeat notes
+				for (let r = 0; r < repeats; r++) {
+					// every chord
+					for (let i = 0; i < chords.length; i++) {
+						// 4 tacts
+						const tacts = chordBeats * 2;
+						for (let tick = 0; tick < tacts; tick++) {
+							const chordNotes = chordNotesMap[chords[i]];
+							if (!chordNotes) {
+								this.error = `Chord ${chords[i]} not found.`
+								// console.log('cannot find notes for chord: ', );
+								return;
+							}
+							const onlyFirstNote = this.pianoStyle === "flat";
+							if (onlyFirstNote) {
+								notes.push({
+									when: offset,
+									pitch: chordNotes[0],
+									duration: duration*4,
+									slides: [],
+								});
+							}
+							else {
+								// all notes
+								notes.push(...chordNotes.map(pitch => {
+									const note = {
+										when: offset,
+										pitch,
+										duration,
+										slides: [],
+									};
+									return note;
+								}));
+							}
+
+
+							offset += tickDuration;
+						}
+						songNotes.push(...notes);
 					}
-				} */
+				}
+
+				// console.log('notes: ', [...notes]);
+				// song.duration = totalBeats * beatDuration * repeats;
+				song.tracks[0].notes = notes;
+			}
+
+			const notesMap = {
+				52: 0, // E
+				48: 1, // C
+				55: 2, // G
+				50: 3, // D
+			};
+
+			// style 1-123--1-123
+			if (this.pianoStyle === "1-123--1-123") {
+				song.tracks[0].notes = this.buildSongFromStyle({
+					chords,
+					style: this.pianoStyle,
+					notesMap,
+				});
+			}
+
+			// style force-last
+			if (this.pianoStyle === "min-3-4") {
+				song.tracks[0].notes = this.buildSongFromStyle({
+					chords,
+					style: this.pianoStyle,
+					notesMap,
+				});
+			}
+
+			if (this.error) {
+				console.log('broken song: ');
+				this.listSongNotes(song, true);
+				return null;
 			}
 
 			return song;
 		},
 
-  	startPlay() {
+		buildSongFromStyle({chords, style, notesMap}) {
+			// 8-16 tacts in piano midi
+			const styleMidi = beats.find(b => b.name === `style-piano-${style}-100-bpm`);
+			const midiArrayBuffer = this.base64ToArrayBuffer(styleMidi.data);
+			const midiFile = new MIDIFile(midiArrayBuffer);
+			const songStyle = midiFile.parseSong();
+
+			const tacts = parseInt(Math.round(songStyle.duration / (60 / bpmDefault)));
+
+			if (debug) console.log('songStyle: ', songStyle);
+			// this.listSongNotes(songStyle, true);
+
+			let chordCurrent = -1;
+			let noteCurrent = 0;
+			let notes = [];
+			let noteNums = [];
+			const chordChangeEvery = this.chordBeats / (tacts / 4);
+			let chordChanges = 0;
+			let lastChordNum = -1;
+			// const notesPerChord = chordBeats * ticksPerBeat;
+			// console.log('notesPerChord: ', notesPerChord);
+			const bpmMultiplier = bpmDefault / this.midiBpm;
+
+			for (let i = 0; i < 8; i++) {
+				const midiNotes = songStyle.tracks[0].notes.map(note => {
+					const offset = i * songStyle.duration * bpmMultiplier;
+					const chordNum = notesMap[note.pitch];
+					let label = '';
+					if (chordNum !== undefined && chordNum !== lastChordNum) {
+						// console.log('change chord: ', chordNum);
+						lastChordNum = chordNum;
+						noteNums = [
+							note.pitch + 12,
+							note.pitch + 16,
+							note.pitch + 19,
+						];
+						if (chordChanges % chordChangeEvery === 0){
+							chordCurrent = chordCurrent === 3 ? 0 : chordCurrent + 1; // chordNum
+							label = 'change chord: ' + chordCurrent;
+						}
+						chordChanges++;
+					}
+
+					noteCurrent++;
+
+					const chord = chords[chordCurrent];
+					const chordNotes = chordNotesMap[chord];
+					if (!chordNotes) {
+						this.error = `Chord ${chord} not found.`
+						console.log('cannot find notes for chord: ', chord);
+						return note;
+					}
+
+					const chordNoteNum = noteNums.findIndex(n => n === note.pitch);
+					const isBassNote = notesMap[note.pitch] !== undefined;
+
+					if (chordNoteNum === -1 && !isBassNote) {
+						note.label = 'skip';
+						console.log ('skip note: ', note.pitch);
+						console.log('chord: ', chord);
+						console.log('chordNum: ', chordNum);
+						console.log('chordNotes: ', chordNotes);
+						console.log('noteNums: ', noteNums);
+						console.log('chordCurrent: ', chordCurrent);
+						this.error = `Skip note ${note.pitch}.`
+						return note;
+					};
+
+					let pitch = note.pitch;
+					if (isBassNote) {
+						pitch = chordNotes[0] - 12;
+					}
+					else {
+						pitch = chordNotes[chordNoteNum];
+					}
+
+					return {...note, ...{
+						pitch,
+						when: offset + note.when * bpmMultiplier,
+						label,
+					}};
+				});
+				notes.push(...midiNotes);
+			}
+			return notes;
+		},
+
+		startPlay() {
 			// this.stopped = false;
 			const stepDuration = 44 / 1000;
 
@@ -681,7 +939,12 @@ export default {
 
 				s.plays = 0;
 
-        // offset for sound latency
+				if (this.songPiano.song) {
+          // TODO: preload online
+					// this.player.adjustPreset(this.audioContext, window[this.pianoInstrument]);
+				}
+
+				// offset for sound latency
 				if (!this.forcePlay) {
 					const offset = this.audioContext.outputLatency + 0.11; // на 100 мс тормозит дополнительно, примерно
 					s.currentSongTime += offset;
@@ -702,7 +965,7 @@ export default {
 				s.songBeatsDuration = s.songBeatsCount * s.beatDuration;
 				// console.log('songBeatsCount: ', songBeatsCount);
 
-				console.log('Delay before first tick: ', Date.now() - this.playStartTime);
+				// console.log('Delay before first tick: ', Date.now() - this.playStartTime);
 
 				this.tick(s, stepDuration);
 			}
