@@ -114,21 +114,34 @@ export default {
         this.changeSong(val[0].url);
       }
     },
-    activeSong(val) {
+    activeSong(song) {
+      // update url
+      const query = {...this.$router.history.current.query};
+      if (query.song_num !== undefined) delete(query.song_num);
+      if (song.url) query.url = song.url;
+      else delete query.url;
+      // const query = song.url ? {url: song.url} : {};
+      this.$router.push({ query });
+
+      if (!song) return;
+
+      // show timer
+      clearTimeout(this.showTimer);
+      this.showTimer = setTimeout(() => {
+        if (!song.url) return; // fix empty song addShow error
+        const safeUrl = song.url.replace(/[\/\.]/g, '_');
+        this.$store.dispatch("addShow", safeUrl);
+      }, 60000);
+
+      // scroll to song
       // to active="scrollTo"
       if (this.$refs.scroller) {
-        const index = this.filteredSongs.findIndex(song => song.url == val.url);
+        const index = this.filteredSongs.findIndex(s => s.url === song.url);
         if (index !== -1) {
           // doesn't scroll on page load without timeout
           setTimeout(() => this.$refs.scroller.scrollToItem(index), 100);
         }
       }
-      const query = {...this.$router.history.current.query};
-      if (query.song_num !== undefined) delete(query.song_num);
-      if (val.url) query.url = val.url;
-      else delete query.url;
-      // const query = val.url ? {url: val.url} : {};
-      this.$router.push({ query });
     },
   },
 
