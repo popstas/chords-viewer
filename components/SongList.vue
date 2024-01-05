@@ -115,6 +115,7 @@ export default {
       }
     },
     activeSong(val) {
+      // to active="scrollTo"
       if (this.$refs.scroller) {
         const index = this.filteredSongs.findIndex(song => song.url == val.url);
         if (index !== -1) {
@@ -122,7 +123,10 @@ export default {
           setTimeout(() => this.$refs.scroller.scrollToItem(index), 100);
         }
       }
-      const query = val.url ? {url: val.url} : {};
+      const query = {...this.$router.history.current.query};
+      if (val.url) query.url = val.url;
+      else delete query.url;
+      // const query = val.url ? {url: val.url} : {};
       this.$router.push({ query });
     },
   },
@@ -138,9 +142,11 @@ export default {
     },
 
     scrollTo(offset) {
-      this.lastOffset = offset;
-      const fixedTopOffset = 0;
-      window.scrollTo(0, offset - fixedTopOffset);
+      setTimeout(() => {
+        this.lastOffset = offset;
+        const fixedTopOffset = 0;
+        window.scrollTo(0, offset - fixedTopOffset);
+      }, 100);
     },
 
     /* handleAddToHomeScreen(event) {

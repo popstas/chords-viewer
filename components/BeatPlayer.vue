@@ -1141,45 +1141,15 @@ export default {
 		});
 		this.player = new WebAudioFontPlayer();
 
-		/* window.document.addEventListener("keydown", (e) => {
-			this.error = `key press: ${e.code}}`;
-		}); */
-
-		const listInputsAndOutputs = (midiAccess) => {
-			this.error = `midi inputs: ${midiAccess.inputs.size}, outputs: ${midiAccess.outputs.size}`;
-			this.error = `baseLatency: ${this.audioContext.baseLatency}`;
-			console.log('midiAccess.outputs: ', midiAccess.outputs);
-			for (const entry of midiAccess.inputs) {
-				const input = entry[1];
-				const msg = `Input port [type:'${input.type}']` +
-						` id:'${input.id}'` +
-						` manufacturer:'${input.manufacturer}'` +
-						` name:'${input.name}'` +
-						` version:'${input.version}'`;
-				console.log(msg);
-				// this.error = msg;
-			}
-
-			for (const entry of midiAccess.outputs) {
-				const output = entry[1];
-				console.log(
-					`Output port [type:'${output.type}'] id:'${output.id}' manufacturer:'${output.manufacturer}' name:'${output.name}' version:'${output.version}'`,
-				);
-			}
+		if (this.pianoAllowed) {
+			const {piano, piano_instrument, octave, piano_style, chord_beats, piano_sustain} = this.$router.history.current.query;
+			if (piano) this.pianoCurrent = true;
+			if (piano_instrument) this.pianoInstrument = pianoInstrumentsMap[piano_instrument];
+			if (piano_style) this.pianoStyle = piano_style;
+			if (piano_sustain) this.pianoSustain = !!piano_sustain;
+			if (chord_beats) this.chordBeats = parseInt(chord_beats);
+			if (octave) this.pianoPitchOffset = octave * 12;
 		}
-
-		/* let midi = null; // global MIDIAccess object
-		function onMIDISuccess(midiAccess) {
-			console.log("MIDI ready!");
-			midi = midiAccess; // store in the global (in real usage, would probably keep in an object instance)
-			listInputsAndOutputs(midiAccess);
-		}
-
-		function onMIDIFailure(msg) {
-			console.error(`Failed to get MIDI access - ${msg}`);
-		}
-
-		navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure); */
 	},
 	beforeDestroy() {
 		this.stop();
