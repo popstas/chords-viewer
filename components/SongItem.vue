@@ -43,24 +43,24 @@
 
           <div v-if="song.text" class="song-text">
             <template class="song-text__line" v-for="(line, lineKey) in textLines">
-              <div v-if="line.type == 'chords'"
-                   :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type == 'text'}"
+              <div v-if="line.type === 'chords'"
+                   :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type === 'text'}"
                    :key="lineKey">
                 <template v-for="(chord, chordKey) in line.data">
-                  <template v-if="chord != ''">
+                  <template v-if="chord !== ''">
                     <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
                   </template>
                   <template v-else>&nbsp;</template>
                 </template>
               </div>
               <div
-                v-if="line.type == 'text'"
+                v-if="line.type === 'text'"
                 class="song-item__line_text"
                 v-html="line.data"
                 :key="lineKey"
               ></div>
               <div
-                v-if="line.type == 'hr'"
+                v-if="line.type === 'hr'"
                 class="song-item__line_text"
                 :key="lineKey"
               >
@@ -177,10 +177,10 @@ export default {
 
     transposeLevel(val) {
       // cycle transpose
-      if (Math.abs(val) == 12) this.transposeLevel = 0;
+      if (Math.abs(val) === 12) this.transposeLevel = 0;
     },
 
-    showsStore(val) {
+    showsStore() {
       this.shows = this.showsStore;
     },
 
@@ -221,7 +221,7 @@ export default {
     },
 
     safeUrl() {
-      return this.song.url.replace(/[\/\.]/g, '_');
+      return this.song.url.replace(/[\/.]/g, '_');
     },
 
     showsStore() {
@@ -242,9 +242,7 @@ export default {
       let genres = this.song.tags.map(tag => {
         if (tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
       });
-      genres = genres.filter((genre, pos, arr) => {
-        return genre;
-      });
+      genres = genres.filter(Boolean);
       /* genres = genres
       .flat()
       .filter((genre, index, arr) => arr.indexOf(genre) == index) */
@@ -270,14 +268,14 @@ export default {
       if (!this.song.text) return "";
       // const textFixed = this.song.text;
       const textFixed = this.song.text
-        .replace(/(\[.*?\][: ])(.+)/g, '$1\n$2') // [куплет 1]:Am Em
+        .replace(/(\[.*?][: ])(.+)/g, '$1\n$2') // [куплет 1]:Am Em
         .replace(/(\d+) раза?/g, 'x$1') // 2 раза -> x2
         .replace(/(\d+)р?/g, 'x$1') // 2 раза -> x2
         .replace(/Вступление:/g, 'Intro:')
         .replace(/вст./g, 'Intro')
         .replace(/Кода:/g, 'Coda:')
         .replace(/Проигрыш/g, 'Coda')
-      const lines = textFixed.split("\n").map(line => {
+      return textFixed.split("\n").map(line => {
         if (!line.match(/[а-яА-Я]/)) {
           if (!line.trim()) {
             return {type: "hr", data: ''};
@@ -289,8 +287,6 @@ export default {
         }
         return {type: "text", data: line};
       });
-
-      return lines;
     },
 
     toolbarHidden() {

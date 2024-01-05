@@ -164,11 +164,10 @@ export default {
       recognition.interimResults = true;
       recognition.addEventListener("result", event => {
         // console.log("speech result", event.results);
-        const text = Array.from(event.results)
+        this.runtimeTranscription = Array.from(event.results)
           .map(result => result[0])
           .map(result => result.transcript)
           .join("");
-        this.runtimeTranscription = text;
       });
       recognition.addEventListener("end", this.onSpeechEnd);
       this.recognition = recognition;

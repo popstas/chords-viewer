@@ -8,9 +8,9 @@
     chord_separator_bracket_right: chord === ')'
     }" :data-chord="chord">
     <el-popover v-if="isKnown" placement="top-start" trigger="hover">
-      <el-button slot="reference">{{ html }} <img v-if="image" height="100" class="chord__image" :src="imageUrl"
+      <el-button slot="reference">{{ html }} <img v-if="image" :alt="chord" height="100" class="chord__image" :src="imageUrl"
                                                   slot="default"></el-button>
-      <img class="chord__image" :src="imageUrl" slot="default">
+      <img class="chord__image" :alt="chord" :src="imageUrl" slot="default">
     </el-popover>
     <template v-if="!isKnown">{{ html }}</template>
     <slot></slot>
@@ -89,8 +89,6 @@
 </style>
 
 <script>
-import {transposeMap} from "~/store";
-
 export default {
   name: "chord",
   props: {
@@ -109,11 +107,9 @@ export default {
         case 'ukulele':
           chord = this.chordifyReplace(chord);
           return `https://chordify.net/img/diagrams/ukulele/${chord}.png`
-          break;
         case 'piano':
           chord = this.chordifyReplace(chord);
           return `https://chordify.net/img/diagrams/piano/${chord}.png`
-          break;
         case 'guitar':
         default:
           chord = this.amdmReplace(chord);
@@ -138,34 +134,11 @@ export default {
 
     transposedChord() {
       return this.$store.getters.transposeChord(this.chord, this.transposeLevel);
-      if (!this.replacedChord || this.transposeLevel == 0)
-        return this.replacedChord;
-      let chord = this.replacedChord;
-
-      // find chain
-      let chain = transposeMap.find(chain => chain.indexOf(chord) != -1);
-      if (!chain) {
-        return chord;
-      }
-
-      // iterate over chain at this.transposeLevel
-      let currentIndex = chain.indexOf(chord);
-      for (let i = 0; i < Math.abs(this.transposeLevel); i++) {
-        if (this.transposeLevel > 0) {
-          currentIndex =
-            currentIndex + 1 >= chain.length ? 0 : currentIndex + 1;
-        } else {
-          currentIndex =
-            currentIndex - 1 < 0 ? chain.length - 1 : currentIndex - 1;
-        }
-      }
-      return chain[currentIndex];
     }
   },
 
   methods: {
     chordifyReplace(chord) {
-      const orig = chord;
       const chordifyReplaceMap = {
         '^([ABCDEFG])$': '$1_maj',
         '^([ABCDEFG])5$': '$1_5',
@@ -188,7 +161,7 @@ export default {
     },
 
     amdmReplace(chord) {
-      return chord.replace(/\#/g, 'w').replace(/\+/g, 'p').replace(/\-/g, 'z');
+      return chord.replace(/#/g, 'w').replace(/\+/g, 'p').replace(/-/g, 'z');
     }
   }
 };

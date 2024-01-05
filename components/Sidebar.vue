@@ -202,10 +202,10 @@ export default {
 
   methods: {
     changeFilter(name, value) {
-      if (name == "sortByDate" && value && this.sortByShows) {
+      if (name === "sortByDate" && value && this.sortByShows) {
         this.sortByShows = false;
       }
-      if (name == "sortByShows" && value && this.sortByShows) {
+      if (name === "sortByShows" && value && this.sortByShows) {
         this.sortByDate = false;
       }
       this.$store.dispatch("changeFilter", {name, value});

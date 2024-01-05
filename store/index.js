@@ -146,10 +146,10 @@ export const getters = {
 
   activeSongNum(state) {
     if (!state.activeSong.url) return -1;
-    return state.songs.findIndex(song => song.url == state.activeSong.url);
+    return state.songs.findIndex(song => song.url === state.activeSong.url);
   },
 
-  replacedChord(state) {
+  replacedChord() {
     return (chord) => chord
       .replace(/H(\s)/, /B$1/)
       .replace(/^H$/, "B")
@@ -162,7 +162,7 @@ export const getters = {
   },
   isKnownChord(state, getters) {
     return (chord) => {
-      return transposeMap.find(chain => chain.indexOf(getters.replacedChord(chord)) != -1) || false;
+      return transposeMap.find(chain => chain.indexOf(getters.replacedChord(chord)) !== -1) || false;
     };
   },
   transposeChord(state, getters) {
@@ -170,11 +170,11 @@ export const getters = {
       chord = getters.replacedChord(chord);
       if (!chord) return "";
 
-      if (!chord || level == 0)
+      if (!chord || level === 0)
         return chord;
 
       // find chord's chain
-      let chain = transposeMap.find(chain => chain.indexOf(chord) != -1);
+      let chain = transposeMap.find(chain => chain.indexOf(chord) !== -1);
       if (!chain) {
         return chord;
       }
@@ -326,9 +326,6 @@ export const actions = {
   },
 
   async filterSongs({commit, state}) {
-    // console.log("FilterSongs");
-    const t0 = Date.now();
-
     // webhookShow
     const webhookCommand = state.filter.q.match(/^webhookShow=(.*)$/);
     if (webhookCommand) {
@@ -360,9 +357,7 @@ export const actions = {
       let g = song.tags.map(tag => {
         if (tag.indexOf("жанр:") === 0) return tag.replace("жанр: ", "");
       });
-      song.genres = g.filter((genre, pos, arr) => {
-        return genre;
-      });
+      song.genres = g.filter(Boolean);
 
       return song;
     });
@@ -434,13 +429,13 @@ export const actions = {
 
     if (state.filter.comments === "1") {
       result = result.filter(song => {
-        const safeUrl = song.url.replace(/[\/\.]/g, '_');
+        const safeUrl = song.url.replace(/[\/.]/g, '_');
         return !!state.comments[safeUrl]
       });
     }
     if (state.filter.comments === "0") {
       result = result.filter(song => {
-        const safeUrl = song.url.replace(/[\/\.]/g, '_');
+        const safeUrl = song.url.replace(/[\/.]/g, '_');
         return !state.comments[safeUrl]
       });
     }
@@ -457,16 +452,14 @@ export const actions = {
 
     if (state.filter.sortByShows) {
       result = result.slice().sort((a, b) => {
-        const aSafe = a.url.replace(/[\/\.]/g, '_');
-        const bSafe = b.url.replace(/[\/\.]/g, '_');
+        const aSafe = a.url.replace(/[\/.]/g, '_');
+        const bSafe = b.url.replace(/[\/.]/g, '_');
         const aShows = state.shows[aSafe] || 0;
         const bShows = state.shows[bSafe] || 0;
         return bShows - aShows || new Date(b.created) - new Date(a.created);
       });
     }
 
-    const t1 = Date.now();
-    // console.log(`filter songs time: ${ t1 - t0 }`);
     commit("setFilteredSongs", result);
   },
 
@@ -480,8 +473,8 @@ export const actions = {
   },
 
   changeSong({commit, state, dispatch}, url) {
-    let activeSong = state.songs.find(song => song.url == url) || {};
-    if (state.activeSong.url == url) return;
+    let activeSong = state.songs.find(song => song.url === url) || {};
+    if (state.activeSong.url === url) return;
 
 
     commit("activeSong", activeSong);
@@ -497,14 +490,14 @@ export const actions = {
     commit("setToolbarHidden", false);
   },
 
-  setPrevSong({commit, state, dispatch}, payload) {
+  setPrevSong({commit, state, dispatch}) {
     if (state.playlistCurrent <= 0) return;
     commit("activeSong", state.playlist[state.playlistCurrent - 1]);
     dispatch("updateTranspose");
     commit("playlistCurrent", state.playlistCurrent - 1);
   },
 
-  setNextSong({commit, state, dispatch}, payload) {
+  setNextSong({commit, state, dispatch}) {
     if (state.playlist[state.playlistCurrent + 1]) {
       // next known
       commit("activeSong", state.playlist[state.playlistCurrent + 1]);

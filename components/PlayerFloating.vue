@@ -138,7 +138,7 @@
       .toolbar__hide {
         display: block !important;
         float: left;
-        margin-left: 0px;
+        margin-left: 0;
       }
 
       .search-letters {
@@ -306,23 +306,21 @@
 
 <script>
 import SearchInput from "~/components/SearchInput";
-import _ from "lodash";
 import "vue-awesome/icons/play";
 import "vue-awesome/icons/pause";
 import "vue-awesome/icons/backward";
 import "vue-awesome/icons/forward";
 import "vue-awesome/icons/chevron-up";
 import "vue-awesome/icons/chevron-down";
-import Icon from "vue-awesome/components/Icon";
 
-const speedMapping = {
+/*const speedMapping = {
   1: 1024,
   2: 512,
   3: 256,
   4: 128,
   5: 64,
   6: 32
-};
+};*/
 const speedMapping2 = {
   1: 8000,
   2: 5000,
@@ -456,7 +454,7 @@ export default {
 
       // console.log('window.scrollY:', window.scrollY);
       // console.log('delta:', delta);
-      if (delta == 1) {
+      if (delta === 1) {
         return; // ignore autoscroll
       }
 

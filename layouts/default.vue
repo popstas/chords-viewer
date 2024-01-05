@@ -234,7 +234,6 @@ import Profile from "~/components/Profile";
 import Sidebar from "~/components/Sidebar";
 import Slideout from "vue-slideout";
 import "vue-awesome/icons/qrcode";
-import Icon from "vue-awesome/components/Icon";
 
 import firebase from "firebase";
 

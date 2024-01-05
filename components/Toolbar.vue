@@ -66,7 +66,7 @@
 
       <ul class="toolbar__search-letters search-letters">
         <li
-          :class="{'search-letters__letter': true, active: q == '^' + letter}"
+          :class="{'search-letters__letter': true, active: q === '^' + letter}"
           v-for="letter in letters"
           :key="letter"
           @click="q = '^' + letter"
@@ -76,10 +76,10 @@
 
       <ul class="toolbar__search-genres search-genres">
         <li
-          :class="{'search-genres__genre': true, active: q == 'жанр: ' + genre}"
+          :class="{'search-genres__genre': true, active: q === 'жанр: ' + genre}"
           v-for="genre in genres"
           :key="genre"
-          @click="q = q=='жанр: ' + genre ? '' : 'жанр: ' + genre"
+          @click="q = q==='жанр: ' + genre ? '' : 'жанр: ' + genre"
         >{{ genre }}
         </li>
       </ul>
@@ -187,7 +187,7 @@
       .toolbar__hide {
         display: block !important;
         float: left;
-        margin-left: 0px;
+        margin-left: 0;
       }
 
       .search-letters {
@@ -362,16 +362,15 @@ import "vue-awesome/icons/backward";
 import "vue-awesome/icons/forward";
 import "vue-awesome/icons/chevron-up";
 import "vue-awesome/icons/chevron-down";
-import Icon from "vue-awesome/components/Icon";
 
-const speedMapping = {
+/*const speedMapping = {
   1: 1024,
   2: 512,
   3: 256,
   4: 128,
   5: 64,
   6: 32
-};
+};*/
 const speedMapping2 = {
   1: 8000,
   2: 5000,
@@ -489,7 +488,7 @@ export default {
       }
     },
 
-    handleScroll(event) {
+    handleScroll() {
       const delta = window.scrollY - this.lastScrollTop;
       this.lastScrollTop = window.scrollY;
       this.toolbarFixed = window.scrollY > 0;
@@ -500,7 +499,7 @@ export default {
 
       // console.log('window.scrollY:', window.scrollY);
       // console.log('delta:', delta);
-      if (delta == 1) {
+      if (delta === 1) {
         return; // ignore autoscroll
       }
 
@@ -532,10 +531,9 @@ export default {
       });
       letters.sort();
       // unique letters
-      letters = letters.filter((letter, pos, arr) => {
-        return arr.indexOf(letter) == pos;
+      this.letters = letters.filter((letter, pos, arr) => {
+        return arr.indexOf(letter) === pos;
       });
-      this.letters = letters;
     },
 
     buildGenres() {
@@ -544,15 +542,13 @@ export default {
         let g = song.tags.map(tag => {
           if (tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
         });
-        g = g.filter((genre, pos, arr) => {
-          return genre;
-        });
+        g = g.filter(Boolean);
         return g;
       });
       genres = genres
         // .filter((genre, index) => genres.indexOf(genre) !== index)
         .flat()
-        .filter((genre, index, arr) => arr.indexOf(genre) == index)
+        .filter((genre, index, arr) => arr.indexOf(genre) === index)
 
       genres.sort();
 
@@ -563,16 +559,16 @@ export default {
       let artists = [];
       const shows = this.$store.state.shows || {};
 
-      const safeUrl = url => url.replace(/[\/\.]/g, '_');
+      const safeUrl = url => url.replace(/[\/.]/g, '_');
       const songShows = song => shows[safeUrl(song.url)] || 0;
 
       this.$store.state.songs.map(song => {
         if (!song.details || !song.details.artist) return;
 
         const foundIndex = artists.findIndex(artist => {
-          return artist && artist.name == song.details.artist;
+          return artist && artist.name === song.details.artist;
         });
-        if (foundIndex == -1) {
+        if (foundIndex === -1) {
           artists.push({name: song.details.artist, count: 1, shows: songShows(song)});
         } else {
           artists[foundIndex].count++;
@@ -588,28 +584,27 @@ export default {
         return a;
       });
 
-      if (this.artistsSort == 'count') {
+      if (this.artistsSort === 'count') {
         artists.sort((a, b) => {
           return a.count > b.count ? 1 : a.count < b.count ? -1 : 0;
         }).reverse();
       }
 
-      if (this.artistsSort == 'shows') {
+      if (this.artistsSort === 'shows') {
         artists.sort((a, b) => {
           return a.shows > b.shows ? 1 : a.shows < b.shows ? -1 : 0;
         }).reverse();
       }
 
-      if (this.artistsSort == 'rate') {
+      if (this.artistsSort === 'rate') {
         artists.sort((a, b) => {
           return a.rate > b.rate ? 1 : a.rate < b.rate ? -1 : 0;
         }).reverse();
       }
 
-      artists = artists.filter((letter, pos, arr) => {
-        return arr.indexOf(letter) == pos;
+      this.artists = artists.filter((letter, pos, arr) => {
+        return arr.indexOf(letter) === pos;
       });
-      this.artists = artists;
     },
 
     prevSong() {

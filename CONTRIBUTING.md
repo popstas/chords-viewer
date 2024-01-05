@@ -1,6 +1,3 @@
-## TODO:
-- Hide songs out of screen - https://vuejs.org/v2/cookbook/avoiding-memory-leaks.html
-
 ## Build Setup
 
 You should use yarn!

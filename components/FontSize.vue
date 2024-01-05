@@ -1,7 +1,7 @@
 <template>
   <span class="font-size">
     <el-radio-group v-model="fontSize" size="mini">
-      <el-radio-button style="font-size1" label="1"></el-radio-button>
+      <el-radio-button class="font-size1" label="1"></el-radio-button>
       <el-radio-button class="font-size2" label="2"></el-radio-button>
       <el-radio-button class="font-size3" label="3"></el-radio-button>
     </el-radio-group>

@@ -528,7 +528,7 @@ export default {
             if (this.$store.state.beatFirstPlay) {
               ticks = 6;
             }
-            if (this.audioContext.state == 'suspended') {
+            if (this.audioContext.state === 'suspended') {
               await this.audioContext.resume();
             }
 

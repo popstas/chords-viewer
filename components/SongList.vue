@@ -18,9 +18,9 @@
             <SongItem
               :song="item"
               :key="item.url"
-              :active="item.url == activeSong.url"
+              :active="item.url === activeSong.url"
               @active="scrollTo"
-              @change="changeSong(item.url == activeSong.url ? '' : item.url)"
+              @change="changeSong(item.url === activeSong.url ? '' : item.url)"
             ></SongItem>
           </DynamicScrollerItem>
         </template>
@@ -29,9 +29,9 @@
                 v-for="item in filteredSongs"
                 :song="item"
                 :key="item.url"
-                :active="item.url == activeSong.url"
+                :active="item.url === activeSong.url"
                 @active="scrollTo"
-                @change="changeSong(item.url == activeSong.url ? '' : item.url)"
+                @change="changeSong(item.url === activeSong.url ? '' : item.url)"
       ></SongItem>
 
     </el-collapse>
@@ -117,7 +117,7 @@ export default {
   watch: {
     // open single filtered chords
     filteredSongs(val) {
-      if (val.length == 1 && val[0].title !== "Loading...") {
+      if (val.length === 1 && val[0].title !== "Loading...") {
         this.changeSong(val[0].url);
       }
     },
@@ -136,7 +136,7 @@ export default {
       clearTimeout(this.showTimer);
       this.showTimer = setTimeout(() => {
         if (!song.url) return; // fix empty song addShow error
-        const safeUrl = song.url.replace(/[\/\.]/g, '_');
+        const safeUrl = song.url.replace(/[\/.]/g, '_');
         this.$store.dispatch("addShow", safeUrl);
       }, 60000);
 
