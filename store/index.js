@@ -84,7 +84,7 @@ export const state = () => ({
   homepage: pjson.homepage,
 
   // app state
-  activeSong: { title: "" },
+  activeSong: {title: ""},
   transposeLevel: 0,
   defaultTransposeLevel: 0,
   scroller: false,
@@ -151,14 +151,14 @@ export const getters = {
 
   replacedChord(state) {
     return (chord) => chord
-    .replace(/H(\s)/, /B$1/)
-    .replace(/^H$/, "B")
-    .replace(/^H7$/, "B7")
-    .replace("Hm", "Bm")
-    .replace("m#", "#m")
-    .replace("Bb", "A#")
-    .replace("Eb", "F#")
-    .replace(/[()]/g, '');
+      .replace(/H(\s)/, /B$1/)
+      .replace(/^H$/, "B")
+      .replace(/^H7$/, "B7")
+      .replace("Hm", "Bm")
+      .replace("m#", "#m")
+      .replace("Bb", "A#")
+      .replace("Eb", "F#")
+      .replace(/[()]/g, '');
   },
   isKnownChord(state, getters) {
     return (chord) => {
@@ -171,7 +171,7 @@ export const getters = {
       if (!chord) return "";
 
       if (!chord || level == 0)
-      return chord;
+        return chord;
 
       // find chord's chain
       let chain = transposeMap.find(chain => chain.indexOf(chord) != -1);
@@ -295,7 +295,7 @@ let isFirstFilter = true;
 const startTime = Date.now();
 
 export const actions = {
-  changeFilter({ commit, dispatch, state }, options) {
+  changeFilter({commit, dispatch, state}, options) {
     // console.log('changeFilter: ', options);
     commit("changeFilter", options);
 
@@ -325,7 +325,7 @@ export const actions = {
     }
   },
 
-  async filterSongs({ commit, state }) {
+  async filterSongs({commit, state}) {
     // console.log("FilterSongs");
     const t0 = Date.now();
 
@@ -342,10 +342,10 @@ export const actions = {
         const snapshot = await db.once("value");
         const settings = {
           ...snapshot.val().settings || {},
-          ... { webhookShow }
+          ...{webhookShow}
         };
 
-        db.update({ settings });
+        db.update({settings});
       }
 
       return;
@@ -470,7 +470,7 @@ export const actions = {
     commit("setFilteredSongs", result);
   },
 
-  updateTranspose({ commit, state }) {
+  updateTranspose({commit, state}) {
     const songTranspose = state.activeSong.title?.match(
       /\((капо|кап|capo|cap)\.? (\d+)\)/
     );
@@ -479,7 +479,7 @@ export const actions = {
     commit("transposeLevel", transpose);
   },
 
-  changeSong({ commit, state, dispatch }, url) {
+  changeSong({commit, state, dispatch}, url) {
     let activeSong = state.songs.find(song => song.url == url) || {};
     if (state.activeSong.url == url) return;
 
@@ -497,14 +497,14 @@ export const actions = {
     commit("setToolbarHidden", false);
   },
 
-  setPrevSong({ commit, state, dispatch }, payload) {
+  setPrevSong({commit, state, dispatch}, payload) {
     if (state.playlistCurrent <= 0) return;
     commit("activeSong", state.playlist[state.playlistCurrent - 1]);
     dispatch("updateTranspose");
     commit("playlistCurrent", state.playlistCurrent - 1);
   },
 
-  setNextSong({ commit, state, dispatch }, payload) {
+  setNextSong({commit, state, dispatch}, payload) {
     if (state.playlist[state.playlistCurrent + 1]) {
       // next known
       commit("activeSong", state.playlist[state.playlistCurrent + 1]);
@@ -519,8 +519,8 @@ export const actions = {
     dispatch("updateTranspose");
   },
 
-  setUser({ commit, state }, user) {
-    if(user) {
+  setUser({commit, state}, user) {
+    if (user) {
       commit("setUser", {
         uid: user.uid,
         photoURL: user.photoURL,
@@ -560,8 +560,8 @@ export const actions = {
     }
   },
 
-  setShow({ commit, state }, { url, shows }) {
-    commit('setShow', { url, shows });
+  setShow({commit, state}, {url, shows}) {
+    commit('setShow', {url, shows});
 
     if (state.user) {
       firebase
@@ -574,7 +574,7 @@ export const actions = {
     }
   },
 
-  addShow({ commit, state }, url) {
+  addShow({commit, state}, url) {
     commit("addShow", url);
 
     // webhookShow send
@@ -618,7 +618,7 @@ export const actions = {
     }
   },
 
-  addComment({ commit, state }, {url, comment}) {
+  addComment({commit, state}, {url, comment}) {
     commit("setComment", {url, comment});
 
     if (state.user) {

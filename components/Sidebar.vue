@@ -107,7 +107,7 @@
   }
 
   // font size radiobuttons
-  .font-size .el-radio-group{
+  .font-size .el-radio-group {
     text-align: right;
 
     .el-radio-button__inner {
@@ -120,6 +120,7 @@
     margin-right: 15px;
     text-decoration: none;
     color: var(--link);
+
     &:hover {
       color: var(--link-hover);
     }
@@ -135,10 +136,11 @@ import "vue-awesome/icons/calendar-alt";
 // import Icon from "vue-awesome/components/Icon";
 
 import NoSleep from "nosleep.js";
+
 const nosleep = new NoSleep();
 
 export default {
-  components: { FontSize },
+  components: {FontSize},
 
   data() {
     return {
@@ -200,13 +202,13 @@ export default {
 
   methods: {
     changeFilter(name, value) {
-      if(name == "sortByDate" && value && this.sortByShows) {
+      if (name == "sortByDate" && value && this.sortByShows) {
         this.sortByShows = false;
       }
-      if(name == "sortByShows" && value && this.sortByShows) {
+      if (name == "sortByShows" && value && this.sortByShows) {
         this.sortByDate = false;
       }
-      this.$store.dispatch("changeFilter", { name, value });
+      this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
     },
   },

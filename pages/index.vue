@@ -48,6 +48,7 @@ import SongList from "~/components/SongList";
 import ChordsFloating from "~/components/ChordsFloating";
 import BeatPlayer from "~/components/BeatPlayer";
 import BeatPlayerAll from "~/components/BeatPlayerAll";
+
 export default {
   components: {
     Toolbar,

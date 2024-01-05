@@ -1,6 +1,6 @@
 <template>
   <div class="search-input">
-    <input v-model="q" v-shortkey.avoid />
+    <input v-model="q" v-shortkey.avoid/>
     <span class="el-input__suffix">
       <span class="el-input__suffix-inner">
         <button
@@ -39,7 +39,7 @@
     height: 40px;
     line-height: 40px;
 
-    &:hover{
+    &:hover {
       border-color: #c0c4cc;
     }
 
@@ -62,6 +62,7 @@
     &:hover {
       color: #666;
     }
+
     &.active {
       color: #409eff;
     }
@@ -96,6 +97,7 @@
 
 <script>
 import "vue-awesome/icons/microphone";
+
 export default {
   props: {
     value: {

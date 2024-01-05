@@ -15,7 +15,9 @@
           <el-header height="42px">
             <button class="menu-toggle">☰</button>
             <button class="input-clear" @click="onInputClear">&cross;</button>
-            <button class="input-clear" @click="showQrCode = !showQrCode"><icon name="qrcode"></icon></button>
+            <button class="input-clear" @click="showQrCode = !showQrCode">
+              <icon name="qrcode"></icon>
+            </button>
             <Profile></Profile>
           </el-header>
           <el-main>
@@ -27,7 +29,7 @@
               </qrcode-drop-zone>
               <qrcode-stream @decode="onDecode"></qrcode-stream>
             </div>
-            <nuxt />
+            <nuxt/>
           </el-main>
         </div>
       </Slideout>
@@ -44,7 +46,7 @@
 
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, sans-serif;
+  Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 14px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -53,9 +55,11 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
+
 body {
   overflow-y: auto;
 }
+
 .el-main {
   max-width: 100vw;
   padding: $main-padding !important;
@@ -107,6 +111,7 @@ textarea {
 .qrcode-wrapper {
   height: 80vh;
 }
+
 .drop-area {
   height: 300px;
   background: #ccc;
@@ -160,6 +165,7 @@ textarea {
 
 .el-header {
   padding: 0 5px !important;
+
   .menu-toggle,
   .input-clear {
     background: none;
@@ -171,11 +177,13 @@ textarea {
 
   button {
     color: var(--link);
+
     &:hover {
       color: var(--link-hover);
     }
   }
 }
+
 .slideout-menu {
   position: absolute;
   top: 0;
@@ -190,6 +198,7 @@ textarea {
   &-left {
     left: 0;
   }
+
   &-right {
     right: 0;
   }
@@ -213,6 +222,7 @@ input {
     background-color: var(--link-disabled);
   }
 }
+
 /* .el-radio-button__orig-radio:checked+.el-radio-button__inner {
   background-color: #84a1bd !important;
   border-color: #84a1bd !important;
@@ -227,6 +237,7 @@ import "vue-awesome/icons/qrcode";
 import Icon from "vue-awesome/components/Icon";
 
 import firebase from "firebase";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAi6BptwN63ruuHJiTmm_ofYUyquAaPf9U",
   authDomain: "chords-viewer.firebaseapp.com",
@@ -240,7 +251,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export default {
-  components: { Slideout, Sidebar, Profile },
+  components: {Slideout, Sidebar, Profile},
   data() {
     return {
       chordsHeight: 0,
@@ -268,7 +279,7 @@ export default {
     // },
 
     onInputClear() {
-      const options = { name: "q", value: "" };
+      const options = {name: "q", value: ""};
       this.$store.dispatch("changeFilter", options);
       const input = this.$el.querySelector(".search-input input");
       if (input) input.value = "";
@@ -283,8 +294,7 @@ export default {
           const song = this.$store.state.songs[song_num];
           if (song) this.$store.dispatch('changeSong', song.url);
         }
-      }
-      catch(e) {
+      } catch (e) {
         console.log('unknown qrcode format: ');
         console.log('e: ', e);
         return;
@@ -300,8 +310,8 @@ export default {
         class: this.$store.state.darkMode ? 'dark-mode' : ''
       },
       link: [
-        { rel: "manifest", href: "/site.webmanifest" },
-        { rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5" },
+        {rel: "manifest", href: "/site.webmanifest"},
+        {rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5"},
         {
           rel: "apple-touch-icon",
           type: "image/png",

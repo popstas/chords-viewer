@@ -16,7 +16,8 @@
         <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
           <qr-code :size="340" :text="$store.state.activeSong.url"></qr-code>
         </div>
-        <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link" @click.prevent="showQrCode = !showQrCode">
+        <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link"
+           @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
         </a>
       </div>
@@ -69,7 +70,8 @@
           v-for="letter in letters"
           :key="letter"
           @click="q = '^' + letter"
-        >{{ letter }}</li>
+        >{{ letter }}
+        </li>
       </ul>
 
       <ul class="toolbar__search-genres search-genres">
@@ -78,7 +80,8 @@
           v-for="genre in genres"
           :key="genre"
           @click="q = q=='жанр: ' + genre ? '' : 'жанр: ' + genre"
-        >{{ genre }}</li>
+        >{{ genre }}
+        </li>
       </ul>
 
       <el-select class="toolbar__search-artists search-artists" placeholder="Select artist" v-model="artist">
@@ -87,9 +90,17 @@
           :key="item.name"
           :value="item.name">
           <span style="float: left">{{ item.name }}</span>
-          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'rate' }">{{ item.rate }}</span>
-          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'count' }">{{ item.count }}</span>
-          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'shows' }">{{ item.shows }}</span>
+          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'rate' }">{{
+              item.rate
+            }}</span>
+          <span
+            :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'count' }">{{
+              item.count
+            }}</span>
+          <span
+            :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'shows' }">{{
+              item.shows
+            }}</span>
         </el-option>
       </el-select>
 
@@ -134,6 +145,7 @@
       background: #fff;
     }
   }
+
   &__qrcode-link {
     float: right;
     padding: 10px;
@@ -156,6 +168,7 @@
     .toolbar-spacer {
       height: 212px;
     }
+
     .toolbar-body {
       position: fixed;
       bottom: 0;
@@ -163,13 +176,14 @@
       right: 0;
       padding: 5px;
       box-shadow: 0 0 1px #ccc;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0, 0, 0, 0.2);
 
       .toolbar__up {
         display: block !important;
         float: left;
         margin-left: 7px;
       }
+
       .toolbar__hide {
         display: block !important;
         float: left;
@@ -199,7 +213,7 @@
     }
   }
 
-  &_hidden .toolbar-body{
+  &_hidden .toolbar-body {
     display: none;
   }
 
@@ -282,6 +296,7 @@
     margin-right: 0; // for 3rd button "count"
 
     $input-height: 30px;
+
     .el-input__icon, input {
       line-height: $input-height;
       height: $input-height;
@@ -303,9 +318,11 @@
     border-radius: 4px !important;
     background: none !important;
     color: var(--link) !important;
+
     &:disabled {
       color: var(--bg-hover) !important;
     }
+
     padding: 7px;
     // float: right;
   }
@@ -452,7 +469,7 @@ export default {
     },
 
     changeFilter(name, value) {
-      this.$store.dispatch("changeFilter", { name, value });
+      this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
     },
 
@@ -466,7 +483,7 @@ export default {
           window.scrollBy({
             left: 0,
             top: 20,
-            behavior : 'smooth',
+            behavior: 'smooth',
           });
         }, speedMapping2[this.autoScrollSpeed]);
       }
@@ -500,7 +517,7 @@ export default {
       }
 
       // stop when 2+ columns
-      if(this.$el.parentElement.offsetWidth > 1200) {
+      if (this.$el.parentElement.offsetWidth > 1200) {
         this.autoScroll = false;
       }
     },
@@ -525,7 +542,7 @@ export default {
       let genres = this.$store.state.songs.map(song => {
         if (!song.tags) return [];
         let g = song.tags.map(tag => {
-          if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+          if (tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
         });
         g = g.filter((genre, pos, arr) => {
           return genre;
@@ -533,9 +550,9 @@ export default {
         return g;
       });
       genres = genres
-      // .filter((genre, index) => genres.indexOf(genre) !== index)
-      .flat()
-      .filter((genre, index, arr) => arr.indexOf(genre) == index)
+        // .filter((genre, index) => genres.indexOf(genre) !== index)
+        .flat()
+        .filter((genre, index, arr) => arr.indexOf(genre) == index)
 
       genres.sort();
 
@@ -550,15 +567,14 @@ export default {
       const songShows = song => shows[safeUrl(song.url)] || 0;
 
       this.$store.state.songs.map(song => {
-        if(!song.details || !song.details.artist) return;
+        if (!song.details || !song.details.artist) return;
 
         const foundIndex = artists.findIndex(artist => {
           return artist && artist.name == song.details.artist;
         });
-        if(foundIndex == -1) {
-          artists.push({ name: song.details.artist, count: 1, shows: songShows(song) });
-        }
-        else {
+        if (foundIndex == -1) {
+          artists.push({name: song.details.artist, count: 1, shows: songShows(song)});
+        } else {
           artists[foundIndex].count++;
           artists[foundIndex].shows += songShows(song);
         }
@@ -572,19 +588,19 @@ export default {
         return a;
       });
 
-      if(this.artistsSort == 'count'){
+      if (this.artistsSort == 'count') {
         artists.sort((a, b) => {
           return a.count > b.count ? 1 : a.count < b.count ? -1 : 0;
         }).reverse();
       }
 
-      if(this.artistsSort == 'shows'){
+      if (this.artistsSort == 'shows') {
         artists.sort((a, b) => {
           return a.shows > b.shows ? 1 : a.shows < b.shows ? -1 : 0;
         }).reverse();
       }
 
-      if(this.artistsSort == 'rate'){
+      if (this.artistsSort == 'rate') {
         artists.sort((a, b) => {
           return a.rate > b.rate ? 1 : a.rate < b.rate ? -1 : 0;
         }).reverse();

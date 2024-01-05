@@ -10,12 +10,15 @@
 
 <style lang="scss">
 @import "@/assets/variables.scss";
+
 .font-size1 .el-radio-button__inner {
   font-size: $font-size-1 !important;
 }
+
 .font-size2 .el-radio-button__inner {
   font-size: $font-size-2 !important;
 }
+
 .font-size3 .el-radio-button__inner {
   font-size: $font-size-3 !important;
 }

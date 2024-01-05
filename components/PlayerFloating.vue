@@ -13,7 +13,8 @@
         <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
           <qr-code :size="340" :text="activeSongQrCode"></qr-code>
         </div>
-        <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link" @click.prevent="showQrCode = !showQrCode">
+        <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link"
+           @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
         </a>
       </div>
@@ -94,6 +95,7 @@
       background: #fff;
     }
   }
+
   &__qrcode-link {
     float: right;
     padding: 10px;
@@ -116,6 +118,7 @@
     .toolbar-spacer {
       height: 212px;
     }
+
     .toolbar-body {
       position: fixed;
       bottom: 0;
@@ -124,13 +127,14 @@
       z-index: 2;
       padding: 5px;
       box-shadow: 0 0 1px #ccc;
-      background: rgba(0,0,0,0.2);
+      background: rgba(0, 0, 0, 0.2);
 
       .toolbar__up {
         display: block !important;
         float: left;
         margin-left: 7px;
       }
+
       .toolbar__hide {
         display: block !important;
         float: left;
@@ -160,7 +164,7 @@
     }
   }
 
-  &_hidden .toolbar-body{
+  &_hidden .toolbar-body {
     display: none;
   }
 
@@ -243,6 +247,7 @@
     margin-right: 0; // for 3rd button "count"
 
     $input-height: 30px;
+
     .el-input__icon, input {
       line-height: $input-height;
       height: $input-height;
@@ -264,9 +269,11 @@
     border-radius: 4px !important;
     background: none !important;
     color: var(--link) !important;
+
     &:disabled {
       color: var(--bg-hover) !important;
     }
+
     padding: 7px;
     // float: right;
   }
@@ -416,7 +423,7 @@ export default {
     },
 
     changeFilter(name, value) {
-      this.$store.dispatch("changeFilter", { name, value });
+      this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
     },
 
@@ -430,7 +437,7 @@ export default {
           window.scrollBy({
             left: 0,
             top: 20,
-            behavior : 'smooth',
+            behavior: 'smooth',
           });
         }, speedMapping2[this.autoScrollSpeed]);
       }
@@ -466,7 +473,7 @@ export default {
       }
 
       // stop when 2+ columns
-      if(this.$el.parentElement?.offsetWidth > 1200) {
+      if (this.$el.parentElement?.offsetWidth > 1200) {
         this.autoScroll = false;
       }
     },

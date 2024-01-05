@@ -14,6 +14,7 @@
 import firebase from "firebase";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+
 export default {
   name: "Login",
   data() {

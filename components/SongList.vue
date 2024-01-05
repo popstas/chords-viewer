@@ -2,12 +2,12 @@
   <div :class="['song-list', 'size' + this.$store.state.fontSize]">
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
       <DynamicScroller v-if="isMobile()"
-        class="scroller"
-        :items="filteredSongs"
-        :min-item-size="itemHeight"
-        keyField="url"
-        :page2Mode="true"
-        ref="scroller"
+                       class="scroller"
+                       :items="filteredSongs"
+                       :min-item-size="itemHeight"
+                       keyField="url"
+                       :page2Mode="true"
+                       ref="scroller"
       >
         <template v-slot="{ item, index, active }">
           <DynamicScrollerItem
@@ -26,12 +26,12 @@
         </template>
       </DynamicScroller>
       <SongItem v-else
-        v-for="item in filteredSongs"
-        :song="item"
-        :key="item.url"
-        :active="item.url == activeSong.url"
-        @active="scrollTo"
-        @change="changeSong(item.url == activeSong.url ? '' : item.url)"
+                v-for="item in filteredSongs"
+                :song="item"
+                :key="item.url"
+                :active="item.url == activeSong.url"
+                @active="scrollTo"
+                @change="changeSong(item.url == activeSong.url ? '' : item.url)"
       ></SongItem>
 
     </el-collapse>
@@ -44,21 +44,27 @@
 .scroller {
   height: 100vh;
 }
+
 .el-collapse {
   border: none !important;
 }
+
 .el-collapse-item__header {
   border: none !important;
 }
+
 // global text size
 .el-collapse-item__content {
   font-size: 13px;
+
   .size1 & {
     font-size: $font-size-1;
   }
+
   .size2 & {
     font-size: $font-size-2;
   }
+
   .size3 & {
     font-size: $font-size-3;
   }
@@ -67,6 +73,7 @@
 
 <script>
 import SongItem from "~/components/SongItem";
+
 const itemHeight = 48;
 
 export default {
@@ -117,11 +124,11 @@ export default {
     activeSong(song) {
       // update url
       const query = {...this.$router.history.current.query};
-      if (query.song_num !== undefined) delete(query.song_num);
+      if (query.song_num !== undefined) delete (query.song_num);
       if (song.url) query.url = song.url;
       else delete query.url;
       // const query = song.url ? {url: song.url} : {};
-      this.$router.push({ query });
+      this.$router.push({query});
 
       if (!song) return;
 

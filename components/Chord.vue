@@ -8,7 +8,8 @@
     chord_separator_bracket_right: chord === ')'
     }" :data-chord="chord">
     <el-popover v-if="isKnown" placement="top-start" trigger="hover">
-      <el-button slot="reference">{{ html }} <img v-if="image" height="100" class="chord__image" :src="imageUrl" slot="default"></el-button>
+      <el-button slot="reference">{{ html }} <img v-if="image" height="100" class="chord__image" :src="imageUrl"
+                                                  slot="default"></el-button>
       <img class="chord__image" :src="imageUrl" slot="default">
     </el-popover>
     <template v-if="!isKnown">{{ html }}</template>
@@ -21,20 +22,26 @@
 
 .chord {
   white-space: nowrap;
+
   &:after {
     content: " ";
   }
+
   &_known .el-button {
     font-size: $font-size-1;
+
     .size1 & {
       font-size: $font-size-1;
     }
+
     .size2 & {
       font-size: $font-size-2;
     }
+
     .size3 & {
       font-size: $font-size-3;
     }
+
     display: inline-block;
     color: #000;
     padding: 5px 3px;
@@ -48,6 +55,7 @@
     }
 
     min-width: 25px;
+
     &:hover,
     &:focus {
       background: #ededed;
@@ -57,15 +65,17 @@
   &_separator_short {
     margin: 0 -5px;
   }
+
   &_separator_bracket_left {
     margin-right: -4px;
   }
+
   &_separator_bracket_right {
     margin-left: -7px;
   }
 }
 
-.chord_separator_short + .chord .el-button{
+.chord_separator_short + .chord .el-button {
   padding: 5px 1px;
   min-width: auto;
 }
@@ -79,7 +89,7 @@
 </style>
 
 <script>
-import { transposeMap } from "~/store";
+import {transposeMap} from "~/store";
 
 export default {
   name: "chord",
@@ -95,7 +105,7 @@ export default {
   computed: {
     imageUrl() {
       let chord = this.transposedChord;
-      switch(this.$store.state.instrument) {
+      switch (this.$store.state.instrument) {
         case 'ukulele':
           chord = this.chordifyReplace(chord);
           return `https://chordify.net/img/diagrams/ukulele/${chord}.png`
@@ -168,7 +178,7 @@ export default {
         '^A#$': 'Bb_maj',
       }
 
-      for(let from in chordifyReplaceMap) {
+      for (let from in chordifyReplaceMap) {
         const regFrom = new RegExp(from);
         const to = chordifyReplaceMap[from];
         chord = chord.replace(regFrom, to);

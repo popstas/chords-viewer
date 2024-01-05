@@ -13,100 +13,111 @@
       </span>
 
       <span class="song-item__badges" v-if="$store.state.showBadges">
-        <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }" v-html="complexity" title="song complexity"></span>
+        <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }"
+              v-html="complexity" title="song complexity"></span>
         <i v-if="song.text" class="el-icon-tickets" title="with text"></i>
       </span>
     </div>
 
-    <div role="tabpanel" class="el-collapse-item__wrap" v-if="active"><div class="el-collapse-item__content">
-      <div class="song-item__content">
-        <div v-if="active" class="song-transpose">
-          <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
-          <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
-          <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
-          <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
-          <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
-          <FontSize style="float: right"></FontSize>
-        </div>
-
-        <div v-if="isBeat" class="song-midi">
-          <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="false" :chords="song.details.chords"></BeatPlayer>
-        </div>
-        <div v-if="!isBeat && isPianoAllowed" class="song-midi">
-          <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true" :chords="song.details.chords"></BeatPlayer>
-        </div>
-
-
-        <div v-if="song.text" class="song-text">
-          <template class="song-text__line" v-for="(line, lineKey) in textLines">
-            <div v-if="line.type == 'chords'" :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type == 'text'}" :key="lineKey">
-              <template v-for="(chord, chordKey) in line.data">
-                <template v-if="chord != ''">
-                  <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
-                </template>
-                <template v-else>&nbsp;</template>
-              </template>
-            </div>
-            <div
-              v-if="line.type == 'text'"
-              class="song-item__line_text"
-              v-html="line.data"
-              :key="lineKey"
-            ></div>
-            <div
-              v-if="line.type == 'hr'"
-              class="song-item__line_text"
-              :key="lineKey"
-            ><hr></div>
-          </template>
-        </div>
-
-        <a class="song-item__link" target="_blank" :href="song.url">
-          <icon name="link"></icon>
-        </a>
-        <a v-if="isShare" class="song-item__link" @click.prevent="share">
-          <icon name="share-alt"></icon>
-        </a>
-        <a class="song-item__link" @click.prevent="copyText">
-          <i class="el-icon-copy-document"></i>
-        </a>
-        <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
-          <icon name="qrcode"></icon>
-        </a>
-        <a class="song-item__link" @click.prevent="showComment = !showComment">
-          <icon name="edit"> </icon>
-        </a>
-
-        <div class="song-item__qrcode" v-if="showQrCode">
-          <qr-code :size="340" :text="song.url"></qr-code>
-        </div>
-
-        <ul v-if="active" class="song-categories">
-          <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
-          <li
-            class="song-categories__item song-categories__item_artist"
-            @click="changeFilter('q', '^' + song.details.artist)"
-          >{{ song.details.artist }}</li>
-          <li
-            class="song-categories__item song-categories__item_genre"
-            v-for="genre in genres" :key="genre"
-            @click="changeFilter('q', 'жанр: ' + genre)"
-          >{{ genre }}</li>
-          <li class="song-categories__item song-categories__item_shows">просмотров:
-            <el-button size="mini" disabled v-html="shows"></el-button>
-            <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
-            <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
-          </li>
-        </ul>
-
-        <details :open="showComment || !!this.comment">
-          <summary v-html="this.comment ? 'Заметка' : ''" />
-          <div>
-            <textarea ref="comment" class="song-item__comment" v-model="comment" v-shortkey.avoid />
+    <div role="tabpanel" class="el-collapse-item__wrap" v-if="active">
+      <div class="el-collapse-item__content">
+        <div class="song-item__content">
+          <div v-if="active" class="song-transpose">
+            <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
+            <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
+            <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
+            <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
+            <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+            <FontSize style="float: right"></FontSize>
           </div>
-        </details>
+
+          <div v-if="isBeat" class="song-midi">
+            <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="false"
+                        :chords="song.details.chords"></BeatPlayer>
+          </div>
+          <div v-if="!isBeat && isPianoAllowed" class="song-midi">
+            <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true"
+                        :chords="song.details.chords"></BeatPlayer>
+          </div>
+
+
+          <div v-if="song.text" class="song-text">
+            <template class="song-text__line" v-for="(line, lineKey) in textLines">
+              <div v-if="line.type == 'chords'"
+                   :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type == 'text'}"
+                   :key="lineKey">
+                <template v-for="(chord, chordKey) in line.data">
+                  <template v-if="chord != ''">
+                    <Chord :chord="chord.trim()" :transposeLevel="transposeLevel" :key="chordKey"></Chord>
+                  </template>
+                  <template v-else>&nbsp;</template>
+                </template>
+              </div>
+              <div
+                v-if="line.type == 'text'"
+                class="song-item__line_text"
+                v-html="line.data"
+                :key="lineKey"
+              ></div>
+              <div
+                v-if="line.type == 'hr'"
+                class="song-item__line_text"
+                :key="lineKey"
+              >
+                <hr>
+              </div>
+            </template>
+          </div>
+
+          <a class="song-item__link" target="_blank" :href="song.url">
+            <icon name="link"></icon>
+          </a>
+          <a v-if="isShare" class="song-item__link" @click.prevent="share">
+            <icon name="share-alt"></icon>
+          </a>
+          <a class="song-item__link" @click.prevent="copyText">
+            <i class="el-icon-copy-document"></i>
+          </a>
+          <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
+            <icon name="qrcode"></icon>
+          </a>
+          <a class="song-item__link" @click.prevent="showComment = !showComment">
+            <icon name="edit"></icon>
+          </a>
+
+          <div class="song-item__qrcode" v-if="showQrCode">
+            <qr-code :size="340" :text="song.url"></qr-code>
+          </div>
+
+          <ul v-if="active" class="song-categories">
+            <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
+            <li
+              class="song-categories__item song-categories__item_artist"
+              @click="changeFilter('q', '^' + song.details.artist)"
+            >{{ song.details.artist }}
+            </li>
+            <li
+              class="song-categories__item song-categories__item_genre"
+              v-for="genre in genres" :key="genre"
+              @click="changeFilter('q', 'жанр: ' + genre)"
+            >{{ genre }}
+            </li>
+            <li class="song-categories__item song-categories__item_shows">просмотров:
+              <el-button size="mini" disabled v-html="shows"></el-button>
+              <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
+              <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
+            </li>
+          </ul>
+
+          <details :open="showComment || !!this.comment">
+            <summary v-html="this.comment ? 'Заметка' : ''"/>
+            <div>
+              <textarea ref="comment" class="song-item__comment" v-model="comment" v-shortkey.avoid/>
+            </div>
+          </details>
+        </div>
       </div>
-    </div></div>
+    </div>
   </div>
 </template>
 
@@ -143,7 +154,7 @@ Icon.register({
 })
 
 export default {
-  components: { Chord, FontSize, BeatPlayer },
+  components: {Chord, FontSize, BeatPlayer},
   props: ["song", "active"],
 
   data() {
@@ -174,7 +185,9 @@ export default {
     },
 
     showComment(val) {
-      if (val) setTimeout(() => { this.$refs.comment.focus() }, 100);
+      if (val) setTimeout(() => {
+        this.$refs.comment.focus()
+      }, 100);
     }
   },
 
@@ -199,13 +212,13 @@ export default {
       return this.chordsList.length >= 4;
     },
 
-		chordsList() {
-			let chords = this.song.details?.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
-			if (chords.length === 2) {
-				chords = [chords[0], chords[0], chords[1], chords[1]];
-			}
-			return chords;
-		},
+    chordsList() {
+      let chords = this.song.details?.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
+      if (chords.length === 2) {
+        chords = [chords[0], chords[0], chords[1], chords[1]];
+      }
+      return chords;
+    },
 
     safeUrl() {
       return this.song.url.replace(/[\/\.]/g, '_');
@@ -216,10 +229,10 @@ export default {
     },
 
     transposeLevel: {
-      get(){
+      get() {
         return this.$store.state.transposeLevel;
       },
-      set(val){
+      set(val) {
         this.$store.commit('transposeLevel', val);
       },
     },
@@ -227,7 +240,7 @@ export default {
     genres() {
       if (!this.song.tags) return [];
       let genres = this.song.tags.map(tag => {
-        if(tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
+        if (tag.indexOf('жанр:') === 0) return tag.replace('жанр: ', '');
       });
       genres = genres.filter((genre, pos, arr) => {
         return genre;
@@ -267,14 +280,14 @@ export default {
       const lines = textFixed.split("\n").map(line => {
         if (!line.match(/[а-яА-Я]/)) {
           if (!line.trim()) {
-            return { type: "hr", data: '' };
+            return {type: "hr", data: ''};
           }
           // find something like chords in line
           if (line.match(/[A-H]{1}#{0,1}[a-z]{0,1}[0-9#]{0,1}(\s|$)/)) {
-            return { type: "chords", data: line.split(" ") };
+            return {type: "chords", data: line.split(" ")};
           }
         }
-        return { type: "text", data: line };
+        return {type: "text", data: line};
       });
 
       return lines;
@@ -285,16 +298,18 @@ export default {
     },
 
     comment: {
-      get() { return this.$store.state.comments[this.safeUrl] || ""; },
+      get() {
+        return this.$store.state.comments[this.safeUrl] || "";
+      },
       set(val) {
-        this.$store.dispatch('addComment', { url: this.safeUrl, comment: val })
+        this.$store.dispatch('addComment', {url: this.safeUrl, comment: val})
       }
     }
   },
 
   methods: {
     changeFilter(name, value) {
-      this.$store.dispatch("changeFilter", { name, value });
+      this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
     },
 
@@ -308,13 +323,13 @@ export default {
       }
     },
 
-    copyText(){
+    copyText() {
       copy(this.song.text);
     },
 
     addShows(count) {
       this.shows = this.shows + count;
-      this.$store.dispatch('setShow', { url: this.safeUrl, shows: this.shows });
+      this.$store.dispatch('setShow', {url: this.safeUrl, shows: this.shows});
     }
   },
 

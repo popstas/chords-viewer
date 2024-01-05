@@ -1,6 +1,7 @@
 <template>
   <div class="profile">
-    <a class="profile-logout" v-if="user" title="Click to logout" @click.prevent="logout" href="#" v-html="user.email"></a>
+    <a class="profile-logout" v-if="user" title="Click to logout" @click.prevent="logout" href="#"
+       v-html="user.email"></a>
     <a class="profile-login" v-if="isLogin" href="/login">Login</a>
   </div>
 </template>
@@ -16,6 +17,7 @@
     color: var(--link);
   }
 }
+
 .profile-avatar {
   width: 32px;
   height: 32px;
@@ -24,6 +26,7 @@
 
 <script>
 import firebase from "firebase";
+
 export default {
   data() {
     return {
