@@ -672,7 +672,7 @@ export default {
 				duration: totalBeats * beatDuration * repeats,
 			};
 
-			const duration = this.pianoSustain ? 2 : 0.5;
+      const duration = 0.3;
 
 			// build piano song with style
 
