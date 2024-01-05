@@ -14,14 +14,6 @@
 					@click="toggle"
 				>{{ stopped ? 'Play' : 'Stop' }}</el-button>
 				{{ playDelay }}
-				<div v-if="isPianoInDrums">
-					octave:
-					<el-radio-group  v-model="pianoPitchOffset" size="mini">
-						<el-radio-button :label="-12">-1</el-radio-button>
-						<el-radio-button :label="0">0</el-radio-button>
-						<el-radio-button :label="+12">+1</el-radio-button>
-					</el-radio-group>
-				</div>
 			</el-col>
 			<el-col :span="4" class="beat__rever">
 				<el-checkbox v-model="reverCurrent">rever</el-checkbox>
@@ -30,12 +22,26 @@
 				<el-slider v-model="bpmCurrent" :min="bpmMin" :max="bpmMax"></el-slider>
 			</el-col>
 		</el-row>
+
+		<div style="text-align: right" v-if="isPianoInDrums || pianoAllowed">
+			octave:
+			<el-radio-group  v-model="pianoPitchOffset" size="mini">
+				<el-radio-button :label="-12">-2</el-radio-button>
+				<el-radio-button :label="0">-1</el-radio-button>
+				<el-radio-button :label="12">0</el-radio-button>
+				<el-radio-button :label="24">+1</el-radio-button>
+				<el-radio-button :label="36">+2</el-radio-button>
+				<!-- <el-radio-button :label="48">+3</el-radio-button> -->
+			</el-radio-group>
+		</div>
+
 		<el-row v-if="pianoAllowed" class="piano" :gutter="20">
 			<el-col :span="24" class="beat__left">
 				<el-checkbox v-model="pianoCurrent">piano</el-checkbox>
 				<el-radio-group v-model="pianoInstrument" size="mini">
 					<el-radio-button v-for="el of pianoInstruments" :key="el.id" :label="el.id">{{ el.label }}</el-radio-button>
 				</el-radio-group>
+				<el-checkbox v-model="pianoSustain">sustain</el-checkbox>
 				<br />
 				slow:
 				<el-radio-group  v-model="chordBeats" size="mini">
@@ -43,6 +49,7 @@
 					<el-radio-button title="4" label="4">4</el-radio-button>
 					<el-radio-button title="8" label="8">8</el-radio-button>
 				</el-radio-group>
+				<br />
 
 				style:
 				<el-radio-group  v-model="pianoStyle" size="mini">
@@ -57,6 +64,7 @@
 					<el-radio-button class="piano-style-button" title="flat-full" label="flat-full">flat-full</el-radio-button>
 					<!-- <el-radio-button title="test" label="test">test</el-radio-button> -->
 				</el-radio-group>
+				<!-- <el-slider v-model="pianoVolume" :min="0" :max="1" :step="0.1"></el-slider> -->
 			</el-col>
 		</el-row>
 		<div v-if="error">{{ error }}</div>
@@ -99,6 +107,8 @@ import "../assets/instruments/accordion.js";
 import "../assets/instruments/vocal.js";
 // import "../assets/instruments/piano1.js";
 
+const debug = true;
+
 const bpmDefault = 100;
 const pianoInstrumentsMap = {
 	'piano': '_tone_0000_JCLive_sf2_file',
@@ -111,15 +121,21 @@ const chordNotesMap = {
 	'E7': [40, 44, 47], // [40, 44, 47, 50],
 	'Em': [40, 43, 47],
 	'Em7': [40, 43, 47], // [40, 43, 47, 50],
-	'C': [36, 40, 43],
+	'C': [48, 52, 55], // [36, 40, 43]
 	'C5': [36, 40, 43], // [36, 43],
+	'C#7': [37, 41, 44], // [37, 41, 44, 47],
 	'Cm': [36, 39, 43],
+	'C#m': [37, 40, 44],
 	'Cmaj': [36, 40, 43], // [36, 40, 43, 47]
 	'Cmaj7': [36, 40, 43], // [36, 40, 43, 47]
 	'C#': [37, 41, 44],
 	'D': [38, 42, 45],
+	'Dsus2': [38, 42, 45],
+	'D#': [39, 43, 46],
 	'D5': [38, 42, 45], // [38, 45]
-	'Dm': [38, 41, 45],
+	'Dm': [50, 53, 57], // [38, 41, 45],
+	'Dm7': [50, 53, 57], // [50, 53, 57, 60],
+	'D#m': [39, 42, 46],
 	'Hm': [35, 38, 42],
 	'Bm': [35, 38, 42],
 	'H': [35, 39, 42], // [47, 51, 54],
@@ -138,17 +154,15 @@ const chordNotesMap = {
 	'F5': [41, 45, 48], // [41, 48],
 	'F#': [42, 46, 49],
 	'A': [45, 49, 52],
+	'A7': [45, 49, 52], // [45, 49, 52, 55]
 	'A5': [45, 49, 52], // [45, 52],
 	'Am': [45, 48, 52],
 	'Am7': [45, 48, 52], // [45, 48, 52, 55],
 	'A#': [46, 50, 53],
 	// дальше не точно
-	'D#m': [39, 42, 46],
-	'C#m': [37, 40, 44],
 	'F#m': [42, 45, 49],
 	'G#m': [44, 47, 51],
 	'A#m': [46, 49, 53],
-	'D#': [51, 54, 58],
 };
 const instrDrumsMap = {
   33: '_drum_35_0_JCLive_sf2_file',
@@ -198,11 +212,13 @@ export default {
 			pianoInstrument: "_tone_0000_JCLive_sf2_file",
 			pianoCurrent: this.piano,
 			pianoStyle: "12312312",
+			pianoVolume: 0.2,
 			chordBeats: 4,
 			error: '',
 			songDrums: null,
 			songPiano: null,
-			pianoPitchOffset: -12,
+			pianoPitchOffset: 12,
+			pianoSustain: false,
 			forcePlay: true,
 			playStartTime: 0, // TODO: remove
 			playDelay: '', // TODO: remove
@@ -606,7 +622,7 @@ export default {
 				duration: totalBeats * beatDuration * repeats,
 			};
 
-			const duration = 0.5;
+			const duration = this.pianoSustain ? 2 : 0.5;
 
 			// build piano song with style
 
@@ -1037,7 +1053,7 @@ export default {
 							console.log('track.notes[i].when: ', track.notes[i].when);
 							continue;
 						}
-						var duration = track.notes[i].duration;
+						let duration = track.notes[i].duration;
 						if (duration > 3) {
 							duration = 3;
 						}
@@ -1065,13 +1081,13 @@ export default {
 						}
 
 						// var v = track.volume / 7;
-						var v = track.volume;
+						var v = isDrums ? track.volume : this.pianoVolume;
 						// console.log('instr: ', instr);
-						// console.log('pitch: ', pitch);
+						if (debug && !isDrums) console.log('pitch: ', pitch);
 
 						if (!this.playDelay) {
 							this.playDelay = Date.now() - this.playStartTime;
-							console.log('Delay before send first note: ', this.playDelay);
+							// console.log('Delay before send first note: ', this.playDelay);
 						}
 						player.queueWaveTable(audioContext, input, window[instr], when, pitch, duration, v, track.notes[i].slides);
 					}
