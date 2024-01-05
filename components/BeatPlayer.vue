@@ -5,7 +5,7 @@
 		@shortkey="shortkey"
 	>
 		<el-row :class="{beat: true, beat__playing: !stopped}" :gutter="20">
-			<el-col :span="14" class="beat__left">
+			<el-col :span="11" class="beat__left">
 				<el-button
 					:title="`${beat.name}, bpm: ${bpmCurrent}` + (pianoCurrent ? `, piano: ${this.chordsList.join(' ')}` : '')"
 					@click="play({force: true})"
@@ -15,8 +15,11 @@
 				>{{ stopped ? 'Play' : 'Stop' }}</el-button>
 				{{ playDelay }}
 			</el-col>
-			<el-col :span="4" class="beat__rever">
-				<el-checkbox v-model="reverCurrent">rever</el-checkbox>
+			<el-col :span="3" class="beat__rever">
+        <el-checkbox-button class="beat__checkbutton" v-model="reverCurrent">rever</el-checkbox-button>
+			</el-col>
+			<el-col :span="4" class="beat__bpm">
+				<BPMMeter :bpm="bpmCurrent" @change="(bpm) => bpmCurrent = bpm"></BPMMeter>
 			</el-col>
 			<el-col :span="6" class="beat__right">
 				<el-slider v-model="bpmCurrent" :min="bpmMin" :max="bpmMax"></el-slider>
@@ -93,6 +96,21 @@
 	border-left: 1;
 	text-align: center;
 }
+.beat__checkbutton {
+  .el-checkbox-button__inner {
+    padding: 3px 6px;
+    border-radius: 4px !important;
+    border: 1px solid var(--border) !important;
+    font-weight: normal !important;
+    color: var(--color) !important;
+  }
+  &.is-checked .el-checkbox-button__inner {
+    background-color: transparent !important;
+    border-color: var(--border-hover) !important;
+    color: var(--color) !important;
+    box-shadow: none;
+  }
+}
 </style>
 
 <script>
@@ -105,7 +123,7 @@ import "../assets/instruments/drums0.js";
 import "../assets/instruments/piano0.js";
 import "../assets/instruments/accordion.js";
 import "../assets/instruments/vocal.js";
-// import "../assets/instruments/piano1.js";
+import BPMMeter from "@/components/BPMMeter.vue";
 
 const debug = true;
 
@@ -194,6 +212,7 @@ const instrDrumsMap = {
 };
 
 export default {
+  components: {BPMMeter},
   props: ["beat", "name", "rever", "piano", "chords", "bpmForce"],
   data() {
     return {
