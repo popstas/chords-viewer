@@ -276,8 +276,20 @@ export default {
     },
 
     onDecode(url) {
+      try {
+        const res = url.match(/song_num=(\d+)/);
+        if (res) {
+          const song_num = parseInt(res[1]);
+          const song = this.$store.state.songs[song_num];
+          if (song) this.$store.dispatch('changeSong', song.url);
+        }
+      }
+      catch(e) {
+        console.log('unknown qrcode format: ');
+        console.log('e: ', e);
+        return;
+      }
       this.showQrCode = false;
-      this.$store.dispatch('changeSong', url);
     },
   },
 

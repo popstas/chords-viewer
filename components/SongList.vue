@@ -124,6 +124,7 @@ export default {
         }
       }
       const query = {...this.$router.history.current.query};
+      if (query.song_num !== undefined) delete(query.song_num);
       if (val.url) query.url = val.url;
       else delete query.url;
       // const query = val.url ? {url: val.url} : {};
@@ -181,6 +182,12 @@ export default {
     // get url with filtered songs, read from get query ?q=...
     if (this.$route.query["q"]) {
       this.$store.state.filter.q = this.$route.query["q"];
+    }
+
+    if (this.$route.query["song_num"]) {
+      const num = parseInt(this.$route.query["song_num"]);
+      const song = this.$store.state.songs[num];
+      if (song) this.changeSong(song.url);
     }
 
     /*this.$router.afterEach((to, from) => {

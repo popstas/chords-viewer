@@ -11,7 +11,7 @@
         <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
 
         <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
-          <qr-code :size="340" :text="$store.state.activeSong.url"></qr-code>
+          <qr-code :size="340" :text="activeSongQrCode"></qr-code>
         </div>
         <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link" @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
@@ -349,6 +349,10 @@ export default {
       return this.$store.state.toolbarHidden;
     },
 
+    activeSongQrCode() {
+      return `${window.location.origin}/?song_num=${this.$store.getters.activeSongNum}`;
+    },
+
     artistsSort: {
       get() {
         return this.$store.state.artistsSort;
@@ -388,7 +392,7 @@ export default {
 
     playlistCurrent() {
       return this.$store.state.playlistCurrent;
-    }
+    },
   },
 
   watch: {

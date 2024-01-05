@@ -92,6 +92,11 @@ export const getters = {
     return title;
   },
 
+  activeSongNum(state) {
+    if (!state.activeSong.url) return -1;
+    return state.songs.findIndex(song => song.url == state.activeSong.url);
+  },
+
   replacedChord(state) {
     return (chord) => chord
     .replace(/H(\s)/, /B$1/)
