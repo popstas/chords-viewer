@@ -32,7 +32,7 @@
         <div v-if="isBeat" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :chords="song.details.chords"></BeatPlayer>
         </div>
-        <div v-if="!isBeat && isPiano" class="song-midi">
+        <div v-if="!isBeat && isPianoAllowed" class="song-midi">
           <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true" :chords="song.details.chords"></BeatPlayer>
         </div>
 
@@ -195,6 +195,9 @@ export default {
     isPiano() {
       return this.chordsList.length === 4;
     },
+    isPianoAllowed() {
+      return this.chordsList.length >= 4;
+    },
 
 		chordsList() {
 			let chords = this.song.details?.chords?.replace(/\(.*?\)/g, '').trim().split(' ') || [];
@@ -252,7 +255,15 @@ export default {
 
     textLines() {
       if (!this.song.text) return "";
-      const textFixed = this.song.text.replace(/(\[.*?\]:?)/g, '$1\n'); // [куплет 1]:
+      // const textFixed = this.song.text;
+      const textFixed = this.song.text
+        .replace(/(\[.*?\][: ])(.+)/g, '$1\n$2') // [куплет 1]:Am Em
+        .replace(/(\d+) раза?/g, 'x$1') // 2 раза -> x2
+        .replace(/(\d+)р?/g, 'x$1') // 2 раза -> x2
+        .replace(/Вступление:/g, 'Intro:')
+        .replace(/вст./g, 'Intro')
+        .replace(/Кода:/g, 'Coda:')
+        .replace(/Проигрыш/g, 'Coda')
       const lines = textFixed.split("\n").map(line => {
         if (!line.match(/[а-яА-Я]/)) {
           if (!line.trim()) {

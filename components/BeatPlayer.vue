@@ -78,9 +78,16 @@ import MIDIFile from '../MIDIFile.js';
 import beats from "~/assets/beats.json";
 import "../assets/instruments/drums0.js";
 import "../assets/instruments/piano0.js";
+import "../assets/instruments/accordion.js";
+import "../assets/instruments/vocal.js";
 // import "../assets/instruments/piano1.js";
 
 const bpmDefault = 100;
+const pianoInstrumentsMap = {
+	'piano': '_tone_0000_JCLive_sf2_file',
+	'accordion': '_tone_0210_Aspirin_sf2_file',
+	'vocal': '_tone_0520_Chaos_sf2_file',
+};
 const chordNotesMap = {
 	'E': [40, 44, 47],
 	'E5': [40, 44, 47], // [40, 47],
@@ -171,6 +178,7 @@ export default {
 			bpmCurrent: 0,
 			reverCurrent: false,
 			pianoAllowed: false,
+			pianoInstrument: "_tone_0000_JCLive_sf2_file",
 			pianoCurrent: this.piano,
 			pianoStyle: "12312312",
 			chordBeats: 4,
@@ -232,6 +240,13 @@ export default {
 			}
 			// console.log('chords: ', chords);
 			return chords;
+		},
+		pianoInstruments() {
+			const instruments = [];
+			for (let instr in pianoInstrumentsMap) {
+				instruments.push({id: pianoInstrumentsMap[instr], label: instr});
+			}
+			return instruments;
 		},
   },
 	watch: {
@@ -527,7 +542,9 @@ export default {
 					info: {
 						title: "Acoustic Grand Piano: Piano",
 						url: "https://surikov.github.io/webaudiofontdata/sound/0000_JCLive_sf2_file.js",
-						variable: "_tone_0000_JCLive_sf2_file",
+						// variable: "_tone_0000_JCLive_sf2_file",
+						// variable: "_tone_0210_Aspirin_sf2_file", // MIDI: 21. Accordion, https://surikov.github.io/webaudiofontdata/sound/0210_Aspirin_sf2_file.html
+						variable: this.pianoInstrument,
 						// variable: "_tone_0000_Aspirin_sf2_file", // piano1
 					},
 					notes: [],
@@ -775,6 +792,15 @@ export default {
 								instr = instrDrumsMap[pitch] || track.info.variable;
 							}
 						}
+						else {
+							// piano pitch
+							pitch = pitch + this.pianoPitchOffset;
+							// replace instrument to this.pianoInstrument on the fly
+							instr = instr.replace(track.info.variable, this.pianoInstrument);
+
+							if (this.pianoSustain) duration = duration * 2;
+						}
+
 						// var v = track.volume / 7;
 						var v = track.volume;
 						// console.log('instr: ', instr);

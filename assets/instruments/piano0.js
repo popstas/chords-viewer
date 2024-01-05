@@ -135,7 +135,7 @@ window._tone_0000_JCLive_sf2_file={
 			,anchor:0.01000000
 			//_tone.Gd_pno_A2_R_
 		}
-		/* ,{
+		,{
 			midi:0
 			,originalPitch:6100
 			,keyRangeLow:60
@@ -255,7 +255,7 @@ window._tone_0000_JCLive_sf2_file={
 			,anchor:0.02458050
 			//_tone.Gd_pno_F5_R_
 		}
-		,{
+		/*,{
 			midi:0
 			,originalPitch:9500
 			,keyRangeLow:94
