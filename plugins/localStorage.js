@@ -12,6 +12,7 @@ export default ({store}) => {
       "autoScrollSpeed",
       "instrument",
       "artistsSort",
+      "readerMode",
       "showImages",
       "showBadges",
       "webhookShow"

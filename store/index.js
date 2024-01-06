@@ -102,6 +102,7 @@ export const state = () => ({
   autoScrollSpeed: 4,
   instrument: "guitar",
   artistsSort: "name",
+  readerMode: false,
   showImages: false,
   showBadges: false,
   showShows: true,
@@ -225,6 +226,9 @@ export const mutations = {
   },
   artistsSort(state, newValue) {
     state.artistsSort = newValue;
+  },
+  readerMode(state, newValue) {
+    state.readerMode = newValue;
   },
   showImages(state, newValue) {
     state.showImages = newValue;

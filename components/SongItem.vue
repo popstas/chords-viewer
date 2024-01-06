@@ -5,8 +5,8 @@
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
 
-      <icon v-if="isBeat && $store.state.filter.beats !== '1'" style="margin-left: 5px" name="drum"></icon>
-      <icon v-if="isPiano" style="margin-left: 5px" name="piano"></icon>
+      <icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" name="drum"></icon>
+      <icon v-if="isPiano && !$store.state.readerMode" style="margin-left: 5px" name="piano"></icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
@@ -22,12 +22,15 @@
     <div role="tabpanel" class="el-collapse-item__wrap" v-if="active">
       <div class="el-collapse-item__content">
         <div class="song-item__content">
-          <div v-if="active" class="song-transpose">
+          <div v-if="active && !$store.state.readerMode" class="song-transpose">
             <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
             <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
             <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
             <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
             <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+            <FontSize style="float: right"></FontSize>
+          </div>
+          <div v-else>
             <FontSize style="float: right"></FontSize>
           </div>
 
@@ -43,7 +46,7 @@
 
           <div v-if="song.text" class="song-text">
             <template class="song-text__line" v-for="(line, lineKey) in textLines">
-              <div v-if="line.type === 'chords'"
+              <div v-if="line.type === 'chords' && !$store.state.readerMode"
                    :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type === 'text'}"
                    :key="lineKey">
                 <template v-for="(chord, chordKey) in line.data">
@@ -270,7 +273,7 @@ export default {
       const textFixed = this.song.text
         .replace(/(\[.*?][: ])(.+)/g, '$1\n$2') // [куплет 1]:Am Em
         .replace(/(\d+) раза?/g, 'x$1') // 2 раза -> x2
-        .replace(/(\d+)р?/g, 'x$1') // 2 раза -> x2
+        .replace(/(\d+)р/g, 'x$1') // 2 раза -> x2
         .replace(/Вступление:/g, 'Intro:')
         .replace(/вст./g, 'Intro')
         .replace(/Кода:/g, 'Coda:')

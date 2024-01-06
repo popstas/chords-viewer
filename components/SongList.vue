@@ -216,7 +216,10 @@ export default {
     if (this.$route.query["song_num"]) {
       const num = parseInt(this.$route.query["song_num"]);
       const song = this.$store.state.songs[num];
-      if (song) this.changeSong(song.url);
+      if (song) {
+        this.changeSong(song.url);
+        this.$store.commit('readerMode', true);
+      }
     }
 
     /*this.$router.afterEach((to, from) => {

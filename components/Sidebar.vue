@@ -12,6 +12,9 @@
     <el-row>
       <el-switch v-model="darkMode" active-text="dark mode"></el-switch>
     </el-row>
+    <el-row>
+      <el-switch v-model="readerMode" active-text="text only"></el-switch>
+    </el-row>
     <el-row style="text-align:center">
       <label>font size:</label>
       <FontSize></FontSize>
@@ -158,7 +161,16 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    readerMode: {
+      get() {
+        return this.$store.state.readerMode;
+      },
+      set(val) {
+        this.$store.commit("readerMode", val);
+      }
+    },
+  },
 
   watch: {
     withChords(val) {

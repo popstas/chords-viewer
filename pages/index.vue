@@ -4,7 +4,7 @@
       <div class="search-total">total: {{ count }}</div>
       <Toolbar @scrollToLast="scrollTo(lastOffset)"></Toolbar>
     </div>
-    <ChordsFloating></ChordsFloating>
+    <ChordsFloating v-if="!$store.state.readerMode"></ChordsFloating>
     <PlayerFloating></PlayerFloating>
     <div v-if="!activeSong.url && isTest">
       <!-- <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer> -->

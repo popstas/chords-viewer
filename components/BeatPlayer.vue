@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!$store.state.readerMode"
     class="beat-player"
     v-shortkey="{a:['a'], aRus: ['ф'], b:['b'], bRus: ['и'], c:['c'], cRus: ['с'], d:['d'], dRus: ['в'], pgUp: ['pageup'], pgDn: ['pagedown']}"
     @shortkey="shortkey"
