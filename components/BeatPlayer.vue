@@ -5,6 +5,7 @@
     v-shortkey="{a:['a'], aRus: ['ф'], b:['b'], bRus: ['и'], c:['c'], cRus: ['с'], d:['d'], dRus: ['в'], pgUp: ['pageup'], pgDn: ['pagedown']}"
     @shortkey="shortkey"
   >
+    <!-- play/stop, rever, bpm -->
     <el-row :class="{beat: true, beat__playing: !stopped}" :gutter="20">
       <el-col :span="11" class="beat__left">
         <el-button
@@ -16,7 +17,7 @@
           @click="toggle"
         >{{ stopped ? 'Play' : 'Stop' }}
         </el-button>
-        {{ playDelay }}
+        <!--{{ playDelay }}-->
       </el-col>
       <el-col :span="3" class="beat__rever">
         <el-checkbox-button class="beat__checkbutton" v-model="reverCurrent">rever</el-checkbox-button>
@@ -29,6 +30,7 @@
       </el-col>
     </el-row>
 
+    <!-- piano, octave -->
     <el-row class="beat__octave" v-if="isPianoInDrums || pianoAllowed">
       <el-col :span="8" class="beat__octave-left">
         <el-checkbox-button class="beat__checkbutton" v-model="pianoCurrent" v-if="pianoAllowed">piano
@@ -48,6 +50,7 @@
       </el-col>
     </el-row>
 
+    <!-- piano speed, instrument -->
     <el-row v-if="pianoAllowed" class="beat__piano" :gutter="20">
       <el-col :span="24" class="beat__left">
         <!--<span class="beat__label">slow:</span>-->
@@ -60,9 +63,39 @@
         <el-radio-group v-model="pianoInstrument" size="mini">
           <el-radio-button v-for="el of pianoInstruments" :key="el.id" :label="el.id">{{ el.label }}</el-radio-button>
         </el-radio-group>
+        <el-checkbox-button class="beat__checkbutton" v-model="customInstrumentSelect">...</el-checkbox-button>
       </el-col>
     </el-row>
 
+    <!-- dynamic custom instrument select -->
+    <el-row v-if="customInstrumentSelect" class="beat__piano beat__custom-instrument" :gutter="20">
+      <el-col :span="24" class="beat__left">
+        <span class="beat__label">custom instrument:</span>
+        <el-input-number v-model="customInstrumentNum" :min="0" :max="1395" size="mini"></el-input-number>
+        <br/>
+        <span class="beat__label" style="display: inline-block; width: 22px">all:</span>
+        <el-select style="width: 324px; margin: 3px 0;" v-model="customInstrumentNum" placeholder="Select">
+          <el-option
+            v-for="item in customInstruments"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <br/>
+        <span class="beat__label" style="display: inline-block; width: 22px">best:&nbsp;</span>
+        <el-select style="width: 324px" v-model="customInstrumentNum" placeholder="Select">
+          <el-option
+            v-for="item in customInstrumentsPicked"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+    </el-row>
+
+    <!-- piano style -->
     <el-row v-if="pianoAllowed" class="beat__piano" :gutter="20">
       <el-col :span="24" class="beat__left">
         <span class="beat__label">style:</span>
@@ -218,6 +251,11 @@ export default {
       reverCurrent: false,
       pianoAllowed: false,
       pianoInstrument: "_tone_0000_JCLive_sf2_file",
+      customInstrumentSelect: true,
+      customInstrumentNum: 0,
+      customInstruments: [],
+      customInstrumentsPicked: [],
+      customInstrumentsPickedNums: [315, 320, 346],
       pianoCurrent: this.piano,
       pianoStyle: "12312312",
       pianoVolume: 0.2,
@@ -299,6 +337,10 @@ export default {
     },
     pianoStyle() {
       this.loadPiano();
+    },
+    customInstrumentNum(val) {
+      if (!val) return;
+      this.loadCustomInstrument(val);
     },
     bpmCurrent() {
       const debouncedApplyBpm = debounce((self) => {
@@ -557,6 +599,31 @@ export default {
         }, 1);
       }
       this.player.loader.waitLoad(onLoad);
+    },
+
+    loadCustomInstrument(n) {
+      const info = this.player.loader.instrumentInfo(n)
+      this.player.loader.startLoad(this.audioContext, info.url, info.variable);
+      this.player.loader.waitLoad(() => {
+        // console.log(`change instrument: ${info.title} (${info.variable})`);
+        this.pianoInstrument = info.variable;
+        // this.player.cancelQueue(this.audioContext);
+      });
+    },
+
+    buildCustomInstruments() {
+      const instruments = [];
+      for (let i = 0; i < this.player.loader.instrumentKeys().length; i++) {
+        const opt = {
+          value: i,
+          label: `${i}: ${this.player.loader.instrumentInfo(i).title}`,
+        };
+        if (this.customInstrumentsPickedNums.includes(i)) {
+          this.customInstrumentsPicked.push(opt);
+        }
+        instruments.push(opt);
+      }
+      return instruments;
     },
 
     base64ToArrayBuffer(base64) {
@@ -1052,6 +1119,7 @@ export default {
       sampleRate: 44100,
     });
     this.player = new WebAudioFontPlayer();
+    this.customInstruments = this.buildCustomInstruments();
 
     // read piano params from url
     if (this.pianoAllowed) {
