@@ -136,7 +136,6 @@
 import FontSize from "~/components/FontSize";
 import "vue-awesome/icons/brands/github";
 import "vue-awesome/icons/calendar-alt";
-// import Icon from "vue-awesome/components/Icon";
 
 import NoSleep from "nosleep.js";
 
@@ -147,28 +146,64 @@ export default {
 
   data() {
     return {
+      // filters
       withChords: -1,
       withTexts: -1,
       comments: -1,
       beats: -1,
       sortByDate: false,
       sortByShows: false,
-      noSleep: false,
-      darkMode: false,
-      showImages: false,
-      showBadges: false,
-      showShows: true,
     };
   },
 
   computed: {
+    noSleep: {
+      get() {
+        return this.$store.state.noSleep;
+      },
+      set(val) {
+        this.$store.commit("noSleep", val);
+      },
+    },
+    darkMode: {
+      get() {
+        return this.$store.state.darkMode;
+      },
+      set(val) {
+        this.$store.commit("darkMode", val);
+      },
+    },
     readerMode: {
       get() {
         return this.$store.state.readerMode;
       },
       set(val) {
         this.$store.commit("readerMode", val);
-      }
+      },
+    },
+    showImages: {
+      get() {
+        return this.$store.state.showImages;
+      },
+      set(val) {
+        this.$store.commit("showImages", val);
+      },
+    },
+    showBadges: {
+      get() {
+        return this.$store.state.showBadges;
+      },
+      set(val) {
+        this.$store.commit("showBadges", val);
+      },
+    },
+    showShows: {
+      get() {
+        return this.$store.state.showShows;
+      },
+      set(val) {
+        this.$store.commit("showShows", val);
+      },
     },
   },
 
@@ -193,22 +228,7 @@ export default {
     },
 
     noSleep(val) {
-      this.$store.commit("setNoSleep", val);
       val ? nosleep.enable() : nosleep.disable();
-    },
-
-    darkMode(val) {
-      this.$store.commit("darkMode", val);
-    },
-
-    showImages(val) {
-      this.$store.commit("showImages", val);
-    },
-    showBadges(val) {
-      this.$store.commit("showBadges", val);
-    },
-    showShows(val) {
-      this.$store.commit("showShows", val);
     },
   },
 
@@ -223,12 +243,6 @@ export default {
       this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
     },
-  },
-
-  created() {
-    this.showImages = this.$store.state.showImages;
-    this.noSleep = this.$store.state.noSleep;
-    this.darkMode = this.$store.state.darkMode;
   },
 
   mounted() {

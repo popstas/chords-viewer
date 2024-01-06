@@ -63,30 +63,30 @@
         <el-radio-group v-model="pianoInstrument" size="mini">
           <el-radio-button v-for="el of pianoInstruments" :key="el.id" :label="el.id">{{ el.label }}</el-radio-button>
         </el-radio-group>
-        <el-checkbox-button class="beat__checkbutton" v-model="customInstrumentSelect">...</el-checkbox-button>
+        <el-checkbox-button class="beat__checkbutton" v-model="beatCustomInstruments">...</el-checkbox-button>
       </el-col>
     </el-row>
 
     <!-- dynamic custom instrument select -->
-    <el-row v-if="customInstrumentSelect" class="beat__piano beat__custom-instrument" :gutter="20">
+    <el-row v-if="beatCustomInstruments" class="beat__piano beat__custom-instrument" :gutter="20">
       <el-col :span="24" class="beat__left">
         <span class="beat__label">custom instrument:</span>
-        <el-input-number v-model="customInstrumentNum" :min="0" :max="1395" size="mini"></el-input-number>
+        <el-input-number v-model="customInstrumentNum" :min="0" :max="customInstruments.length - 1" size="mini"></el-input-number>
         <br/>
-        <span class="beat__label" style="display: inline-block; width: 22px">all:</span>
-        <el-select style="width: 324px; margin: 3px 0;" v-model="customInstrumentNum" placeholder="Select">
+        <span class="beat__label" style="display: inline-block; width: 22px">best:&nbsp;</span>
+        <el-select style="width: 324px" v-model="customInstrumentNum" placeholder="Select">
           <el-option
-            v-for="item in customInstruments"
+            v-for="item in customInstrumentsPicked"
             :key="item.value"
             :label="item.label"
             :value="item.value">
           </el-option>
         </el-select>
         <br/>
-        <span class="beat__label" style="display: inline-block; width: 22px">best:&nbsp;</span>
-        <el-select style="width: 324px" v-model="customInstrumentNum" placeholder="Select">
+        <span class="beat__label" style="display: inline-block; width: 22px">all:</span>
+        <el-select style="width: 324px; margin: 3px 0;" v-model="customInstrumentNum" placeholder="Select">
           <el-option
-            v-for="item in customInstrumentsPicked"
+            v-for="item in customInstruments"
             :key="item.value"
             :label="item.label"
             :value="item.value">
@@ -251,11 +251,10 @@ export default {
       reverCurrent: false,
       pianoAllowed: false,
       pianoInstrument: "_tone_0000_JCLive_sf2_file",
-      customInstrumentSelect: true,
       customInstrumentNum: 0,
       customInstruments: [],
       customInstrumentsPicked: [],
-      customInstrumentsPickedNums: [315, 320, 346],
+      customInstrumentsPickedNums: [161, 193, 263, 288, 310, 315, 321, 346, 353, 370, 483, 589, 1158, 1196],
       pianoCurrent: this.piano,
       pianoStyle: "12312312",
       pianoVolume: 0.2,
@@ -326,6 +325,14 @@ export default {
         instruments.push({id: pianoInstrumentsMap[instr], label: instr});
       }
       return instruments;
+    },
+    beatCustomInstruments: {
+      get() {
+        return this.$store.state.beatCustomInstruments;
+      },
+      set(value) {
+        this.$store.commit('beatCustomInstruments', value);
+      },
     },
   },
   watch: {

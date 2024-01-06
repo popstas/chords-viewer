@@ -96,6 +96,7 @@ export const state = () => ({
   user: false,
   lastOffset: 0,
   beatFirstPlay: true,
+  beatCustomInstruments: false,
 
   // settings
   fontSize: 2,
@@ -255,7 +256,7 @@ export const mutations = {
   setToolbarHidden(state, newValue) {
     state.toolbarHidden = newValue;
   },
-  setNoSleep(state, newValue) {
+  noSleep(state, newValue) {
     state.noSleep = newValue;
   },
   darkMode(state, newValue) {
@@ -288,6 +289,9 @@ export const mutations = {
   },
   beatFirstPlay(state, newValue) {
     state.beatFirstPlay = newValue;
+  },
+  beatCustomInstruments(state, newValue) {
+    state.beatCustomInstruments = newValue;
   },
 };
 
