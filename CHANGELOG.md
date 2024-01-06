@@ -1,3 +1,26 @@
+# [4.3.0](https://github.com/popstas/chords-viewer/compare/v4.2.0...v4.3.0) (2024-01-06)
+
+
+### Bug Fixes
+
+* change default font size 1 -> 2 ([205cf23](https://github.com/popstas/chords-viewer/commit/205cf237cc2abdc104433694722188a4d584f8b3))
+* first play issues with audioContext ([87f0b06](https://github.com/popstas/chords-viewer/commit/87f0b0644805955063b9d7b90651342f0edc285c))
+* hide ChordsFloating when no chords ([8c5c17b](https://github.com/popstas/chords-viewer/commit/8c5c17bb25bda8f2a28742de55f0b256f840bd04))
+* rearrange BeatPlayer controls, highlight error text, fix mobile horizontal scroll ([32f0bca](https://github.com/popstas/chords-viewer/commit/32f0bca94153ff74218202fb1d70d6bec1ee5fbf))
+* remove double sustain for some piano styles ([9e61c46](https://github.com/popstas/chords-viewer/commit/9e61c463238bff411d2d6e45d917085f3095f075))
+* revert addShow ([2a3e0fe](https://github.com/popstas/chords-viewer/commit/2a3e0fefe6baac123c3dfd4d6ec5845180371708))
+* scroll to song on first page load on mobile ([bec3a3c](https://github.com/popstas/chords-viewer/commit/bec3a3c9c152d71533d575ab5692f75b7f621db0))
+* smaller floating chords ([8d08d71](https://github.com/popstas/chords-viewer/commit/8d08d7166b5024442e6720f7d0ef35f1f625c0b3))
+* sustain default enabled, affects to piano in drums ([84da02f](https://github.com/popstas/chords-viewer/commit/84da02f3a5444e1c1b544a3769d3c52ee7d868c2))
+
+
+### Features
+
+* BPMMeter, tune BPM with taps ([ac6ca88](https://github.com/popstas/chords-viewer/commit/ac6ca889429881036a10470f80457bafe8985c27))
+* reader mode, hide all except text ([9ede90a](https://github.com/popstas/chords-viewer/commit/9ede90a63be46df51c05e2030c45c64f3d28f9d7))
+
+
+
 # [4.2.0](https://github.com/popstas/chords-viewer/compare/v4.1.0...v4.2.0) (2024-01-05)
 
 
