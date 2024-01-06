@@ -1068,6 +1068,7 @@ export default {
               if (pitch >= 60) {
                 // transpose depends of pianoPitchOffset
                 pitch = pitch + this.pianoPitchOffset;
+                instr = instr.replace(track.info.variable, this.pianoInstrument);
                 if (this.pianoSustain) duration = duration * 2;
               }
               // drums, set instr mapped by notes
