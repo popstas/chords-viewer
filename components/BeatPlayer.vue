@@ -69,10 +69,11 @@
     </el-row>
 
     <!-- dynamic custom instrument select -->
-    <el-row v-if="beatCustomInstruments" class="beat__piano beat__custom-instrument" :gutter="20">
+    <el-row v-if="pianoAllowed && beatCustomInstruments" class="beat__piano beat__custom-instrument" :gutter="20">
       <el-col :span="24" class="beat__left">
         <span class="beat__label">custom instrument:</span>
-        <el-input-number v-model="customInstrumentNum" :min="0" :max="customInstruments.length - 1" size="mini"></el-input-number>
+        <el-input-number v-model="customInstrumentNum" :min="0" :max="customInstruments.length - 1"
+                         size="mini"></el-input-number>
         <br/>
         <span class="beat__label" style="display: inline-block; width: 22px">best:&nbsp;</span>
         <el-select style="width: 324px" v-model="customInstrumentNum" placeholder="Select">
@@ -115,6 +116,18 @@
         <!-- <el-slider v-model="pianoVolume" :min="0" :max="1" :step="0.1"></el-slider> -->
       </el-col>
     </el-row>
+
+    <!-- piano presets -->
+    <el-row v-if="pianoAllowed" class="beat__presets" :gutter="20">
+      <el-col :span="24" class="beat__left">
+        <span class="beat__label">presets:</span>
+        <el-button @click="addPreset">{{ presets.length }}</el-button>
+        <el-button @click="clearPresets">x</el-button>
+        <el-button @click="() => changePreset()">&rarr;</el-button>
+        <span v-if="presets.length">current: {{ presetCurrent }}</span>
+      </el-col>
+    </el-row>
+
     <div class="beat__error" v-if="error">{{ error }}</div>
 
   </div>
@@ -154,7 +167,7 @@
   padding-top: 6px;
 }
 
-.beat__progress .el-progress-bar__inner{
+.beat__progress .el-progress-bar__inner {
   transition: none;
 }
 
@@ -262,7 +275,7 @@ export default {
       customInstrumentsPickedNums: [161, 193, 263, 288, 310, 315, 321, 346, 353, 370, 483, 589, 1158, 1196],
       pianoCurrent: this.piano,
       pianoStyle: "12312312",
-      pianoVolume: 0.2,
+      pianoVolume: 0.1,
       chordBeats: 4,
       beatProgress: 0,
       error: '',
@@ -274,6 +287,9 @@ export default {
       playStartTime: 0, // TODO: remove
       playDelay: '', // TODO: remove
       firstPlay: true,
+
+      presets: [],
+      presetCurrent: 0,
     };
   },
   computed: {
@@ -400,11 +416,50 @@ export default {
       this.bpmCurrent = bpm;
     },
     shortkey(e) {
-      if (['b', 'bRus', 'pgUp'].includes(e.srcKey)) this.play({force: true});
+      if (['b', 'bRus', 'pgUp'].includes(e.srcKey)) {
+        if (this.stopped) this.play({force: true});
+        else {
+          this.changePreset();
+        }
+      }
       if (['c', 'cRus'].includes(e.srcKey) && this.pianoAllowed) {
         this.pianoCurrent = !this.pianoCurrent;
       }
       if (['d', 'dRus', 'pgDn'].includes(e.srcKey)) this.toggle();
+    },
+    addPreset() {
+      this.presets.push({
+        pianoInstrument: this.pianoInstrument,
+        pianoStyle: this.pianoStyle,
+        pianoPitchOffset: this.pianoPitchOffset,
+      });
+    },
+    clearPresets() {
+      this.presets = [];
+    },
+    fillPresets() {
+      if (this.presets.length > 0) return;
+      this.presets.push({
+        pianoInstrument: this.pianoInstrument,
+        pianoStyle: this.pianoStyle,
+        pianoPitchOffset: this.pianoPitchOffset,
+      });
+      this.presets.push({
+        pianoInstrument: this.pianoInstrument,
+        pianoStyle: 'force_3_4',
+        pianoPitchOffset: this.pianoPitchOffset,
+      });
+    },
+    changePreset(num) {
+      if (!this.presets.length) return;
+
+      if (num !== undefined) this.presetCurrent = num;
+      else this.presetCurrent = this.presets.length > this.presetCurrent + 1 ? this.presetCurrent + 1 : 0;
+
+      const p = this.presets[this.presetCurrent];
+      this.pianoInstrument = p.pianoInstrument;
+      this.pianoStyle = p.pianoStyle;
+      this.pianoPitchOffset = p.pianoPitchOffset;
     },
     toggle() {
       if (this.stopped) this.play({force: false});
@@ -434,6 +489,9 @@ export default {
       } else {
         this.stopped = false; // immediate play only when no force
       }
+
+      this.fillPresets();
+      if (this.presets.length) this.changePreset(0);
 
       this.startLoad(this.songDrums.song || this.songPiano.song);
     },
