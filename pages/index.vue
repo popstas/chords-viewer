@@ -6,7 +6,7 @@
     </div>
     <ChordsFloating v-if="!$store.state.readerMode"></ChordsFloating>
     <PlayerFloating></PlayerFloating>
-    <div v-if="!activeSong.url && isTest">
+    <div v-if="!activeSong.url && isTest && !isMobile()">
       <!-- <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer> -->
       <details>
         <summary>all beats</summary>
@@ -78,6 +78,9 @@ export default {
     },
   },
   methods: {
+    isMobile() {
+      return screen.width <= 600;
+    },
     scrollTo(offset) {
       console.log('toolbar scrollTo: ', offset);
       this.lastOffset = offset;
