@@ -27,6 +27,7 @@
       </el-col>
       <el-col :span="6" class="beat__right">
         <el-slider v-model="bpmCurrent" :min="bpmMin" :max="bpmMax"></el-slider>
+        <el-progress class="beat__progress" :percentage="beatProgress" :show-text="false"></el-progress>
       </el-col>
     </el-row>
 
@@ -153,6 +154,10 @@
   padding-top: 6px;
 }
 
+.beat__progress .el-progress-bar__inner{
+  transition: none;
+}
+
 .beat__octave-right {
   text-align: right;
 }
@@ -259,6 +264,7 @@ export default {
       pianoStyle: "12312312",
       pianoVolume: 0.2,
       chordBeats: 4,
+      beatProgress: 0,
       error: '',
       songDrums: null,
       songPiano: null,
@@ -293,6 +299,12 @@ export default {
     bpmMax() {
       const max = this.bpm * 2;
       return this.bpmForce ? Math.max(this.bpmForce, max) : max;
+    },
+    beatDuration() {
+      return 60 / this.bpmCurrent;
+    },
+    beatCycleDuration() {
+      return this.beatDuration * this.chordBeats * 4;
     },
     highestPitch() {
       return this.songDrums?.highestNote?.pitch;
@@ -354,6 +366,8 @@ export default {
         for (const s of [self.songDrums, self.songPiano]) {
           if (!s || !s.songOrig) continue;
           s.song = self.applyBpm(s.songOrig);
+          s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
+          s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
         }
       }, 500);
       debouncedApplyBpm(this);
@@ -1001,9 +1015,8 @@ export default {
         }
 
         // fix beats, calculate beatsCount from song duration
-        s.beatDuration = 60 / this.bpmCurrent;
-        s.songBeatsCount = Math.round(s.song.duration / s.beatDuration);
-        s.songBeatsDuration = s.songBeatsCount * s.beatDuration;
+        s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
+        s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
         // console.log('Delay before first tick: ', Date.now() - this.playStartTime);
 
         this.tick(s, stepDuration);
@@ -1015,6 +1028,11 @@ export default {
         this.sendNotes(song.song, song.songStart, song.currentSongTime, song.currentSongTime + stepDuration, song.isDrums, song.active);
         song.currentSongTime = song.currentSongTime + stepDuration;
         song.nextStepTime = song.nextStepTime + stepDuration;
+
+        // beat progress
+        const beatTime = song.currentSongTime % this.beatCycleDuration;
+        const p = Math.round((beatTime / this.beatCycleDuration) * 100);
+        if (p % 3 === 0) this.beatProgress = p;
 
         // the end of the song, loop, sync
         if (song.currentSongTime > song.songBeatsDuration) {
