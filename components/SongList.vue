@@ -1,14 +1,13 @@
 <template>
   <div :class="['song-list', 'size' + this.$store.state.fontSize]">
     <el-collapse accordion @change="changeSong" :value="activeSong.url">
-      <!-- default buffer 200 cancels beat right after scroll to next song, 50 is better -->
       <DynamicScroller v-if="isMobile()"
                        class="scroller"
                        :items="filteredSongs"
                        :min-item-size="itemHeight"
                        keyField="url"
                        ref="scroller"
-                       :buffer="50"
+                       :buffer="scrollerBuffer"
       >
         <template v-slot="{ item, index, active }">
           <DynamicScrollerItem
@@ -109,6 +108,11 @@ export default {
     },
     activeSong() {
       return this.$store.state.activeSong;
+    },
+    scrollerBuffer() {
+      // default buffer 200 cancels beat right after scroll to next song, 50 is better
+      // small buffer 50 is bad for fast list scrolling
+      return this.activeSong.url ? 50 : 1000;
     },
 
     songs() {
