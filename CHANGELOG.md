@@ -1,3 +1,24 @@
+# [4.4.0](https://github.com/popstas/chords-viewer/compare/v4.3.0...v4.4.0) (2024-01-08)
+
+
+### Bug Fixes
+
+* disable test all beats on mobile ([1ee9423](https://github.com/popstas/chords-viewer/commit/1ee94235411074664899403077568edf28aa6d8c))
+* dynamic scroller buffer when song is active and when isn't ([5039ffa](https://github.com/popstas/chords-viewer/commit/5039ffa6fea8e3b5941b7adca8960da7c60d6f03))
+* global store for customInstruments opened, avoid beat stop on mobile ([c3a6a51](https://github.com/popstas/chords-viewer/commit/c3a6a51c9deb6d0ad202b36262332b388d4b2114))
+* play beat to the end when stoppen at last 25% of beat ([799b885](https://github.com/popstas/chords-viewer/commit/799b885de7af862f640a8e81e428385bf40c3525))
+* select instrument when piano in drums ([62cc11c](https://github.com/popstas/chords-viewer/commit/62cc11c720c986ccf71ce890391df8858d8de2c1))
+* smaller prerender buffer for mobile song list, for avoid beat stop ([591c12d](https://github.com/popstas/chords-viewer/commit/591c12d46c093b52a2666ae52a70996753f08744))
+
+
+### Features
+
+* beat progress bar ([2e41276](https://github.com/popstas/chords-viewer/commit/2e4127640317589b7f6b6774ec35da13d66a94ce))
+* instrument style presets for quick change while playing ([ecbbcbd](https://github.com/popstas/chords-viewer/commit/ecbbcbdf8600bca00c8dd1cad8a209e892772106))
+* select any webaudiofont instrument (online only) ([c83a374](https://github.com/popstas/chords-viewer/commit/c83a37453179675228d442eb7bafb287f60fe9bd))
+
+
+
 # [4.3.0](https://github.com/popstas/chords-viewer/compare/v4.2.0...v4.3.0) (2024-01-06)
 
 
