@@ -556,7 +556,7 @@ export default {
       if (!this.player) return;
       this.stopped = true;
       this.playDelay = '';
-      this.player.cancelQueue(this.audioContext);
+      // this.player.cancelQueue(this.audioContext);
     },
 
     listSongNotes(song, verbose = false) {
@@ -1115,7 +1115,8 @@ export default {
         }
       }
       window.requestAnimationFrame(() => {
-        if (!this.stopped) this.tick(song, stepDuration);
+				const isContinue = !this.stopped || (this.beatProgress > 75 && this.beatProgress < 99);
+        if (isContinue) this.tick(song, stepDuration);
       });
     },
     sendNotes(song, songStart, start, end, isDrums = false, active) {
