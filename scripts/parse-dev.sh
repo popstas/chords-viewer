@@ -6,4 +6,4 @@ cp chords.json ../chords-viewer/chords.json
 
 cd /d/projects/js/chords-viewer
 npm run build-beats
-npm run dev
+NODE_OPTIONS=--openssl-legacy-provider npm run dev

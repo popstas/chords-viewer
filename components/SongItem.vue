@@ -275,7 +275,7 @@ export default {
         .replace(/(\d+) раза?/g, 'x$1') // 2 раза -> x2
         .replace(/(\d+)р/g, 'x$1') // 2 раза -> x2
         .replace(/Вступление:/g, 'Intro:')
-        .replace(/вст./g, 'Intro')
+        .replace(/вст\./g, 'Intro')
         .replace(/Кода:/g, 'Coda:')
         .replace(/Проигрыш/g, 'Coda')
       return textFixed.split("\n").map(line => {
