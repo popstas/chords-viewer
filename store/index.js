@@ -8,6 +8,7 @@ import debounce from "lodash/debounce";
 export const transposeMap = [
   ['Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'],
   ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+  ['Cmaj7', 'C#maj7', 'Dmaj7', 'D#maj7', 'Emaj7', 'Fmaj7', 'F#maj7', 'Gmaj7', 'G#maj7', 'Amaj7', 'A#maj7', 'Bmaj7'],
   ['C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6'],
   ['C+7', 'C#+7', 'D+7', 'D#+7', 'E+7', 'F+7', 'F#+7', 'G+7', 'G#+7', 'A+7', 'A#+7', 'B+7'],
   ['Csus2', 'C#sus2', 'Dsus2', 'D#sus2', 'Esus2', 'Fsus2', 'F#sus2', 'Gsus2', 'G#sus2', 'Asus2', 'A#sus2', 'Bsus2'],
@@ -159,8 +160,12 @@ export const getters = {
       .replace(/^H7$/, "B7")
       .replace("Hm", "Bm")
       .replace("m#", "#m")
+      .replace("Ab", "G#")
       .replace("Bb", "A#")
+      .replace("Cb", "B#")
+      .replace("Db", "C#")
       .replace("Eb", "F#")
+      .replace("Fb", "E#")
       .replace(/[()]/g, '');
   },
   isKnownChord(state, getters) {
