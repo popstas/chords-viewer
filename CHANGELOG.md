@@ -1,3 +1,14 @@
+## [4.4.1](https://github.com/popstas/chords-viewer/compare/v4.4.0...v4.4.1) (2024-08-13)
+
+
+### Bug Fixes
+
+* add chords Cmaj7, Ab ([ff26fba](https://github.com/popstas/chords-viewer/commit/ff26fba0685670bdcce29a6bbffa2c58d2f5b532))
+* autoscoll on mobile ([96d9fc3](https://github.com/popstas/chords-viewer/commit/96d9fc3a31f5968b79b1e714c90f14aafe7c7332))
+* update beats, intro parse ([9ff59f7](https://github.com/popstas/chords-viewer/commit/9ff59f7edc001f4bc8d27be107cc2244c1a8c012))
+
+
+
 # [4.4.0](https://github.com/popstas/chords-viewer/compare/v4.3.0...v4.4.0) (2024-01-08)
 
 
