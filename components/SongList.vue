@@ -77,6 +77,15 @@ import SongItem from "~/components/SongItem";
 
 const itemHeight = 48;
 
+const speedMapping2 = {
+  1: 8000,
+  2: 5000,
+  3: 3000,
+  4: 2000,
+  5: 1000,
+  6: 700
+};
+
 export default {
   components: {
     SongItem,
@@ -99,6 +108,18 @@ export default {
       set(value) {
         this.$store.commit('lastOffset', value);
       },
+    },
+    autoscroll: {
+      get() {
+        return this.$store.state.autoscroll;
+      },
+      set(val) {
+        this.$store.commit("autoscroll", val);
+      }
+    },
+
+    autoScrollSpeed() {
+      return this.$store.state.autoScrollSpeed;
     },
     filter() {
       return this.$store.state.filter;
@@ -148,11 +169,41 @@ export default {
 
       this.scrollerToActiveSong();
     },
+    autoscroll(val) {
+      this.$store.commit("setToolbarHidden", val);
+      this.changeAutoScroll();
+    },
+
+    autoScrollSpeed() {
+      this.changeAutoScroll();
+    },
   },
 
   methods: {
     isMobile() {
       return screen.width <= 600;
+    },
+
+    changeAutoScroll() {
+      if (this.scrollInterval) {
+        clearInterval(this.scrollInterval);
+      }
+
+      if (this.autoscroll) {
+        if (!this.isMobile()) return; // desktop autoscroll is in Toolbar
+        // console.log('autoscroll songlist');
+        // if (this.isMobile()) return; // in SongList
+        this.scrollInterval = setInterval(() => {
+          try {
+            const scroller = document.querySelector(".vue-recycle-scroller");
+            if (!scroller) return;
+            scroller.scrollTo(0, scroller.scrollTop + 20);
+          }
+          catch (e) {
+            console.error('scroll error: ', e);
+          }
+        }, speedMapping2[this.autoScrollSpeed]);
+      }
     },
 
     scrollerToActiveSong() {

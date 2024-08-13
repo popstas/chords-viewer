@@ -90,6 +90,7 @@ export const state = () => ({
   transposeLevel: 0,
   defaultTransposeLevel: 0,
   scroller: false,
+  autoscroll: false,
   playlist: [],
   playlistCurrent: -1,
   toolbarHidden: false,
@@ -245,6 +246,9 @@ export const mutations = {
   },
   showShows(state, newValue) {
     state.showShows = newValue;
+  },
+  autoscroll(state, newValue) {
+    state.autoscroll = newValue;
   },
   autoScrollSpeed(state, newValue) {
     state.autoScrollSpeed = newValue;

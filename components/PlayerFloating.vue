@@ -36,10 +36,10 @@
             >
           </el-col>
           <el-col :span="4">
-            <el-checkbox-button class="toolbar__play" v-model="autoScroll">
-              <icon :name="autoScroll ? 'pause' : 'play'"></icon>
+            <el-checkbox-button class="toolbar__play" v-model="autoscroll">
+              <icon :name="autoscroll ? 'pause' : 'play'"></icon>
             </el-checkbox-button>
-            <input type="hidden" v-shortkey="['space']" @shortkey="autoScroll = !autoScroll">
+            <input type="hidden" v-shortkey="['space']" @shortkey="autoscroll = !autoscroll">
           </el-col>
           <el-col :span="4">
             <el-button class="toolbar__next" @click="nextSong">
@@ -337,7 +337,7 @@ export default {
 
   data() {
     return {
-      autoScroll: false,
+      // autoscroll: false,
       scrollInterval: false,
 
       toolbarFixed: false,
@@ -377,6 +377,15 @@ export default {
       }
     },
 
+    autoscroll: {
+      get() {
+        return this.$store.state.autoscroll;
+      },
+      set(val) {
+        this.$store.commit("autoscroll", val);
+      }
+    },
+
     autoScrollSpeed: {
       get() {
         return this.$store.state.autoScrollSpeed;
@@ -401,7 +410,7 @@ export default {
   },
 
   watch: {
-    autoScroll(val) {
+    autoscroll(val) {
       this.$store.commit("setToolbarHidden", val);
       this.changeAutoScroll();
     },
@@ -425,12 +434,18 @@ export default {
       // this.$emit("changeFilter", { name, value });
     },
 
+    isMobile() {
+      return screen.width <= 600;
+    },
+
     changeAutoScroll() {
       if (this.scrollInterval) {
         clearInterval(this.scrollInterval);
       }
 
-      if (this.autoScroll) {
+      if (this.autoscroll) {
+        // console.log('autoscroll floating');
+        if (this.isMobile()) return; // in SongList
         this.scrollInterval = setInterval(() => {
           window.scrollBy({
             left: 0,
@@ -449,7 +464,7 @@ export default {
       this.toolbarFixed = scrollY > 0;
 
       if (scrollY === 0) {
-        this.autoScroll = false;
+        this.autoscroll = false;
       }
 
       // console.log('window.scrollY:', window.scrollY);
@@ -472,7 +487,7 @@ export default {
 
       // stop when 2+ columns
       if (this.$el.parentElement?.offsetWidth > 1200) {
-        this.autoScroll = false;
+        this.autoscroll = false;
       }
     },
 
