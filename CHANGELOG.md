@@ -1,3 +1,13 @@
+# [4.5.0](https://github.com/popstas/chords-viewer/compare/v4.4.1...v4.5.0) (2024-08-13)
+
+
+### Features
+
+* bpm progress color ([b930ee3](https://github.com/popstas/chords-viewer/commit/b930ee3f7c90af9784a6906d8ee08019ea3271c3))
+* show size, show beats switches ([63cb71f](https://github.com/popstas/chords-viewer/commit/63cb71f532502378ce3b9871a642c0fb9ee50e8e))
+
+
+
 ## [4.4.1](https://github.com/popstas/chords-viewer/compare/v4.4.0...v4.4.1) (2024-08-13)
 
 
