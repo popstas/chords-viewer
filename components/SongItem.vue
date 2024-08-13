@@ -34,15 +34,16 @@
             <FontSize style="float: right"></FontSize>
           </div>
 
-          <div v-if="isBeat" class="song-midi">
-            <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="false"
-                        :chords="song.details.chords"></BeatPlayer>
-          </div>
-          <div v-if="!isBeat && isPianoAllowed" class="song-midi">
-            <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true"
-                        :chords="song.details.chords"></BeatPlayer>
-          </div>
-
+          <template v-if="$store.state.showBeats">
+            <div v-if="isBeat" class="song-midi">
+              <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="false"
+                          :chords="song.details.chords"></BeatPlayer>
+            </div>
+            <div v-if="!isBeat && isPianoAllowed" class="song-midi">
+              <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="true"
+                          :chords="song.details.chords"></BeatPlayer>
+            </div>
+          </template>
 
           <div v-if="song.text" class="song-text">
             <template class="song-text__line" v-for="(line, lineKey) in textLines">

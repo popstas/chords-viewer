@@ -23,6 +23,9 @@
     <el-divider></el-divider>
 
     <el-row>
+      <el-switch v-model="showSize" active-text="images"></el-switch>
+    </el-row>
+    <el-row>
       <el-switch v-model="showImages" active-text="images"></el-switch>
     </el-row>
     <el-row>
@@ -30,6 +33,9 @@
     </el-row>
     <el-row>
       <el-switch v-model="showShows" active-text="shows"></el-switch>
+    </el-row>
+    <el-row>
+      <el-switch v-model="showBeats" active-text="beats"></el-switch>
     </el-row>
     <el-row>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
@@ -181,6 +187,14 @@ export default {
         this.$store.commit("readerMode", val);
       },
     },
+    showSize: {
+      get() {
+        return this.$store.state.showSize;
+      },
+      set(val) {
+        this.$store.commit("showSize", val);
+      },
+    },
     showImages: {
       get() {
         return this.$store.state.showImages;
@@ -203,6 +217,14 @@ export default {
       },
       set(val) {
         this.$store.commit("showShows", val);
+      },
+    },
+    showBeats: {
+      get() {
+        return this.$store.state.showBeats;
+      },
+      set(val) {
+        this.$store.commit("showBeats", val);
       },
     },
   },

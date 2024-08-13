@@ -1,5 +1,5 @@
 <template>
-  <span class="font-size">
+  <span class="font-size" v-if="showSize">
     <el-radio-group v-model="fontSize" size="mini">
       <el-radio-button class="font-size1" label="1"></el-radio-button>
       <el-radio-button class="font-size2" label="2"></el-radio-button>
@@ -27,6 +27,9 @@
 <script>
 export default {
   computed: {
+    showSize() {
+      return this.$store.state.showSize;
+    },
     fontSize: {
       get() {
         return this.$store.state.fontSize;
