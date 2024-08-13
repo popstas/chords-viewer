@@ -27,7 +27,7 @@
       </el-col>
       <el-col :span="6" class="beat__right">
         <el-slider v-model="bpmCurrent" :min="bpmMin" :max="bpmMax"></el-slider>
-        <el-progress class="beat__progress" :percentage="beatProgress" :show-text="false"></el-progress>
+        <el-progress class="beat__progress" :percentage="beatProgress" :show-text="false" :color="beatProgressColor"></el-progress>
       </el-col>
     </el-row>
 
@@ -551,6 +551,12 @@ export default {
       return songBpm;
     },
 
+    beatProgressColor(num) {
+      if (num < 25) return '#409EFF';
+      if (num < 50) return 'green';
+      if (num < 75) return 'orange';
+      return 'red';
+    },
 
     stop() {
       if (!this.player) return;
