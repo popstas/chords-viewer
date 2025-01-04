@@ -285,7 +285,7 @@ export default {
             return {type: "hr", data: ''};
           }
           // find something like chords in line
-          if (line.match(/[A-H]{1}#{0,1}[a-z]{0,1}[0-9#]{0,1}(\s|$)/)) {
+          if (line.match(/[A-H]{1}#{0,1}[a-z]{0,1}m?[0-9#]{0,1}(\s|$)/)) {
             return {type: "chords", data: line.split(" ")};
           }
         }

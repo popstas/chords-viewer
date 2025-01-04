@@ -23,7 +23,7 @@
     <el-divider></el-divider>
 
     <el-row>
-      <el-switch v-model="showSize" active-text="images"></el-switch>
+      <el-switch v-model="showSize" active-text="sizes"></el-switch>
     </el-row>
     <el-row>
       <el-switch v-model="showImages" active-text="images"></el-switch>

@@ -167,8 +167,9 @@ export const getters = {
       .replace("Bb", "A#")
       .replace("Cb", "B#")
       .replace("Db", "C#")
-      .replace("Eb", "F#")
+      .replace("Eb", "D#")
       .replace("Fb", "E#")
+      .replace("Gb", "F#")
       .replace(/[()]/g, '');
   },
   isKnownChord(state, getters) {
