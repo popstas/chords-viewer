@@ -15,6 +15,8 @@ export default ({store}) => {
       "readerMode",
       "showImages",
       "showBadges",
+      "showShows",
+      "showBeats",
       "webhookShow",
       "beatCustomInstruments",
     ]

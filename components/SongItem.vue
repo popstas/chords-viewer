@@ -6,7 +6,7 @@
       {{ title }}
 
       <icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" name="drum"></icon>
-      <icon v-if="isPiano && !$store.state.readerMode" style="margin-left: 5px" name="piano"></icon>
+      <icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" name="piano"></icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
@@ -143,7 +143,7 @@ import "vue-awesome/icons/link";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
 import "vue-awesome/icons/drum";
-import Icon from "vue-awesome/components/Icon.vue";
+import Icon from "vue-awesome/components/Icon";
 
 Icon.register({
   piano: {
