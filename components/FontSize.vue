@@ -9,7 +9,7 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
+@use "@/assets/variables.scss" as *;
 
 .font-size1 .el-radio-button__inner {
   font-size: $font-size-1 !important;

@@ -7,7 +7,7 @@
           :class="{'search-input__speech-toggle':true, active: isSpeechRunning}"
           @click="speechToggle"
         >
-          <icon v-if="recognition" name="microphone" class="el-icon-speech el-input__icon"></icon>
+          <font-awesome-icon icon="microphone" class="el-icon-speech el-input__icon"></font-awesome-icon>
         </button>
         <a
           :class="{'search-input__amdm-search':true}"
@@ -96,9 +96,11 @@
 </style>
 
 <script>
-import "vue-awesome/icons/microphone";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 
 export default {
+  components: { FontAwesomeIcon },
   props: {
     value: {
       default: ""

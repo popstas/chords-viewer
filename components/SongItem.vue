@@ -5,8 +5,8 @@
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
 
-      <icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" name="drum"></icon>
-      <icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" name="piano"></icon>
+      <font-awesome-icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" icon="drum"></font-awesome-icon>
+      <font-awesome-icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" icon="piano"></font-awesome-icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
@@ -74,19 +74,19 @@
           </div>
 
           <a class="song-item__link" target="_blank" :href="song.url">
-            <icon name="link"></icon>
+            <font-awesome-icon icon="link"></font-awesome-icon>
           </a>
           <a v-if="isShare" class="song-item__link" @click.prevent="share">
-            <icon name="share-alt"></icon>
+            <font-awesome-icon icon="share-alt"></font-awesome-icon>
           </a>
           <a class="song-item__link" @click.prevent="copyText">
             <i class="el-icon-copy-document"></i>
           </a>
           <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
-            <icon name="qrcode"></icon>
+            <font-awesome-icon icon="qrcode"></font-awesome-icon>
           </a>
           <a class="song-item__link" @click.prevent="showComment = !showComment">
-            <icon name="edit"></icon>
+            <font-awesome-icon icon="edit"></font-awesome-icon>
           </a>
 
           <div class="song-item__qrcode" v-if="showQrCode">
@@ -136,29 +136,13 @@ import Chord from "~/components/Chord";
 import FontSize from "~/components/FontSize";
 import BeatPlayer from "~/components/BeatPlayer";
 // import { transposeMap } from "~/store";
-import "vue-awesome/icons/edit";
-import "vue-awesome/icons/qrcode";
-import "vue-awesome/icons/share-alt";
-import "vue-awesome/icons/link";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
-import "vue-awesome/icons/drum";
-import Icon from "vue-awesome/components/Icon";
-
-Icon.register({
-  piano: {
-    width: 64,
-    height: 64,
-    paths: [
-      {
-        d: 'M60,0H4C1.789,0,0,1.789,0,4v56c0,2.211,1.789,4,4,4h56c2.211,0,4-1.789,4-4V4C64,1.789,62.211,0,60,0z M28,56H8V8h12v28c0,2.211,1.789,4,4,4h4V56z M56,56H36V40h4c2.211,0,4-1.789,4-4V8h12V56z'
-      }
-    ]
-  }
-})
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faEdit, faQrcode, faShareAlt, faLink, faDrum, faUser, faCoffee } from '@fortawesome/free-solid-svg-icons';
 
 export default {
-  components: {Chord, FontSize, BeatPlayer},
+  components: {Chord, FontSize, BeatPlayer, FontAwesomeIcon},
   props: ["song", "active"],
 
   data() {

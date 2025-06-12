@@ -1,48 +1,48 @@
 <template>
   <div :class="{'container-wrap': true}" :style="{ paddingTop: chordsHeight + 'px' }">
     <el-container>
-      <!-- https://github.com/Mango/slideout#user-content-slideoutoptions -->
-      <Slideout
-        :toggleSelectors="['.menu-toggle']"
-        panel="#panel"
-        menu="#menu"
-        side="left"
-        :padding="140"
-        :touch="false"
+      <el-drawer
+        v-model="drawerVisible"
+        direction="ltr"
+        :with-header="false"
+        size="140px"
+        :show-close="false"
+        class="slideout-panel"
       >
-        <div id="panel">
-          <!-- коммент, чтобы кодировка не переключалась -->
-          <el-header height="42px">
-            <button class="menu-toggle">☰</button>
-            <button class="input-clear" @click="onInputClear">&cross;</button>
-            <button class="input-clear" @click="showQrCode = !showQrCode">
-              <icon name="qrcode"></icon>
-            </button>
-            <Profile></Profile>
-          </el-header>
-          <el-main>
-            <div class="qrcode-wrapper" v-if="showQrCode">
-              <qrcode-drop-zone v-if="isDesktop" @decode="onDecode">
-                <div class="drop-area">
-                  Drop QR code here
-                </div>
-              </qrcode-drop-zone>
-              <qrcode-stream @decode="onDecode"></qrcode-stream>
-            </div>
-            <nuxt/>
-          </el-main>
-        </div>
-      </Slideout>
+        <Sidebar />
+      </el-drawer>
+      <div id="panel">
+        <el-header height="42px">
+          <button class="menu-toggle" @click="drawerVisible = true">☰</button>
+          <button class="input-clear" @click="onInputClear">&cross;</button>
+          <button class="input-clear" @click="showQrCode = !showQrCode">
+            <font-awesome-icon icon="qrcode"></font-awesome-icon>
+          </button>
+          <Profile></Profile>
+        </el-header>
+        <el-main>
+          <div class="qrcode-wrapper" v-if="showQrCode">
+            <qrcode-drop-zone v-if="isDesktop" @decode="onDecode">
+              <div class="drop-area">
+                Drop QR code here
+              </div>
+            </qrcode-drop-zone>
+            <qrcode-stream @decode="onDecode"></qrcode-stream>
+          </div>
+          <nuxt/>
+        </el-main>
+      </div>
     </el-container>
-    <nav id="menu">
-      <Sidebar></Sidebar>
+    <!-- Sidebar always visible on wide screens -->
+    <nav id="menu" class="slideout-menu slideout-menu-left">
+      <Sidebar />
     </nav>
   </div>
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
-@import "@/assets/dark-theme.scss";
+@use "@/assets/variables.scss" as *;
+@use "@/assets/dark-theme.scss" as *;
 
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -232,10 +232,10 @@ input {
 <script>
 import Profile from "~/components/Profile";
 import Sidebar from "~/components/Sidebar";
-import Slideout from "vue-slideout";
-import "vue-awesome/icons/qrcode";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faQrcode } from '@fortawesome/free-solid-svg-icons';
 
-import firebase from "firebase";
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAi6BptwN63ruuHJiTmm_ofYUyquAaPf9U",
@@ -247,44 +247,28 @@ const firebaseConfig = {
   appId: "1:98010485379:web:bf6700c3e06ba149ce81b6",
   measurementId: "G-YYGZ8HR9JB"
 };
-firebase.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 export default {
-  components: {Slideout, Sidebar, Profile},
+  components: { Profile, Sidebar, FontAwesomeIcon },
   data() {
     return {
-      chordsHeight: 0,
+      drawerVisible: false,
       showQrCode: false,
+      chordsHeight: 0,
+      isDesktop: false,
     };
   },
-
-  computed: {
-    title() {
-      const t = [];
-      if (this.$store.state.activeSong.title) t.push(this.$store.state.activeSong.title);
-      t.push(this.$store.state.name);
-      return t.join(' - ');
-    },
-    isDesktop() {
-      return window.innerWidth > 768;
-    },
+  mounted() {
+    this.isDesktop = window.innerWidth > 1024;
   },
-
   methods: {
-    // handleScroll() {
-    //   const chords = this.$el.querySelector(".song-item.active .chords");
-    //   if (!chords) return;
-    //   this.chordsHeight = chords.clientHeight;
-    // },
-
     onInputClear() {
       const options = {name: "q", value: ""};
       this.$store.dispatch("changeFilter", options);
       const input = this.$el.querySelector(".search-input input");
       if (input) input.value = "";
-      // this.$store.dispatch("filterSongs");
     },
-
     onDecode(url) {
       try {
         const res = url.match(/song_num=(\d+)/);
@@ -301,7 +285,6 @@ export default {
       this.showQrCode = false;
     },
   },
-
   head() {
     return {
       title: this.title,
@@ -332,19 +315,11 @@ export default {
       ]
     };
   },
-
   created() {
-    // window.addEventListener("scroll", this.handleScroll);
-
-    // console.log('this.$store.state.darkMode: ', this.$store.state.darkMode);
     if (this.$store.state.darkMode === undefined) {
       const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       this.$store.commit('darkMode', isDark);
     }
   },
-
-  destroyed() {
-    // window.removeEventListener("scroll", this.handleScroll);
-  }
 };
 </script>

@@ -2,18 +2,17 @@ module.exports = {
   ssr: false,
   target: 'static',
   modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    // '@nuxtjs/axios',
+    // '@nuxtjs/pwa'
   ],
 
   css: [
-    'element-ui/lib/theme-chalk/index.css',
-    'element-ui/lib/theme-chalk/display.css',
+    'element-plus/dist/index.css',
     'vue-virtual-scroller/dist/vue-virtual-scroller.css',
   ],
 
   plugins: [
-    { src: '@/plugins/element-ui', ssr: false },
+    { src: '@/plugins/element-plus', ssr: false },
     { src: '@/plugins/vue-awesome', ssr: false },
     { src: '@/plugins/vue-qr-generator', ssr: false },
     { src: '@/plugins/vue-qrcode-reader', ssr: false },
@@ -48,7 +47,6 @@ module.exports = {
   loading: { color: '#333333' },
 
   build: {
-    transpile: [/^vue-awesome/],
     /*
     ** Run ESLint on save
     */

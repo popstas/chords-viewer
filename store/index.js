@@ -2,7 +2,7 @@ import pjson from "~/package.json";
 import dateformat from "dateformat";
 import songs from "~/chords.json";
 import Fuse from "fuse.js";
-import firebase from "firebase";
+import { getDatabase, ref, get, update } from "firebase/database";
 import debounce from "lodash/debounce";
 
 export const transposeMap = [
@@ -362,14 +362,14 @@ export const actions = {
 
       // store to firebase
       if (state.user) {
-        const db = firebase.database().ref("users/" + state.user.uid);
-        const snapshot = await db.once("value");
+        const db = ref(getDatabase(), "users/" + state.user.uid);
+        const snapshot = await get(db);
         const settings = {
           ...snapshot.val().settings || {},
           ...{webhookShow}
         };
 
-        db.update({settings});
+        update(db, settings);
       }
 
       return;
@@ -548,33 +548,31 @@ export const actions = {
         email: user.email,
       });
 
-      firebase
-        .database()
-        .ref("users/" + state.user.uid)
-        .once("value")
-        .then(snapshot => {
-          const shows = (snapshot.val() && snapshot.val().shows) || false;
-          const comments = (snapshot.val() && snapshot.val().comments) || false;
+      const db = getDatabase();
+      const userRef = ref(db, "users/" + state.user.uid);
+      get(userRef).then(snapshot => {
+        const shows = (snapshot.val() && snapshot.val().shows) || false;
+        const comments = (snapshot.val() && snapshot.val().comments) || false;
 
-          if (shows) {
-            console.log('Update shows from firebase:', shows);
-            commit("setShows", shows);
-          }
+        if (shows) {
+          console.log('Update shows from firebase:', shows);
+          commit("setShows", shows);
+        }
 
-          if (comments) {
-            console.log('Update comments from firebase:', comments);
-            commit("setComments", comments);
-          }
+        if (comments) {
+          console.log('Update comments from firebase:', comments);
+          commit("setComments", comments);
+        }
 
-          const settings = (snapshot.val() && snapshot.val().settings) || false;
-          if (settings) {
-            // console.log('Update settings from firebase:', settings);
-            if (settings.webhookShow && state.webhookShow !== settings.webhookShow) {
-              console.log('Update webhookShow from firebase:', settings);
-              commit('webhookShow', settings.webhookShow);
-            }
+        const settings = (snapshot.val() && snapshot.val().settings) || false;
+        if (settings) {
+          // console.log('Update settings from firebase:', settings);
+          if (settings.webhookShow && state.webhookShow !== settings.webhookShow) {
+            console.log('Update webhookShow from firebase:', settings);
+            commit('webhookShow', settings.webhookShow);
           }
-        });
+        }
+      });
     } else {
       commit("setUser", false);
     }
@@ -584,12 +582,8 @@ export const actions = {
     commit('setShow', {url, shows});
 
     if (state.user) {
-      firebase
-        .database()
-        .ref("users/" + state.user.uid)
-        .update({
-          [`shows/${url}`]: shows
-        });
+      const db = getDatabase();
+      update(ref(db, "users/" + state.user.uid + "/shows/" + url), shows);
       console.log('update remote shows');
     }
   },
@@ -628,12 +622,8 @@ export const actions = {
     }
 
     if (state.user) {
-      firebase
-        .database()
-        .ref("users/" + state.user.uid)
-        .update({
-          [`shows/${url}`]: state.shows[url]
-        });
+      const db = getDatabase();
+      update(ref(db, "users/" + state.user.uid + "/shows/" + url), state.shows[url]);
       console.log('update remote shows');
     }
   },
@@ -643,12 +633,8 @@ export const actions = {
 
     if (state.user) {
       console.log('state.comments: ', state.comments);
-      firebase
-        .database()
-        .ref("users/" + state.user.uid)
-        .update({
-          comments: state.comments
-        });
+      const db = getDatabase();
+      update(ref(db, "users/" + state.user.uid + "/comments"), state.comments);
       console.log('update remote comments');
     }
   },

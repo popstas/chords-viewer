@@ -7,7 +7,7 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
+@use "@/assets/variables.scss" as *;
 
 .profile {
   float: right;
@@ -25,7 +25,7 @@
 </style>
 
 <script>
-import firebase from "firebase";
+import { getAuth } from "firebase/auth";
 
 export default {
   data() {
@@ -41,7 +41,7 @@ export default {
   },
 
   created() {
-    firebase.auth().onAuthStateChanged(user => {
+    getAuth().onAuthStateChanged(user => {
       if (user) {
         this.$store.dispatch("setUser", user);
         this.isLogin = false;
@@ -53,7 +53,7 @@ export default {
 
   methods: {
     logout() {
-      firebase.auth().signOut();
+      getAuth().signOut();
       this.isLogin = true;
       this.$store.dispatch('setUser', false);
     }

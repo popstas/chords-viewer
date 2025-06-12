@@ -134,7 +134,7 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
+@use "@/assets/variables.scss" as *;
 
 .beat {
   padding: 0 0 5px 0;

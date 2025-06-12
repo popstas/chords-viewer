@@ -6,10 +6,10 @@
 
       <div class="toolbar__current-song">
         <el-button class="toolbar__up" @click="toTop">
-          <icon name="chevron-up"></icon>
+          <font-awesome-icon :icon="['fas', 'chevron-up']"></font-awesome-icon>
         </el-button>
         <el-button class="toolbar__hide" @click="hideToolbar">
-          <icon name="chevron-down"></icon>
+          <font-awesome-icon :icon="['fas', 'chevron-down']"></font-awesome-icon>
         </el-button>
         <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
 
@@ -18,7 +18,7 @@
         </div>
         <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link"
            @click.prevent="showQrCode = !showQrCode">
-          <icon name="qrcode"></icon>
+          <font-awesome-icon :icon="['fas', 'qrcode']"></font-awesome-icon>
         </a>
       </div>
 
@@ -30,7 +30,7 @@
           </el-col>
           <el-col :span="4">
             <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong">
-              <icon name="backward"></icon>
+              <font-awesome-icon :icon="['fas', 'backward']"></font-awesome-icon>
             </el-button>
             <input
               type="hidden"
@@ -40,13 +40,13 @@
           </el-col>
           <el-col :span="4">
             <el-checkbox-button class="toolbar__play" v-model="autoscroll">
-              <icon :name="autoscroll ? 'pause' : 'play'"></icon>
+              <font-awesome-icon :icon="autoscroll ? ['fas', 'pause'] : ['fas', 'play']"></font-awesome-icon>
             </el-checkbox-button>
             <input type="hidden" v-shortkey="['space']" @shortkey="autoscroll = !autoscroll">
           </el-col>
           <el-col :span="4">
             <el-button class="toolbar__next" @click="nextSong">
-              <icon name="forward"></icon>
+              <font-awesome-icon :icon="['fas', 'forward']"></font-awesome-icon>
             </el-button>
             <input
               type="hidden"
@@ -115,7 +115,7 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
+@use "@/assets/variables.scss" as *;
 
 .toolbar {
   background: var(--bg);
@@ -356,12 +356,8 @@
 <script>
 import SearchInput from "~/components/SearchInput";
 import _ from "lodash";
-import "vue-awesome/icons/play";
-import "vue-awesome/icons/pause";
-import "vue-awesome/icons/backward";
-import "vue-awesome/icons/forward";
-import "vue-awesome/icons/chevron-up";
-import "vue-awesome/icons/chevron-down";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faChevronUp, faChevronDown, faQrcode, faBackward, faForward, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
 
 /*const speedMapping = {
   1: 1024,
@@ -382,7 +378,8 @@ const speedMapping2 = {
 
 export default {
   components: {
-    SearchInput
+    SearchInput,
+    FontAwesomeIcon
   },
 
   data() {

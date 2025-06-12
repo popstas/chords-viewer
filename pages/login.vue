@@ -11,7 +11,7 @@
 </style>
 
 <script>
-import firebase from "firebase";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
@@ -23,12 +23,12 @@ export default {
   mounted() {
     let ui = firebaseui.auth.AuthUI.getInstance();
     if (!ui) {
-      ui = new firebaseui.auth.AuthUI(firebase.auth());
+      ui = new firebaseui.auth.AuthUI(getAuth());
     }
     var uiConfig = {
       signInSuccessUrl: "/", // This redirect can be achived by route using callback.
       signInFlow: "popup",
-      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
+      signInOptions: [GoogleAuthProvider.PROVIDER_ID]
     };
     ui.start("#firebaseui-auth-container", uiConfig);
   }

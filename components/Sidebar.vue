@@ -80,13 +80,13 @@
 
     <el-row style="text-align:center">
       <a class="sidebar__link" href="https://github.com/popstas/chords-viewer/blob/master/CHANGELOG.md" target="_blank">
-        <icon name="brands/github"></icon>
+        <font-awesome-icon :icon="['fab', 'github']"></font-awesome-icon>
         {{ $store.state.name }} {{ $store.state.version }} (changelog)
       </a>
     </el-row>
     <el-row style="text-align:center">
       <a class="sidebar__link" href="https://github.com/popstas/chords-data" target="_blank">
-        <icon name="calendar-alt"></icon>
+        <font-awesome-icon :icon="['fas', 'calendar-days']"></font-awesome-icon>
         songs updated: {{ $store.getters.lastUpdated }}
       </a>
     </el-row>
@@ -140,15 +140,16 @@
 
 <script>
 import FontSize from "~/components/FontSize";
-import "vue-awesome/icons/brands/github";
-import "vue-awesome/icons/calendar-alt";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 
 import NoSleep from "nosleep.js";
 
 const nosleep = new NoSleep();
 
 export default {
-  components: {FontSize},
+  components: {FontSize, FontAwesomeIcon},
 
   data() {
     return {
