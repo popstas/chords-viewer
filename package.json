@@ -27,7 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@fortawesome/vue-fontawesome": "^2.0.10",
     "axios": "^1.6.0",
     "copy-to-clipboard": "^3.3.3",
     "dateformat": "^3.0.3",
@@ -46,6 +46,7 @@
     "vue-qrcode-reader": "^4.0.0",
     "vue-shortkey": "^3.1.7",
     "vue-virtual-scroller": "^2.0.0-beta.8",
+    "vuex": "^4.1.0",
     "webaudiofont": "^2.7.1"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@
       {{ title }}
 
       <font-awesome-icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" icon="drum"></font-awesome-icon>
-      <font-awesome-icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" icon="piano"></font-awesome-icon>
+      <font-awesome-icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" icon="keyboard"></font-awesome-icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
