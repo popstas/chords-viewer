@@ -356,8 +356,7 @@
 <script>
 import SearchInput from "~/components/SearchInput";
 import _ from "lodash";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faChevronUp, faChevronDown, faQrcode, faBackward, faForward, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+// font-awesome icons are registered globally via plugin
 
 /*const speedMapping = {
   1: 1024,
@@ -379,7 +378,7 @@ const speedMapping2 = {
 export default {
   components: {
     SearchInput,
-    FontAwesomeIcon
+    
   },
 
   data() {

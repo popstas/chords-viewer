@@ -140,16 +140,14 @@
 
 <script>
 import FontSize from "~/components/FontSize";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+// font-awesome icons are registered globally via plugin
 
 import NoSleep from "nosleep.js";
 
 const nosleep = new NoSleep();
 
 export default {
-  components: {FontSize, FontAwesomeIcon},
+  components: {FontSize},
 
   data() {
     return {

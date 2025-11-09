@@ -7,7 +7,7 @@
           :class="{'search-input__speech-toggle':true, active: isSpeechRunning}"
           @click="speechToggle"
         >
-          <font-awesome-icon icon="microphone" class="el-icon-speech el-input__icon"></font-awesome-icon>
+          <font-awesome-icon :icon="['fas', 'microphone']" class="el-icon-speech el-input__icon"></font-awesome-icon>
         </button>
         <a
           :class="{'search-input__amdm-search':true}"
@@ -96,11 +96,10 @@
 </style>
 
 <script>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
+// font-awesome icons are registered globally via plugin
 
 export default {
-  components: { FontAwesomeIcon },
+  components: { },
   props: {
     value: {
       default: ""

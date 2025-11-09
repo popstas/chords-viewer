@@ -5,6 +5,8 @@ export default defineNuxtConfig({
 
   modules: [],
 
+  devtools: { enabled: true },
+
   css: [
     'vue-virtual-scroller/dist/vue-virtual-scroller.css',
   ],
@@ -32,8 +34,44 @@ export default defineNuxtConfig({
     }
   },
 
+  // Minimal Vite workaround for Windows virtual module paths
+  vite: {
+    plugins: [
+      {
+        name: 'windows-virtual-module-guard',
+        enforce: 'pre',
+        configResolved(resolved) {
+          const plugins = (resolved as any).plugins || [];
+          for (const p of plugins) {
+            if (p && p.name === 'nuxt:components:imports') {
+              const origInclude = p.transformInclude?.bind(p);
+              p.transformInclude = (id: string) => {
+                if (!id) return origInclude ? origInclude(id as any) : true;
+                const s = String(id);
+                // Skip Vite virtual module ids and Vue export helper on Windows
+                if (
+                  s.startsWith('\u0000') ||
+                  s.startsWith('\0') ||
+                  s.includes('plugin-vue:export-helper') ||
+                  s.includes('vite/modulepreload-polyfill')
+                ) {
+                  return false;
+                }
+                return origInclude ? origInclude(id) : true;
+              };
+            }
+          }
+        }
+      }
+    ],
+    build: {
+      // Avoid injecting the modulepreload polyfill (appears as a Vite virtual module)
+      modulePreload: { polyfill: false }
+    }
+  },
   nitro: {
-    preset: 'static'
+    preset: 'static',
+    compatibilityDate: '2025-09-13'
   },
 
   typescript: {

@@ -6,7 +6,7 @@
   "homepage": "https://github.com/popstas/chords-viewer",
   "private": true,
   "scripts": {
-    "dev": "cross-env HOST=0.0.0.0 PORT=3001 nuxt",
+    "dev": "nuxt dev --host 0.0.0.0 --port 3001",
     "parse-dev": "bash scripts/parse-dev.sh",
     "build": "nuxt build",
     "start": "nuxt start",
@@ -27,7 +27,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/vue-fontawesome": "^2.0.10",
+    "@fortawesome/vue-fontawesome": "^3.0.6",
     "axios": "^1.6.0",
     "copy-to-clipboard": "^3.3.3",
     "dateformat": "^3.0.3",
@@ -37,7 +37,7 @@
     "fuse.js": "^6.4.0",
     "lodash": "^4.17.21",
     "nosleep.js": "^0.12.0",
-    "nuxt": "^3.10.0",
+    "nuxt": "^3.13.2",
     "pinia": "^3.0.2",
     "pinia-plugin-persistedstate": "^4.3.0",
     "qrcode.vue": "^3.6.0",
@@ -50,8 +50,6 @@
     "webaudiofont": "^2.7.1"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "latest",
-    "@nuxt/types": "latest",
     "@vue/test-utils": "^2.4.1",
     "eslint": "^8.56.0",
     "sass-loader": "^13.3.0",

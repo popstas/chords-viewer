@@ -5,8 +5,8 @@
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
 
-      <font-awesome-icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" icon="drum"></font-awesome-icon>
-      <font-awesome-icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" icon="keyboard"></font-awesome-icon>
+      <font-awesome-icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" :icon="['fas', 'drum']"></font-awesome-icon>
+      <font-awesome-icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" :icon="['fas', 'keyboard']"></font-awesome-icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
@@ -74,19 +74,19 @@
           </div>
 
           <a class="song-item__link" target="_blank" :href="song.url">
-            <font-awesome-icon icon="link"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>
           </a>
           <a v-if="isShare" class="song-item__link" @click.prevent="share">
-            <font-awesome-icon icon="share-alt"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'share-nodes']"></font-awesome-icon>
           </a>
           <a class="song-item__link" @click.prevent="copyText">
             <i class="el-icon-copy-document"></i>
           </a>
           <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
-            <font-awesome-icon icon="qrcode"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'qrcode']"></font-awesome-icon>
           </a>
           <a class="song-item__link" @click.prevent="showComment = !showComment">
-            <font-awesome-icon icon="edit"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'pen-to-square']"></font-awesome-icon>
           </a>
 
           <div class="song-item__qrcode" v-if="showQrCode">
@@ -138,11 +138,10 @@ import BeatPlayer from "~/components/BeatPlayer";
 // import { transposeMap } from "~/store";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faEdit, faQrcode, faShareAlt, faLink, faDrum, faUser, faCoffee } from '@fortawesome/free-solid-svg-icons';
+// font-awesome icons are registered globally via plugin
 
 export default {
-  components: {Chord, FontSize, BeatPlayer, FontAwesomeIcon},
+  components: {Chord, FontSize, BeatPlayer},
   props: ["song", "active"],
 
   data() {

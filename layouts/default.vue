@@ -16,7 +16,7 @@
           <button class="menu-toggle" @click="drawerVisible = true">☰</button>
           <button class="input-clear" @click="onInputClear">&cross;</button>
           <button class="input-clear" @click="showQrCode = !showQrCode">
-            <font-awesome-icon icon="qrcode"></font-awesome-icon>
+            <font-awesome-icon :icon="['fas', 'qrcode']"></font-awesome-icon>
           </button>
           <Profile></Profile>
         </el-header>
@@ -232,8 +232,7 @@ input {
 <script>
 import Profile from "~/components/Profile";
 import Sidebar from "~/components/Sidebar";
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faQrcode } from '@fortawesome/free-solid-svg-icons';
+// font-awesome icons are registered globally via plugin
 
 import { initializeApp } from "firebase/app";
 
@@ -250,7 +249,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 export default {
-  components: { Profile, Sidebar, FontAwesomeIcon },
+  components: { Profile, Sidebar },
   data() {
     return {
       drawerVisible: false,
