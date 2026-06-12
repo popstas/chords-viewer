@@ -35,6 +35,8 @@ export const state = () => ({
   lastOffset: 0,
   beatFirstPlay: true,
   beatCustomInstruments: false,
+  beatProgress: 0,
+  beatPlaying: false,
 
   // settings
   fontSize: 2,
@@ -246,6 +248,12 @@ export const mutations = {
   },
   beatCustomInstruments(state, newValue) {
     state.beatCustomInstruments = newValue;
+  },
+  beatProgress(state, newValue) {
+    state.beatProgress = newValue;
+  },
+  beatPlaying(state, newValue) {
+    state.beatPlaying = newValue;
   },
 };
 

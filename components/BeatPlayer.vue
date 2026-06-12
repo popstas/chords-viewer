@@ -367,6 +367,9 @@ export default {
     activeSong(val) {
       if (!val) this.stop();
     },
+    stopped(val) {
+      this.$store.commit('beatPlaying', !val);
+    },
     pianoCurrent(val) {
       this.songPiano.active = val;
     },
@@ -1096,7 +1099,10 @@ export default {
         // beat progress
         const beatTime = song.currentSongTime % this.beatCycleDuration;
         const p = Math.round((beatTime / this.beatCycleDuration) * 100);
-        if (p % 3 === 0) this.beatProgress = p;
+        if (p % 3 === 0) {
+          this.beatProgress = p;
+          this.$store.commit('beatProgress', p);
+        }
 
         // the end of the song, loop, sync
         if (song.currentSongTime > song.songBeatsDuration) {
