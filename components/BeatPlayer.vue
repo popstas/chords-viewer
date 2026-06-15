@@ -278,6 +278,12 @@ export default {
       reverCurrent: false,
       pianoAllowed: false,
       pianoInstrument: "_tone_0000_JCLive_sf2_file",
+      // инструмент, который реально использует планировщик при постановке нот;
+      // отделён от pianoInstrument (выбор в UI), чтобы смена применялась на
+      // границе 4 тактов, а не на следующей же ноте.
+      pianoInstrumentActive: "_tone_0000_JCLive_sf2_file",
+      // отложенная смена инструмента, применяется на ближайшей границе цикла
+      pendingInstrument: null,
       customInstrumentNum: 0,
       customInstruments: [],
       customInstrumentsPicked: [],
@@ -384,6 +390,12 @@ export default {
     },
     pianoStyle() {
       this.loadPiano();
+    },
+    pianoInstrument(val) {
+      if (!val) return;
+      // предзагрузить soundfont и применить смену без прерывания воспроизведения:
+      // во время игры — на ближайшей границе 4 тактов, иначе — сразу.
+      this.scheduleInstrumentChange(val);
     },
     customInstrumentNum(val) {
       if (!val) return;
@@ -552,6 +564,9 @@ export default {
         schedule: null,
         scheduleFor: null, // ссылка на song, для которой собран schedule
         noteIndex: 0,
+        // индекс текущего 4-тактового цикла (beatCycleDuration) — для применения
+        // отложенной смены инструмента ровно на границе цикла
+        lastCycleIndex: 0,
       }
     },
     applyBpm(song) {
@@ -581,6 +596,9 @@ export default {
       if (!this.player) return;
       this.stopped = true;
       this.playDelay = '';
+      // зафиксировать отложенную смену инструмента, чтобы следующий запуск
+      // использовал уже выбранный инструмент
+      this.applyPendingInstrument();
       // планировщик сам докрутит текущий такт (fade-out на границе цикла) и
       // остановится по isContinue; beforeDestroy / stopScheduler гарантируют,
       // что таймер не зависнет.
@@ -710,12 +728,38 @@ export default {
 
     loadCustomInstrument(n) {
       const info = this.player.loader.instrumentInfo(n)
+      // начать предзагрузку soundfont заранее; pianoInstrument-вотчер дождётся
+      // загрузки (waitLoad) и применит смену на границе цикла, не прерывая игру.
       this.player.loader.startLoad(this.audioContext, info.url, info.variable);
+      this.pianoInstrument = info.variable;
+    },
+
+    // предзагрузить выбранный soundfont и запланировать смену инструмента:
+    // во время игры — на ближайшей границе 4 тактов (через pendingInstrument),
+    // в остановленном состоянии — сразу. Не прерывает воспроизведение.
+    scheduleInstrumentChange(variable) {
+      if (!this.player || !this.audioContext) {
+        this.pianoInstrumentActive = variable;
+        return;
+      }
+      // дождаться, пока все запрошенные soundfont'ы догрузятся (статические уже в
+      // window — waitLoad сработает сразу; кастомный — после startLoad)
       this.player.loader.waitLoad(() => {
-        // console.log(`change instrument: ${info.title} (${info.variable})`);
-        this.pianoInstrument = info.variable;
-        // this.player.cancelQueue(this.audioContext);
+        if (this.stopped) {
+          this.pianoInstrumentActive = variable;
+          this.pendingInstrument = null;
+        } else {
+          this.pendingInstrument = variable;
+        }
       });
+    },
+
+    // применить отложенную смену инструмента (вызывается на границе цикла)
+    applyPendingInstrument() {
+      if (this.pendingInstrument) {
+        this.pianoInstrumentActive = this.pendingInstrument;
+        this.pendingInstrument = null;
+      }
     },
 
     buildCustomInstruments() {
@@ -1104,6 +1148,7 @@ export default {
         // когда ссылка на песню пиано не меняется)
         s.scheduleFor = null;
         s.noteIndex = 0;
+        s.lastCycleIndex = 0;
       }
 
       this.startScheduler();
@@ -1195,6 +1240,13 @@ export default {
       if (!song || !song.song) return;
       this.ensureSchedule(song);
       while (song.nextStepTime < horizon) {
+        // граница 4 тактов: применяем отложенную смену инструмента ровно перед
+        // постановкой нот нового цикла, чтобы переход попал в ритм и был бесшовным.
+        const cycleIndex = Math.floor(song.currentSongTime / this.beatCycleDuration);
+        if (cycleIndex !== song.lastCycleIndex) {
+          song.lastCycleIndex = cycleIndex;
+          this.applyPendingInstrument();
+        }
         this.queueWindow(song, song.currentSongTime, song.currentSongTime + stepDuration);
         song.currentSongTime = song.currentSongTime + stepDuration;
         song.nextStepTime = song.nextStepTime + stepDuration;
@@ -1211,6 +1263,8 @@ export default {
         if (song.currentSongTime > song.songBeatsDuration) {
           song.currentSongTime = 0;
           song.noteIndex = 0; // перенос индекса через границу цикла без потерь/дублей
+          song.lastCycleIndex = 0; // граница цикла — применяем отложенную смену инструмента
+          this.applyPendingInstrument();
           song.plays++;
           if (debug) console.log('plays: ', song.plays);
 
@@ -1252,7 +1306,7 @@ export default {
         if (pitch >= 60) {
           // transpose depends of pianoPitchOffset
           pitch = pitch + this.pianoPitchOffset;
-          instr = this.pianoInstrument;
+          instr = this.pianoInstrumentActive;
           if (this.pianoSustain) duration = duration * 2;
         }
         // drums, set instr mapped by notes
@@ -1262,8 +1316,8 @@ export default {
       } else {
         // piano pitch
         pitch = pitch + this.pianoPitchOffset;
-        // replace instrument to this.pianoInstrument on the fly
-        instr = this.pianoInstrument;
+        // replace instrument to active piano instrument (смена — на границе цикла)
+        instr = this.pianoInstrumentActive;
         if (this.pianoSustain) duration = duration * 2;
       }
 
