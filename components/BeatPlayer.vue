@@ -17,7 +17,6 @@
           @click="toggle"
         >{{ stopped ? 'Play' : 'Stop' }}
         </el-button>
-        <!--{{ playDelay }}-->
       </el-col>
       <el-col :span="3" class="beat__rever">
         <el-checkbox-button class="beat__checkbutton" v-model="reverCurrent">rever</el-checkbox-button>
@@ -215,6 +214,14 @@ import {chordNotesMap} from "~/store";
 
 const debug = false;
 
+// look-ahead планировщик по аудио-часам ("A Tale of Two Clocks", Chris Wilson):
+// таймер на setTimeout с малым шагом будит планировщик, который ставит в очередь
+// ноты на окно упреждения вперёд по AudioContext.currentTime. Не зависит от кадров
+// и переживает подвисания UI в пределах окна упреждения.
+const schedulerIntervalMs = 25; // как часто просыпается планировщик
+const scheduleAheadTime = 0.12; // окно упреждения, сек (100-150 мс)
+const stepDuration = 0.044; // гранулярность чанка постановки нот, сек
+
 const bpmDefault = 100;
 const pianoInstrumentsMap = {
   'piano': '_tone_0000_JCLive_sf2_file',
@@ -260,15 +267,25 @@ export default {
       player: null,
       audioContext: null,
 
-      currentSongTime: 0,
-      songStart: 0,
-      nextStepTime: 0,
+      schedulerTimer: null,
+      // RAF, обновляющий только прогресс-бар/метроном (отдельно от аудио-планировщика,
+      // чтобы перерисовка UI не влияла на тайминг звука)
+      progressRaf: null,
 
       stopped: true,
       bpmCurrent: 0,
       reverCurrent: false,
       pianoAllowed: false,
       pianoInstrument: "_tone_0000_JCLive_sf2_file",
+      // инструмент, который реально использует планировщик при постановке нот;
+      // отделён от pianoInstrument (выбор в UI), чтобы смена применялась на
+      // границе 4 тактов, а не на следующей же ноте.
+      pianoInstrumentActive: "_tone_0000_JCLive_sf2_file",
+      // отложенная смена инструмента, применяется на ближайшей границе цикла
+      pendingInstrument: null,
+      // отложенная пересборка пиано-трека (смена стиля/chordBeats), применяется на
+      // ближайшей границе цикла вместо жёсткого replay() с перезапуском с нуля
+      pendingPianoRebuild: false,
       customInstrumentNum: 0,
       customInstruments: [],
       customInstrumentsPicked: [],
@@ -277,6 +294,12 @@ export default {
       pianoStyle: "12312312",
       pianoVolume: 0.1,
       chordBeats: 4,
+      // активная ширина цикла (chordBeats звучащего пиано-рисунка). Отделена от
+      // реактивного chordBeats, чтобы смена chordBeats на лету не дёргала
+      // beatCycleDuration мгновенно: иначе детектор границы цикла (cycleIndex) сдвинется
+      // в середине цикла и применит pendingPianoRebuild/pendingInstrument не на границе.
+      // Обновляется только в момент применения рисунка (старт, стоп-смена, граница цикла).
+      chordBeatsActive: 4,
       beatProgress: 0,
       error: '',
       songDrums: null,
@@ -284,8 +307,6 @@ export default {
       pianoPitchOffset: 12,
       pianoSustain: true,
       forcePlay: true,
-      playStartTime: 0, // TODO: remove
-      playDelay: '', // TODO: remove
       firstPlay: true,
 
       presets: [],
@@ -320,7 +341,10 @@ export default {
       return 60 / this.bpmCurrent;
     },
     beatCycleDuration() {
-      return this.beatDuration * this.chordBeats * 4;
+      // chordBeatsActive (не реактивный chordBeats): ширина цикла меняется только когда
+      // новый пиано-рисунок реально становится активным, иначе детектор границы цикла
+      // сработает в середине цикла при смене chordBeats на лету.
+      return this.beatDuration * this.chordBeatsActive * 4;
     },
     highestPitch() {
       return this.songDrums?.highestNote?.pitch;
@@ -374,7 +398,16 @@ export default {
       this.songPiano.active = val;
     },
     pianoStyle() {
-      this.loadPiano();
+      // во время игры — пересобрать пиано-трек на ближайшей границе цикла (без рестарта),
+      // в остановленном состоянии — сразу подготовить к следующему запуску.
+      if (this.stopped) this.rebuildPiano();
+      else this.pendingPianoRebuild = true;
+    },
+    pianoInstrument(val) {
+      if (!val) return;
+      // предзагрузить soundfont и применить смену без прерывания воспроизведения:
+      // во время игры — на ближайшей границе 4 тактов, иначе — сразу.
+      this.scheduleInstrumentChange(val);
     },
     customInstrumentNum(val) {
       if (!val) return;
@@ -410,8 +443,16 @@ export default {
       }
     },
     chordBeats() {
-      this.loadPiano();
-      this.replay(this);
+      // chordBeats меняет рисунок пиано (и beatCycleDuration). Раньше дёргали жёсткий
+      // replay() с перезапуском с нуля; теперь — перепланирование на границе цикла.
+      // chordBeatsActive (ширину цикла) двигаем только когда рисунок реально применяется:
+      // на стопе — сразу, на лету — в applyPendingPianoRebuild на границе цикла.
+      if (this.stopped) {
+        this.chordBeatsActive = this.chordBeats;
+        this.rebuildPiano();
+      } else {
+        this.pendingPianoRebuild = true;
+      }
     },
   },
   methods: {
@@ -471,8 +512,9 @@ export default {
     // force - from the beginning
     play({force = true}) {
       this.stop();
-      this.playStartTime = Date.now();
       this.error = '';
+      // на старте активная ширина цикла = текущий выбранный chordBeats
+      this.chordBeatsActive = this.chordBeats;
       this.forcePlay = force || (!this?.songDrums?.song && !this?.songPiano?.song) || this.firstPlay;
       this.firstPlay = false;
       if (this.forcePlay) {
@@ -521,10 +563,6 @@ export default {
       }
 
     },
-    replay: debounce((self) => {
-      if (!self.stopped) self.play({force: true});
-    }, 500),
-
     songInit() {
       return {
         song: null,
@@ -537,21 +575,31 @@ export default {
         nextStepTime: 0,
         lowestNote: null,
         highestNote: null,
+        // look-ahead очередь нот: плоский список нот трека(ов), отсортированный по
+        // when, и указатель на следующую ноту — чтобы не сканировать все ноты на
+        // каждом шаге планировщика (O(n) -> амортизированный O(1) на шаг).
+        schedule: null,
+        scheduleFor: null, // ссылка на song, для которой собран schedule
+        noteIndex: 0,
+        // индекс текущего 4-тактового цикла (beatCycleDuration) — для применения
+        // отложенной смены инструмента ровно на границе цикла
+        lastCycleIndex: 0,
       }
     },
     applyBpm(song) {
       if (!song) return;
-      const songBpm = JSON.parse(JSON.stringify(song));
-      songBpm.duration = song.duration * this.bpmMultiplier;
-
-      songBpm.tracks[0].notes = song.tracks[0].notes.map(note => {
-        return {
-          ...note, ...{
-            when: note.when * this.bpmMultiplier,
-          }
-        };
-      });
-      return songBpm;
+      // Без JSON deep-clone в горячем пути: делаем поверхностные копии song/track
+      // и заново строим массивы нот с пересчитанным when. slides/info переиспользуем
+      // по ссылке (их не мутируем) — меньше аллокаций и нагрузки на GC на телефоне.
+      const mult = this.bpmMultiplier;
+      return {
+        ...song,
+        duration: song.duration * mult,
+        tracks: song.tracks.map(track => ({
+          ...track,
+          notes: track.notes.map(note => ({...note, when: note.when * mult})),
+        })),
+      };
     },
 
     beatProgressColor(num) {
@@ -564,7 +612,13 @@ export default {
     stop() {
       if (!this.player) return;
       this.stopped = true;
-      this.playDelay = '';
+      // зафиксировать отложенную смену инструмента/пересборку пиано, чтобы следующий
+      // запуск (в т.ч. resume без force) использовал уже выбранные параметры
+      this.applyPendingInstrument();
+      this.applyPendingPianoRebuild();
+      // планировщик сам докрутит текущий такт (fade-out на границе цикла) и
+      // остановится по isContinue; beforeDestroy / stopScheduler гарантируют,
+      // что таймер не зависнет.
       // this.player.cancelQueue(this.audioContext);
     },
 
@@ -637,7 +691,6 @@ export default {
       } */
 
       const onLoad = () => {
-        // console.log('Delay before onLoad: ', Date.now() - this.playStartTime);
         setTimeout(async () => {
           // preload drums
           if (!this.pianoCurrent) {
@@ -691,12 +744,64 @@ export default {
 
     loadCustomInstrument(n) {
       const info = this.player.loader.instrumentInfo(n)
+      // начать предзагрузку soundfont заранее; pianoInstrument-вотчер дождётся
+      // загрузки (waitLoad) и применит смену на границе цикла, не прерывая игру.
       this.player.loader.startLoad(this.audioContext, info.url, info.variable);
+      this.pianoInstrument = info.variable;
+    },
+
+    // предзагрузить выбранный soundfont и запланировать смену инструмента:
+    // во время игры — на ближайшей границе 4 тактов (через pendingInstrument),
+    // в остановленном состоянии — сразу. Не прерывает воспроизведение.
+    scheduleInstrumentChange(variable) {
+      if (!this.player || !this.audioContext) {
+        this.pianoInstrumentActive = variable;
+        return;
+      }
+      // дождаться, пока все запрошенные soundfont'ы догрузятся (статические уже в
+      // window — waitLoad сработает сразу; кастомный — после startLoad)
       this.player.loader.waitLoad(() => {
-        // console.log(`change instrument: ${info.title} (${info.variable})`);
-        this.pianoInstrument = info.variable;
-        // this.player.cancelQueue(this.audioContext);
+        if (this.stopped) {
+          this.pianoInstrumentActive = variable;
+          this.pendingInstrument = null;
+        } else {
+          this.pendingInstrument = variable;
+        }
       });
+    },
+
+    // применить отложенную смену инструмента (вызывается на границе цикла)
+    applyPendingInstrument() {
+      if (this.pendingInstrument) {
+        this.pianoInstrumentActive = this.pendingInstrument;
+        this.pendingInstrument = null;
+      }
+    },
+
+    // пересобрать пиано-трек (новый рисунок: стиль/chordBeats) без рестарта плеера.
+    // loadPiano создаёт новый song-объект, поэтому ensureSchedule пересоберёт schedule
+    // и заново синхронизирует noteIndex по currentSongTime (без потерь/дублей нот).
+    rebuildPiano() {
+      if (!this.pianoAllowed) return;
+      this.loadPiano();
+      const s = this.songPiano;
+      if (s && s.song) {
+        // пересчитать длину петли под новый рисунок/BPM
+        s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
+        s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
+        // сбросить кэш schedule, чтобы ensureSchedule пересобрал его и реиндексировал
+        s.scheduleFor = null;
+      }
+    },
+
+    // применить отложенную пересборку пиано (вызывается на границе цикла)
+    applyPendingPianoRebuild() {
+      if (this.pendingPianoRebuild) {
+        this.pendingPianoRebuild = false;
+        // активируем новую ширину цикла ровно на границе — вместе с пересборкой рисунка
+        this.chordBeatsActive = this.chordBeats;
+        this.rebuildPiano();
+      }
     },
 
     buildCustomInstruments() {
@@ -1047,8 +1152,6 @@ export default {
     },
 
     startPlay() {
-      const stepDuration = 44 / 1000;
-      // console.log('Delay before startPlay: ', Date.now() - this.playStartTime);
       for (let s of [this.songDrums, this.songPiano]) {
         if (!s.song) continue;
         if (!s.songOrig) {
@@ -1068,11 +1171,6 @@ export default {
 
         s.plays = 0;
 
-        if (this.songPiano.song) {
-          // TODO: preload online
-          // this.player.adjustPreset(this.audioContext, window[this.pianoInstrument]);
-        }
-
         // offset for sound latency
         if (!this.forcePlay) {
           const offset = this.audioContext.outputLatency + 0.11; // на 100 мс тормозит дополнительно, примерно
@@ -1084,118 +1182,277 @@ export default {
         // fix beats, calculate beatsCount from song duration
         s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
         s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
-        // console.log('Delay before first tick: ', Date.now() - this.playStartTime);
 
-        this.tick(s, stepDuration);
+        // сбросить кэш schedule, чтобы он пересобрался и индекс заново
+        // синхронизировался с currentSongTime на старте (важно для replay,
+        // когда ссылка на песню пиано не меняется)
+        s.scheduleFor = null;
+        s.noteIndex = 0;
+        s.lastCycleIndex = 0;
+      }
+
+      this.startScheduler();
+    },
+
+    // запустить look-ahead планировщик (вместо старого RAF-цикла)
+    startScheduler() {
+      this.stopScheduler(); // не плодить таймеры при replay
+      const loop = () => {
+        this.scheduler();
+        // допускаем докручивание текущего такта после stop (fade-out на границе цикла).
+        // Прогресс для условия берём прямо из аудио-часов (computeBeatProgress), а не из
+        // this.beatProgress, чтобы планировщик не зависел от RAF (который встаёт в фоне).
+        const p = this.computeBeatProgress();
+        const isContinue = !this.stopped || (p > 75 && p < 99);
+        if (isContinue) {
+          this.schedulerTimer = setTimeout(loop, schedulerIntervalMs);
+        } else {
+          this.schedulerTimer = null;
+        }
+      };
+      loop();
+      this.startProgressRaf();
+    },
+
+    // остановить планировщик и снять таймер (без зависших таймеров)
+    stopScheduler() {
+      if (this.schedulerTimer !== null) {
+        clearTimeout(this.schedulerTimer);
+        this.schedulerTimer = null;
+      }
+      this.stopProgressRaf();
+    },
+
+    // прогресс внутри 4-тактового цикла (0..100), вычисленный по аудио-часам:
+    // позиция воспроизведения = currentTime - songStart. Не зависит от планировщика.
+    computeBeatProgress() {
+      if (!this.audioContext) return 0;
+      const song = (this.songDrums && this.songDrums.song) ? this.songDrums : this.songPiano;
+      if (!song || !song.song) return 0;
+      const cycle = this.beatCycleDuration;
+      if (!cycle) return 0;
+      const pos = this.audioContext.currentTime - song.songStart;
+      if (pos < 0) return 0;
+      const beatTime = ((pos % cycle) + cycle) % cycle;
+      return Math.round((beatTime / cycle) * 100);
+    },
+
+    // обновить прогресс-бар и закоммитить его в store (контракт beatProgress сохранён)
+    updateProgress() {
+      const p = this.computeBeatProgress();
+      if (p !== this.beatProgress) {
+        this.beatProgress = p;
+        this.$store.commit('beatProgress', p);
       }
     },
-    tick(song, stepDuration) {
-      if (!song) return;
-      if (this.audioContext.currentTime > song.nextStepTime - stepDuration) {
-        this.sendNotes(song.song, song.songStart, song.currentSongTime, song.currentSongTime + stepDuration, song.isDrums, song.active);
-        song.currentSongTime = song.currentSongTime + stepDuration;
-        song.nextStepTime = song.nextStepTime + stepDuration;
 
-        // beat progress
-        const beatTime = song.currentSongTime % this.beatCycleDuration;
-        const p = Math.round((beatTime / this.beatCycleDuration) * 100);
-        if (p % 3 === 0) {
-          this.beatProgress = p;
-          this.$store.commit('beatProgress', p);
+    // отдельный RAF только для отображения прогресса/метронома. Самовыключается по тем
+    // же условиям, что и планировщик (учитывая fade-out текущего такта после stop).
+    startProgressRaf() {
+      this.stopProgressRaf();
+      const raf = () => {
+        this.updateProgress();
+        const p = this.beatProgress;
+        const isContinue = !this.stopped || (p > 75 && p < 99);
+        if (isContinue) {
+          this.progressRaf = requestAnimationFrame(raf);
+        } else {
+          this.progressRaf = null;
         }
+      };
+      this.progressRaf = requestAnimationFrame(raf);
+    },
+
+    // остановить RAF прогресса (без зависших кадров)
+    stopProgressRaf() {
+      if (this.progressRaf !== null) {
+        cancelAnimationFrame(this.progressRaf);
+        this.progressRaf = null;
+      }
+    },
+
+    // один проход планировщика: ставит ноты обоих треков на окно упреждения вперёд.
+    // Барабаны обрабатываем первыми, чтобы сброс пиано на границе цикла происходил
+    // в том же проходе.
+    scheduler() {
+      if (!this.audioContext) return;
+      const horizon = this.audioContext.currentTime + scheduleAheadTime;
+      this.advanceSong(this.songDrums, horizon);
+      this.advanceSong(this.songPiano, horizon);
+    },
+
+    // плоский список нот всех треков, отсортированный по when — основа для
+    // индексной (look-ahead) очереди вместо O(n)-скана на каждом шаге.
+    buildSchedule(song) {
+      const sched = [];
+      for (let t = 0; t < song.tracks.length; t++) {
+        const track = song.tracks[t];
+        for (let i = 0; i < track.notes.length; i++) {
+          sched.push({note: track.notes[i], track});
+        }
+      }
+      sched.sort((a, b) => a.note.when - b.note.when);
+      return sched;
+    },
+
+    // позиция первой ноты с when >= time (для синка индекса при пересборке schedule,
+    // напр. после смены BPM, когда song-объект заменяется новым)
+    seekNoteIndex(sched, time) {
+      let i = 0;
+      while (i < sched.length && sched[i].note.when < time) i++;
+      return i;
+    },
+
+    // гарантировать, что для текущего song собран schedule и индекс синхронизирован
+    ensureSchedule(song) {
+      if (song.scheduleFor !== song.song) {
+        song.schedule = this.buildSchedule(song.song);
+        song.scheduleFor = song.song;
+        song.noteIndex = this.seekNoteIndex(song.schedule, song.currentSongTime);
+      }
+    },
+
+    // поставить в очередь все ноты, попадающие в окно [start, end), двигая индекс.
+    // Индекс двигаем всегда (даже для muted-трека), чтобы он оставался выровнен по
+    // времени, когда piano снова включат на лету.
+    queueWindow(song, start, end) {
+      const sched = song.schedule;
+      let i = song.noteIndex;
+      // пропустить ноты до начала окна (страховка после ресинка индекса)
+      while (i < sched.length && sched[i].note.when < start) i++;
+      while (i < sched.length && sched[i].note.when < end) {
+        if (song.active) this.queueNote(song, sched[i].note, sched[i].track);
+        i++;
+      }
+      song.noteIndex = i;
+    },
+
+    // продвинуть один трек: поставить в очередь чанки нот, пока конец окна
+    // (song.nextStepTime) не догонит горизонт упреждения.
+    advanceSong(song, horizon) {
+      if (!song || !song.song) return;
+      this.ensureSchedule(song);
+      while (song.nextStepTime < horizon) {
+        const cycle = this.beatCycleDuration;
+        // граница 4 тактов: применяем отложенную смену инструмента ровно перед
+        // постановкой нот нового цикла, чтобы переход попал в ритм и был бесшовным.
+        // epsilon — чтобы floor у точной границы (currentSongTime == k*cycle, с учётом
+        // float-погрешности после умножения) надёжно давал новый индекс, а не k-1.
+        const cycleIndex = Math.floor((song.currentSongTime + 1e-9) / cycle);
+        if (cycleIndex !== song.lastCycleIndex) {
+          song.lastCycleIndex = cycleIndex;
+          this.applyPendingInstrument();
+          this.applyPendingPianoRebuild();
+          // если пересобрали пиано-трек — обновить schedule этого трека сразу,
+          // чтобы дальше в этом проходе ставить ноты уже из нового рисунка
+          this.ensureSchedule(song);
+        }
+        // не пересекать границу цикла одним окном: иначе ноты ровно на границе
+        // (первый аккорд нового цикла) попадут в очередь со старыми настройками ДО
+        // того, как applyPending* отработает на следующей итерации. Обрезаем окно по
+        // ближайшей границе, чтобы детектор cycleIndex был точен для каждой ноты окна.
+        // Также обрезаем по songBeatsDuration: для пиано она кратна cycle (cap по границе
+        // цикла и так ложится точно), но барабанная петля (songBeatsDuration не кратна
+        // cycle, напр. 16 бит при cycle=32) иначе перешагнула бы конец петли на величину
+        // до stepDuration. Этот overshoot не сбрасывался бы из nextStepTime (currentSongTime
+        // обнуляется, а songStart прыгает на точную сетку) и копился бы по петле, съедая
+        // look-ahead. Cap по songBeatsDuration сажает финальное окно ровно на конец петли.
+        const nextBoundary = (cycleIndex + 1) * cycle;
+        const windowEnd = Math.min(
+          song.currentSongTime + stepDuration,
+          nextBoundary,
+          song.songBeatsDuration
+        );
+        const stepDelta = windowEnd - song.currentSongTime;
+        this.queueWindow(song, song.currentSongTime, windowEnd);
+        song.currentSongTime = windowEnd;
+        song.nextStepTime = song.nextStepTime + stepDelta;
+
+        // прогресс-бар обновляет отдельный RAF (updateProgress), а не планировщик —
+        // так перерисовка UI не влияет на тайминг звука.
 
         // the end of the song, loop, sync
-        if (song.currentSongTime > song.songBeatsDuration) {
-          song.currentSongTime = 0
-          this.sendNotes(song.song, song.songStart, 0, song.currentSongTime, song.isDrums, song.active);
+        // >= (а не >): окно теперь обрезается по границе цикла (windowEnd cap выше),
+        // а для пиано songBeatsDuration кратно cycle — значит финальное окно ложится
+        // ТОЧНО на songBeatsDuration. С `>` сброс не сработал бы до следующего пустого
+        // чанка [duration, duration+stepDuration), что сдвигает старт новой петли на один
+        // stepDuration и съедает look-ahead (и копит дрейф nextStepTime). epsilon — на
+        // случай, когда cap из-за порядка float-умножений ляжет на волос ниже границы.
+        if (song.currentSongTime >= song.songBeatsDuration - 1e-9) {
+          song.currentSongTime = 0;
+          song.noteIndex = 0; // перенос индекса через границу цикла без потерь/дублей
+          song.lastCycleIndex = 0; // граница цикла — применяем отложенную смену инструмента
+          this.applyPendingInstrument();
+          this.applyPendingPianoRebuild();
+          this.ensureSchedule(song); // обновить schedule после возможной пересборки пиано
           song.plays++;
-          console.log('plays: ', song.plays);
+          if (debug) console.log('plays: ', song.plays);
 
-          // adjust songStart for better bpm sync with external apps
+          // Перепривязать songStart к абсолютной сетке тактов, заданной songStartFirst.
+          // ВАЖНО: опираемся на запланированную границу (сетку), а НЕ на
+          // audioContext.currentTime. Этот блок срабатывает в look-ahead проходе, когда
+          // курсор (currentSongTime) пересекает границу петли на величину до
+          // scheduleAheadTime РАНЬШЕ, чем аудио-часы реально до неё дойдут. Если считать
+          // дрейф по currentTime, он окажется заниженным, songStart уедет в будущее (до
+          // ~scheduleAheadTime ≈ 120 мс) и на стыке петли будет слышен провал/заикание.
+          // songStartFirst + timeFromPlay — это и есть бесшовное продолжение
+          // (songStart предыдущей петли + songBeatsDuration), без накопления float-дрейфа.
           const timeFromPlay = song.plays * song.songBeatsDuration;
-          song.songStartRounded = timeFromPlay;
-          song.songStartRelative = this.audioContext.currentTime - song.songStartFirst;
-          song.songDelta = song.songStartRelative - song.songStartRounded;
-          song.songStart = song.songStartFirst + timeFromPlay - song.songDelta;
+          song.songStart = song.songStartFirst + timeFromPlay;
 
           if (song.isDrums && this.songPiano.song) {
             // reset piano also
             this.songPiano.currentSongTime = 0;
             this.songPiano.songStart = song.songStart;
-            this.sendNotes(this.songPiano.song, this.songPiano.songStart, 0, this.songPiano.currentSongTime, this.songPiano.isDrums, this.songPiano.active);
+            this.songPiano.noteIndex = 0;
+            // выровнять lastCycleIndex по сброшенному currentSongTime: отложенные смены
+            // уже применены выше для барабанов, иначе piano повторит их вне границы
+            this.songPiano.lastCycleIndex = 0;
           }
         }
       }
-      window.requestAnimationFrame(() => {
-				const isContinue = !this.stopped || (this.beatProgress > 75 && this.beatProgress < 99);
-        if (isContinue) this.tick(song, stepDuration);
-      });
     },
-    sendNotes(song, songStart, start, end, isDrums = false, active) {
-      if (!song) return;
-      if (!active) return;
-      for (let t = 0; t < song.tracks.length; t++) {
-        const track = song.tracks[t];
-        for (let i = 0; i < track.notes.length; i++) {
-          if (track.notes[i].when >= start && track.notes[i].when < end) {
-            const when = songStart + track.notes[i].when;
-            if (isNaN(when)) {
-              console.log('when is NaN: ');
-              console.log('songStart: ', songStart);
-              console.log('track.notes[i].when: ', track.notes[i].when);
-              continue;
-            }
-            let duration = track.notes[i].duration;
-            if (duration > 3) {
-              duration = 3;
-            }
-            let instr = track.info.variable;
 
-            let pitch = track.notes[i].pitch;
-            if (isDrums) {
-              // piano, pitch > 59 are piano notes, not drums
-              if (pitch >= 60) {
-                // transpose depends of pianoPitchOffset
-                pitch = pitch + this.pianoPitchOffset;
-                instr = instr.replace(track.info.variable, this.pianoInstrument);
-                if (this.pianoSustain) duration = duration * 2;
-              }
-              // drums, set instr mapped by notes
-              else {
-                instr = instrDrumsMap[pitch] || track.info.variable;
-              }
-            } else {
-              // piano pitch
-              pitch = pitch + this.pianoPitchOffset;
-              // replace instrument to this.pianoInstrument on the fly
-              instr = instr.replace(track.info.variable, this.pianoInstrument);
-
-              if (this.pianoSustain) duration = duration * 2;
-            }
-
-            const v = isDrums ? track.volume : this.pianoVolume;
-            if (debug && !isDrums) console.log('pitch: ', pitch);
-
-            if (!this.playDelay) {
-              this.playDelay = Date.now() - this.playStartTime;
-              // console.log('Delay before send first note: ', this.playDelay);
-            }
-            this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, pitch, duration, v, track.notes[i].slides);
-          }
-        }
+    // поставить одну ноту в очередь WebAudioFont с абсолютным when по аудио-часам
+    queueNote(song, note, track) {
+      const when = song.songStart + note.when;
+      if (isNaN(when)) {
+        console.log('when is NaN: ');
+        console.log('songStart: ', song.songStart);
+        console.log('note.when: ', note.when);
+        return;
       }
-      /*for (let b = 0; b < song.beats.length; b++) {
-        const beat = song.beats[b];
-        for (let i = 0; i < beat.notes.length; i++) {
-          if (beat.notes[i].when >= start && beat.notes[i].when < end) {
-            const when = songStart + beat.notes[i].when;
-            const duration = 1.5;
-            const instr = beat.info.variable;
-            const v = beat.volume / 2;
-            this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, beat.n, duration, v);
-          }
+      let duration = note.duration;
+      if (duration > 3) {
+        duration = 3;
+      }
+      let instr = track.info.variable;
+
+      let pitch = note.pitch;
+      if (song.isDrums) {
+        // piano, pitch > 59 are piano notes, not drums
+        if (pitch >= 60) {
+          // transpose depends of pianoPitchOffset
+          pitch = pitch + this.pianoPitchOffset;
+          instr = this.pianoInstrumentActive;
+          if (this.pianoSustain) duration = duration * 2;
         }
-      }*/
+        // drums, set instr mapped by notes
+        else {
+          instr = instrDrumsMap[pitch] || track.info.variable;
+        }
+      } else {
+        // piano pitch
+        pitch = pitch + this.pianoPitchOffset;
+        // replace instrument to active piano instrument (смена — на границе цикла)
+        instr = this.pianoInstrumentActive;
+        if (this.pianoSustain) duration = duration * 2;
+      }
+
+      const v = song.isDrums ? track.volume : this.pianoVolume;
+      if (debug && !song.isDrums) console.log('pitch: ', pitch);
+
+      this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, pitch, duration, v, note.slides);
     }
   },
   mounted() {
@@ -1238,6 +1495,7 @@ export default {
   },
   beforeDestroy() {
     this.stop();
+    this.stopScheduler(); // снять таймер планировщика, чтобы не завис после размонтирования
   },
 };
 </script>
