@@ -17,7 +17,6 @@
           @click="toggle"
         >{{ stopped ? 'Play' : 'Stop' }}
         </el-button>
-        <!--{{ playDelay }}-->
       </el-col>
       <el-col :span="3" class="beat__rever">
         <el-checkbox-button class="beat__checkbutton" v-model="reverCurrent">rever</el-checkbox-button>
@@ -268,9 +267,6 @@ export default {
       player: null,
       audioContext: null,
 
-      currentSongTime: 0,
-      songStart: 0,
-      nextStepTime: 0,
       schedulerTimer: null,
       // RAF, обновляющий только прогресс-бар/метроном (отдельно от аудио-планировщика,
       // чтобы перерисовка UI не влияла на тайминг звука)
@@ -305,8 +301,6 @@ export default {
       pianoPitchOffset: 12,
       pianoSustain: true,
       forcePlay: true,
-      playStartTime: 0, // TODO: remove
-      playDelay: '', // TODO: remove
       firstPlay: true,
 
       presets: [],
@@ -503,7 +497,6 @@ export default {
     // force - from the beginning
     play({force = true}) {
       this.stop();
-      this.playStartTime = Date.now();
       this.error = '';
       this.forcePlay = force || (!this?.songDrums?.song && !this?.songPiano?.song) || this.firstPlay;
       this.firstPlay = false;
@@ -602,7 +595,6 @@ export default {
     stop() {
       if (!this.player) return;
       this.stopped = true;
-      this.playDelay = '';
       // зафиксировать отложенную смену инструмента/пересборку пиано, чтобы следующий
       // запуск (в т.ч. resume без force) использовал уже выбранные параметры
       this.applyPendingInstrument();
@@ -682,7 +674,6 @@ export default {
       } */
 
       const onLoad = () => {
-        // console.log('Delay before onLoad: ', Date.now() - this.playStartTime);
         setTimeout(async () => {
           // preload drums
           if (!this.pianoCurrent) {
@@ -1142,7 +1133,6 @@ export default {
     },
 
     startPlay() {
-      // console.log('Delay before startPlay: ', Date.now() - this.playStartTime);
       for (let s of [this.songDrums, this.songPiano]) {
         if (!s.song) continue;
         if (!s.songOrig) {
@@ -1173,7 +1163,6 @@ export default {
         // fix beats, calculate beatsCount from song duration
         s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
         s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
-        // console.log('Delay before first tick: ', Date.now() - this.playStartTime);
 
         // сбросить кэш schedule, чтобы он пересобрался и индекс заново
         // синхронизировался с currentSongTime на старте (важно для replay,
@@ -1410,10 +1399,6 @@ export default {
       const v = song.isDrums ? track.volume : this.pianoVolume;
       if (debug && !song.isDrums) console.log('pitch: ', pitch);
 
-      if (!this.playDelay) {
-        this.playDelay = Date.now() - this.playStartTime;
-        // console.log('Delay before send first note: ', this.playDelay);
-      }
       this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, pitch, duration, v, note.slides);
     }
   },
