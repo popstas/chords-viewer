@@ -546,21 +546,28 @@ export default {
         nextStepTime: 0,
         lowestNote: null,
         highestNote: null,
+        // look-ahead очередь нот: плоский список нот трека(ов), отсортированный по
+        // when, и указатель на следующую ноту — чтобы не сканировать все ноты на
+        // каждом шаге планировщика (O(n) -> амортизированный O(1) на шаг).
+        schedule: null,
+        scheduleFor: null, // ссылка на song, для которой собран schedule
+        noteIndex: 0,
       }
     },
     applyBpm(song) {
       if (!song) return;
-      const songBpm = JSON.parse(JSON.stringify(song));
-      songBpm.duration = song.duration * this.bpmMultiplier;
-
-      songBpm.tracks[0].notes = song.tracks[0].notes.map(note => {
-        return {
-          ...note, ...{
-            when: note.when * this.bpmMultiplier,
-          }
-        };
-      });
-      return songBpm;
+      // Без JSON deep-clone в горячем пути: делаем поверхностные копии song/track
+      // и заново строим массивы нот с пересчитанным when. slides/info переиспользуем
+      // по ссылке (их не мутируем) — меньше аллокаций и нагрузки на GC на телефоне.
+      const mult = this.bpmMultiplier;
+      return {
+        ...song,
+        duration: song.duration * mult,
+        tracks: song.tracks.map(track => ({
+          ...track,
+          notes: track.notes.map(note => ({...note, when: note.when * mult})),
+        })),
+      };
     },
 
     beatProgressColor(num) {
@@ -1091,6 +1098,12 @@ export default {
         s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
         s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
         // console.log('Delay before first tick: ', Date.now() - this.playStartTime);
+
+        // сбросить кэш schedule, чтобы он пересобрался и индекс заново
+        // синхронизировался с currentSongTime на старте (важно для replay,
+        // когда ссылка на песню пиано не меняется)
+        s.scheduleFor = null;
+        s.noteIndex = 0;
       }
 
       this.startScheduler();
@@ -1130,12 +1143,59 @@ export default {
       this.advanceSong(this.songPiano, horizon);
     },
 
+    // плоский список нот всех треков, отсортированный по when — основа для
+    // индексной (look-ahead) очереди вместо O(n)-скана на каждом шаге.
+    buildSchedule(song) {
+      const sched = [];
+      for (let t = 0; t < song.tracks.length; t++) {
+        const track = song.tracks[t];
+        for (let i = 0; i < track.notes.length; i++) {
+          sched.push({note: track.notes[i], track});
+        }
+      }
+      sched.sort((a, b) => a.note.when - b.note.when);
+      return sched;
+    },
+
+    // позиция первой ноты с when >= time (для синка индекса при пересборке schedule,
+    // напр. после смены BPM, когда song-объект заменяется новым)
+    seekNoteIndex(sched, time) {
+      let i = 0;
+      while (i < sched.length && sched[i].note.when < time) i++;
+      return i;
+    },
+
+    // гарантировать, что для текущего song собран schedule и индекс синхронизирован
+    ensureSchedule(song) {
+      if (song.scheduleFor !== song.song) {
+        song.schedule = this.buildSchedule(song.song);
+        song.scheduleFor = song.song;
+        song.noteIndex = this.seekNoteIndex(song.schedule, song.currentSongTime);
+      }
+    },
+
+    // поставить в очередь все ноты, попадающие в окно [start, end), двигая индекс.
+    // Индекс двигаем всегда (даже для muted-трека), чтобы он оставался выровнен по
+    // времени, когда piano снова включат на лету.
+    queueWindow(song, start, end) {
+      const sched = song.schedule;
+      let i = song.noteIndex;
+      // пропустить ноты до начала окна (страховка после ресинка индекса)
+      while (i < sched.length && sched[i].note.when < start) i++;
+      while (i < sched.length && sched[i].note.when < end) {
+        if (song.active) this.queueNote(song, sched[i].note, sched[i].track);
+        i++;
+      }
+      song.noteIndex = i;
+    },
+
     // продвинуть один трек: поставить в очередь чанки нот, пока конец окна
     // (song.nextStepTime) не догонит горизонт упреждения.
     advanceSong(song, horizon) {
       if (!song || !song.song) return;
+      this.ensureSchedule(song);
       while (song.nextStepTime < horizon) {
-        this.sendNotes(song.song, song.songStart, song.currentSongTime, song.currentSongTime + stepDuration, song.isDrums, song.active);
+        this.queueWindow(song, song.currentSongTime, song.currentSongTime + stepDuration);
         song.currentSongTime = song.currentSongTime + stepDuration;
         song.nextStepTime = song.nextStepTime + stepDuration;
 
@@ -1150,7 +1210,7 @@ export default {
         // the end of the song, loop, sync
         if (song.currentSongTime > song.songBeatsDuration) {
           song.currentSongTime = 0;
-          this.sendNotes(song.song, song.songStart, 0, song.currentSongTime, song.isDrums, song.active);
+          song.noteIndex = 0; // перенос индекса через границу цикла без потерь/дублей
           song.plays++;
           if (debug) console.log('plays: ', song.plays);
 
@@ -1165,76 +1225,56 @@ export default {
             // reset piano also
             this.songPiano.currentSongTime = 0;
             this.songPiano.songStart = song.songStart;
-            this.sendNotes(this.songPiano.song, this.songPiano.songStart, 0, this.songPiano.currentSongTime, this.songPiano.isDrums, this.songPiano.active);
+            this.songPiano.noteIndex = 0;
           }
         }
       }
     },
-    sendNotes(song, songStart, start, end, isDrums = false, active) {
-      if (!song) return;
-      if (!active) return;
-      for (let t = 0; t < song.tracks.length; t++) {
-        const track = song.tracks[t];
-        for (let i = 0; i < track.notes.length; i++) {
-          if (track.notes[i].when >= start && track.notes[i].when < end) {
-            const when = songStart + track.notes[i].when;
-            if (isNaN(when)) {
-              console.log('when is NaN: ');
-              console.log('songStart: ', songStart);
-              console.log('track.notes[i].when: ', track.notes[i].when);
-              continue;
-            }
-            let duration = track.notes[i].duration;
-            if (duration > 3) {
-              duration = 3;
-            }
-            let instr = track.info.variable;
 
-            let pitch = track.notes[i].pitch;
-            if (isDrums) {
-              // piano, pitch > 59 are piano notes, not drums
-              if (pitch >= 60) {
-                // transpose depends of pianoPitchOffset
-                pitch = pitch + this.pianoPitchOffset;
-                instr = instr.replace(track.info.variable, this.pianoInstrument);
-                if (this.pianoSustain) duration = duration * 2;
-              }
-              // drums, set instr mapped by notes
-              else {
-                instr = instrDrumsMap[pitch] || track.info.variable;
-              }
-            } else {
-              // piano pitch
-              pitch = pitch + this.pianoPitchOffset;
-              // replace instrument to this.pianoInstrument on the fly
-              instr = instr.replace(track.info.variable, this.pianoInstrument);
-
-              if (this.pianoSustain) duration = duration * 2;
-            }
-
-            const v = isDrums ? track.volume : this.pianoVolume;
-            if (debug && !isDrums) console.log('pitch: ', pitch);
-
-            if (!this.playDelay) {
-              this.playDelay = Date.now() - this.playStartTime;
-              // console.log('Delay before send first note: ', this.playDelay);
-            }
-            this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, pitch, duration, v, track.notes[i].slides);
-          }
-        }
+    // поставить одну ноту в очередь WebAudioFont с абсолютным when по аудио-часам
+    queueNote(song, note, track) {
+      const when = song.songStart + note.when;
+      if (isNaN(when)) {
+        console.log('when is NaN: ');
+        console.log('songStart: ', song.songStart);
+        console.log('note.when: ', note.when);
+        return;
       }
-      /*for (let b = 0; b < song.beats.length; b++) {
-        const beat = song.beats[b];
-        for (let i = 0; i < beat.notes.length; i++) {
-          if (beat.notes[i].when >= start && beat.notes[i].when < end) {
-            const when = songStart + beat.notes[i].when;
-            const duration = 1.5;
-            const instr = beat.info.variable;
-            const v = beat.volume / 2;
-            this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, beat.n, duration, v);
-          }
+      let duration = note.duration;
+      if (duration > 3) {
+        duration = 3;
+      }
+      let instr = track.info.variable;
+
+      let pitch = note.pitch;
+      if (song.isDrums) {
+        // piano, pitch > 59 are piano notes, not drums
+        if (pitch >= 60) {
+          // transpose depends of pianoPitchOffset
+          pitch = pitch + this.pianoPitchOffset;
+          instr = this.pianoInstrument;
+          if (this.pianoSustain) duration = duration * 2;
         }
-      }*/
+        // drums, set instr mapped by notes
+        else {
+          instr = instrDrumsMap[pitch] || track.info.variable;
+        }
+      } else {
+        // piano pitch
+        pitch = pitch + this.pianoPitchOffset;
+        // replace instrument to this.pianoInstrument on the fly
+        instr = this.pianoInstrument;
+        if (this.pianoSustain) duration = duration * 2;
+      }
+
+      const v = song.isDrums ? track.volume : this.pianoVolume;
+      if (debug && !song.isDrums) console.log('pitch: ', pitch);
+
+      if (!this.playDelay) {
+        this.playDelay = Date.now() - this.playStartTime;
+        // console.log('Delay before send first note: ', this.playDelay);
+      }
+      this.player.queueWaveTable(this.audioContext, this.input, window[instr], when, pitch, duration, v, note.slides);
     }
   },
   mounted() {
