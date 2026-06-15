@@ -272,6 +272,9 @@ export default {
       songStart: 0,
       nextStepTime: 0,
       schedulerTimer: null,
+      // RAF, обновляющий только прогресс-бар/метроном (отдельно от аудио-планировщика,
+      // чтобы перерисовка UI не влияла на тайминг звука)
+      progressRaf: null,
 
       stopped: true,
       bpmCurrent: 0,
@@ -1159,8 +1162,11 @@ export default {
       this.stopScheduler(); // не плодить таймеры при replay
       const loop = () => {
         this.scheduler();
-        // допускаем докручивание текущего такта после stop (fade-out на границе цикла)
-        const isContinue = !this.stopped || (this.beatProgress > 75 && this.beatProgress < 99);
+        // допускаем докручивание текущего такта после stop (fade-out на границе цикла).
+        // Прогресс для условия берём прямо из аудио-часов (computeBeatProgress), а не из
+        // this.beatProgress, чтобы планировщик не зависел от RAF (который встаёт в фоне).
+        const p = this.computeBeatProgress();
+        const isContinue = !this.stopped || (p > 75 && p < 99);
         if (isContinue) {
           this.schedulerTimer = setTimeout(loop, schedulerIntervalMs);
         } else {
@@ -1168,6 +1174,7 @@ export default {
         }
       };
       loop();
+      this.startProgressRaf();
     },
 
     // остановить планировщик и снять таймер (без зависших таймеров)
@@ -1175,6 +1182,55 @@ export default {
       if (this.schedulerTimer !== null) {
         clearTimeout(this.schedulerTimer);
         this.schedulerTimer = null;
+      }
+      this.stopProgressRaf();
+    },
+
+    // прогресс внутри 4-тактового цикла (0..100), вычисленный по аудио-часам:
+    // позиция воспроизведения = currentTime - songStart. Не зависит от планировщика.
+    computeBeatProgress() {
+      if (!this.audioContext) return 0;
+      const song = (this.songDrums && this.songDrums.song) ? this.songDrums : this.songPiano;
+      if (!song || !song.song) return 0;
+      const cycle = this.beatCycleDuration;
+      if (!cycle) return 0;
+      const pos = this.audioContext.currentTime - song.songStart;
+      if (pos < 0) return 0;
+      const beatTime = ((pos % cycle) + cycle) % cycle;
+      return Math.round((beatTime / cycle) * 100);
+    },
+
+    // обновить прогресс-бар и закоммитить его в store (контракт beatProgress сохранён)
+    updateProgress() {
+      const p = this.computeBeatProgress();
+      if (p !== this.beatProgress) {
+        this.beatProgress = p;
+        this.$store.commit('beatProgress', p);
+      }
+    },
+
+    // отдельный RAF только для отображения прогресса/метронома. Самовыключается по тем
+    // же условиям, что и планировщик (учитывая fade-out текущего такта после stop).
+    startProgressRaf() {
+      this.stopProgressRaf();
+      const raf = () => {
+        this.updateProgress();
+        const p = this.beatProgress;
+        const isContinue = !this.stopped || (p > 75 && p < 99);
+        if (isContinue) {
+          this.progressRaf = requestAnimationFrame(raf);
+        } else {
+          this.progressRaf = null;
+        }
+      };
+      this.progressRaf = requestAnimationFrame(raf);
+    },
+
+    // остановить RAF прогресса (без зависших кадров)
+    stopProgressRaf() {
+      if (this.progressRaf !== null) {
+        cancelAnimationFrame(this.progressRaf);
+        this.progressRaf = null;
       }
     },
 
@@ -1251,13 +1307,8 @@ export default {
         song.currentSongTime = song.currentSongTime + stepDuration;
         song.nextStepTime = song.nextStepTime + stepDuration;
 
-        // beat progress
-        const beatTime = song.currentSongTime % this.beatCycleDuration;
-        const p = Math.round((beatTime / this.beatCycleDuration) * 100);
-        if (p % 3 === 0) {
-          this.beatProgress = p;
-          this.$store.commit('beatProgress', p);
-        }
+        // прогресс-бар обновляет отдельный RAF (updateProgress), а не планировщик —
+        // так перерисовка UI не влияет на тайминг звука.
 
         // the end of the song, loop, sync
         if (song.currentSongTime > song.songBeatsDuration) {

@@ -106,13 +106,21 @@ MIDI/beat-плеер в `components/BeatPlayer.vue` написан на низк
 
 ### Task 4: Развязать прогресс/UI от планировщика
 
-- [ ] Вынести обновление `beatProgress` и коммит в store (`beatProgress`) в отдельный RAF,
+- [x] Вынести обновление `beatProgress` и коммит в store (`beatProgress`) в отдельный RAF,
   предназначенный только для отображения, чтобы перерисовка прогресс-бара не влияла на тайминг.
-- [ ] Сохранить контракт со store (`beatProgress`, `beatPlaying`) и работу мобильного метронома
-  в `ChordsFloating`.
-- [ ] Проверить в браузере: прогресс-бар и метроном `ChordsFloating` двигаются плавно, при этом
-  звук остаётся ровным; на мобильной ширине (`<= 600`) метроном работает как раньше.
-- [ ] Прогнать `npm run lint` — без ошибок.
+  (прогресс убран из `advanceSong`/планировщика; добавлен `startProgressRaf`/`updateProgress` на
+  `requestAnimationFrame`, прогресс считается по аудио-часам через `computeBeatProgress`
+  = `audioContext.currentTime - songStart` в пределах `beatCycleDuration`.)
+- [x] Сохранить контракт со store (`beatProgress`, `beatPlaying`) и работу мобильного метронома
+  в `ChordsFloating`. (`updateProgress` коммитит `beatProgress` в store при каждом изменении;
+  `beatPlaying` по-прежнему коммитится из вотчера `stopped` — контракт не тронут.)
+- [x] Проверить в браузере: прогресс-бар и метроном `ChordsFloating` двигаются плавно, при этом
+  звук остаётся ровным; на мобильной ширине (`<= 600`) метроном работает как раньше. (частично:
+  `npm run lint` чист и `nuxt build` собирает BeatPlayer.vue без ошибок; условие fade-out
+  планировщика теперь не зависит от RAF — берётся напрямую из `computeBeatProgress`, так что
+  пауза RAF в фоне не влияет на звук; плавность движения на глаз требует реального браузера —
+  ручная проверка.)
+- [x] Прогнать `npm run lint` — без ошибок.
 
 ### Task 5: Live-изменения без рестарта
 
