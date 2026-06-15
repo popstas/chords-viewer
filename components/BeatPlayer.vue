@@ -287,6 +287,9 @@ export default {
       pianoInstrumentActive: "_tone_0000_JCLive_sf2_file",
       // отложенная смена инструмента, применяется на ближайшей границе цикла
       pendingInstrument: null,
+      // отложенная пересборка пиано-трека (смена стиля/chordBeats), применяется на
+      // ближайшей границе цикла вместо жёсткого replay() с перезапуском с нуля
+      pendingPianoRebuild: false,
       customInstrumentNum: 0,
       customInstruments: [],
       customInstrumentsPicked: [],
@@ -392,7 +395,10 @@ export default {
       this.songPiano.active = val;
     },
     pianoStyle() {
-      this.loadPiano();
+      // во время игры — пересобрать пиано-трек на ближайшей границе цикла (без рестарта),
+      // в остановленном состоянии — сразу подготовить к следующему запуску.
+      if (this.stopped) this.rebuildPiano();
+      else this.pendingPianoRebuild = true;
     },
     pianoInstrument(val) {
       if (!val) return;
@@ -434,8 +440,10 @@ export default {
       }
     },
     chordBeats() {
-      this.loadPiano();
-      this.replay(this);
+      // chordBeats меняет рисунок пиано (и beatCycleDuration). Раньше дёргали жёсткий
+      // replay() с перезапуском с нуля; теперь — перепланирование на границе цикла.
+      if (this.stopped) this.rebuildPiano();
+      else this.pendingPianoRebuild = true;
     },
   },
   methods: {
@@ -545,10 +553,6 @@ export default {
       }
 
     },
-    replay: debounce((self) => {
-      if (!self.stopped) self.play({force: true});
-    }, 500),
-
     songInit() {
       return {
         song: null,
@@ -599,9 +603,10 @@ export default {
       if (!this.player) return;
       this.stopped = true;
       this.playDelay = '';
-      // зафиксировать отложенную смену инструмента, чтобы следующий запуск
-      // использовал уже выбранный инструмент
+      // зафиксировать отложенную смену инструмента/пересборку пиано, чтобы следующий
+      // запуск (в т.ч. resume без force) использовал уже выбранные параметры
       this.applyPendingInstrument();
+      this.applyPendingPianoRebuild();
       // планировщик сам докрутит текущий такт (fade-out на границе цикла) и
       // остановится по isContinue; beforeDestroy / stopScheduler гарантируют,
       // что таймер не зависнет.
@@ -762,6 +767,30 @@ export default {
       if (this.pendingInstrument) {
         this.pianoInstrumentActive = this.pendingInstrument;
         this.pendingInstrument = null;
+      }
+    },
+
+    // пересобрать пиано-трек (новый рисунок: стиль/chordBeats) без рестарта плеера.
+    // loadPiano создаёт новый song-объект, поэтому ensureSchedule пересоберёт schedule
+    // и заново синхронизирует noteIndex по currentSongTime (без потерь/дублей нот).
+    rebuildPiano() {
+      if (!this.pianoAllowed) return;
+      this.loadPiano();
+      const s = this.songPiano;
+      if (s && s.song) {
+        // пересчитать длину петли под новый рисунок/BPM
+        s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
+        s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
+        // сбросить кэш schedule, чтобы ensureSchedule пересобрал его и реиндексировал
+        s.scheduleFor = null;
+      }
+    },
+
+    // применить отложенную пересборку пиано (вызывается на границе цикла)
+    applyPendingPianoRebuild() {
+      if (this.pendingPianoRebuild) {
+        this.pendingPianoRebuild = false;
+        this.rebuildPiano();
       }
     },
 
@@ -1302,6 +1331,10 @@ export default {
         if (cycleIndex !== song.lastCycleIndex) {
           song.lastCycleIndex = cycleIndex;
           this.applyPendingInstrument();
+          this.applyPendingPianoRebuild();
+          // если пересобрали пиано-трек — обновить schedule этого трека сразу,
+          // чтобы дальше в этом проходе ставить ноты уже из нового рисунка
+          this.ensureSchedule(song);
         }
         this.queueWindow(song, song.currentSongTime, song.currentSongTime + stepDuration);
         song.currentSongTime = song.currentSongTime + stepDuration;
@@ -1316,6 +1349,8 @@ export default {
           song.noteIndex = 0; // перенос индекса через границу цикла без потерь/дублей
           song.lastCycleIndex = 0; // граница цикла — применяем отложенную смену инструмента
           this.applyPendingInstrument();
+          this.applyPendingPianoRebuild();
+          this.ensureSchedule(song); // обновить schedule после возможной пересборки пиано
           song.plays++;
           if (debug) console.log('plays: ', song.plays);
 

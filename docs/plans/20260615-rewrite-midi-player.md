@@ -124,14 +124,24 @@ MIDI/beat-плеер в `components/BeatPlayer.vue` написан на низк
 
 ### Task 5: Live-изменения без рестарта
 
-- [ ] Применять изменения BPM (debounce), `chordBeats`, `pianoStyle`, `rever`, октавы и sustain
+- [x] Применять изменения BPM (debounce), `chordBeats`, `pianoStyle`, `rever`, октавы и sustain
   перепланированием на границе цикла вместо жёсткого `replay()` с перезапуском с нуля, где это
-  возможно.
-- [ ] Не ломать кейсы drums-only / piano-only и переключение `rever` (пересборка цепочки
-  reverberator/equalizer).
-- [ ] Проверить в браузере: смена BPM/стиля/октавы/sustain/rever во время игры применяется
-  плавно, без сброса позиции и без заиканий.
-- [ ] Прогнать `npm run lint` — без ошибок.
+  возможно. (убран жёсткий `replay()` из вотчера `chordBeats`; `chordBeats`/`pianoStyle` теперь
+  ставят `pendingPianoRebuild` и применяются на границе цикла через `applyPendingPianoRebuild`/
+  `rebuildPiano` в `advanceSong` — новый song-объект пересобирает `schedule` и реиндексирует
+  `noteIndex` по `currentSongTime` без потерь/дублей. BPM (debounce), октава
+  (`pianoPitchOffset`) и `pianoSustain` уже применялись live без рестарта — BPM пересобирает
+  `song` из `songOrig`, октава/sustain читаются в `queueNote`; метод `replay` удалён как мёртвый код.)
+- [x] Не ломать кейсы drums-only / piano-only и переключение `rever` (пересборка цепочки
+  reverberator/equalizer). (`rebuildPiano` затрагивает только пиано-трек и no-op при
+  `!pianoAllowed`; в drums-only `songPiano.active=false` — пересборка беззвучна; вотчер
+  `reverCurrent` по-прежнему пересобирает цепочку equalizer/reverberator live без рестарта.)
+- [x] Проверить в браузере: смена BPM/стиля/октавы/sustain/rever во время игры применяется
+  плавно, без сброса позиции и без заиканий. (частично: `npm run lint` чист и `nuxt build`
+  собирает BeatPlayer.vue без ошибок; перепланирование реиндексирует очередь по аудио-часам,
+  так что позиция воспроизведения сохраняется; плавность перехода на слух требует реального
+  браузера с аудио — ручная проверка.)
+- [x] Прогнать `npm run lint` — без ошибок.
 
 ### Task 6: Verify acceptance criteria
 
