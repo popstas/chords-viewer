@@ -215,6 +215,14 @@ import {chordNotesMap} from "~/store";
 
 const debug = false;
 
+// look-ahead планировщик по аудио-часам ("A Tale of Two Clocks", Chris Wilson):
+// таймер на setTimeout с малым шагом будит планировщик, который ставит в очередь
+// ноты на окно упреждения вперёд по AudioContext.currentTime. Не зависит от кадров
+// и переживает подвисания UI в пределах окна упреждения.
+const schedulerIntervalMs = 25; // как часто просыпается планировщик
+const scheduleAheadTime = 0.12; // окно упреждения, сек (100-150 мс)
+const stepDuration = 0.044; // гранулярность чанка постановки нот, сек
+
 const bpmDefault = 100;
 const pianoInstrumentsMap = {
   'piano': '_tone_0000_JCLive_sf2_file',
@@ -263,6 +271,7 @@ export default {
       currentSongTime: 0,
       songStart: 0,
       nextStepTime: 0,
+      schedulerTimer: null,
 
       stopped: true,
       bpmCurrent: 0,
@@ -565,6 +574,9 @@ export default {
       if (!this.player) return;
       this.stopped = true;
       this.playDelay = '';
+      // планировщик сам докрутит текущий такт (fade-out на границе цикла) и
+      // остановится по isContinue; beforeDestroy / stopScheduler гарантируют,
+      // что таймер не зависнет.
       // this.player.cancelQueue(this.audioContext);
     },
 
@@ -1047,7 +1059,6 @@ export default {
     },
 
     startPlay() {
-      const stepDuration = 44 / 1000;
       // console.log('Delay before startPlay: ', Date.now() - this.playStartTime);
       for (let s of [this.songDrums, this.songPiano]) {
         if (!s.song) continue;
@@ -1068,11 +1079,6 @@ export default {
 
         s.plays = 0;
 
-        if (this.songPiano.song) {
-          // TODO: preload online
-          // this.player.adjustPreset(this.audioContext, window[this.pianoInstrument]);
-        }
-
         // offset for sound latency
         if (!this.forcePlay) {
           const offset = this.audioContext.outputLatency + 0.11; // на 100 мс тормозит дополнительно, примерно
@@ -1085,13 +1091,50 @@ export default {
         s.songBeatsCount = Math.round(s.song.duration / this.beatDuration);
         s.songBeatsDuration = s.songBeatsCount * this.beatDuration;
         // console.log('Delay before first tick: ', Date.now() - this.playStartTime);
+      }
 
-        this.tick(s, stepDuration);
+      this.startScheduler();
+    },
+
+    // запустить look-ahead планировщик (вместо старого RAF-цикла)
+    startScheduler() {
+      this.stopScheduler(); // не плодить таймеры при replay
+      const loop = () => {
+        this.scheduler();
+        // допускаем докручивание текущего такта после stop (fade-out на границе цикла)
+        const isContinue = !this.stopped || (this.beatProgress > 75 && this.beatProgress < 99);
+        if (isContinue) {
+          this.schedulerTimer = setTimeout(loop, schedulerIntervalMs);
+        } else {
+          this.schedulerTimer = null;
+        }
+      };
+      loop();
+    },
+
+    // остановить планировщик и снять таймер (без зависших таймеров)
+    stopScheduler() {
+      if (this.schedulerTimer !== null) {
+        clearTimeout(this.schedulerTimer);
+        this.schedulerTimer = null;
       }
     },
-    tick(song, stepDuration) {
-      if (!song) return;
-      if (this.audioContext.currentTime > song.nextStepTime - stepDuration) {
+
+    // один проход планировщика: ставит ноты обоих треков на окно упреждения вперёд.
+    // Барабаны обрабатываем первыми, чтобы сброс пиано на границе цикла происходил
+    // в том же проходе.
+    scheduler() {
+      if (!this.audioContext) return;
+      const horizon = this.audioContext.currentTime + scheduleAheadTime;
+      this.advanceSong(this.songDrums, horizon);
+      this.advanceSong(this.songPiano, horizon);
+    },
+
+    // продвинуть один трек: поставить в очередь чанки нот, пока конец окна
+    // (song.nextStepTime) не догонит горизонт упреждения.
+    advanceSong(song, horizon) {
+      if (!song || !song.song) return;
+      while (song.nextStepTime < horizon) {
         this.sendNotes(song.song, song.songStart, song.currentSongTime, song.currentSongTime + stepDuration, song.isDrums, song.active);
         song.currentSongTime = song.currentSongTime + stepDuration;
         song.nextStepTime = song.nextStepTime + stepDuration;
@@ -1106,10 +1149,10 @@ export default {
 
         // the end of the song, loop, sync
         if (song.currentSongTime > song.songBeatsDuration) {
-          song.currentSongTime = 0
+          song.currentSongTime = 0;
           this.sendNotes(song.song, song.songStart, 0, song.currentSongTime, song.isDrums, song.active);
           song.plays++;
-          console.log('plays: ', song.plays);
+          if (debug) console.log('plays: ', song.plays);
 
           // adjust songStart for better bpm sync with external apps
           const timeFromPlay = song.plays * song.songBeatsDuration;
@@ -1126,10 +1169,6 @@ export default {
           }
         }
       }
-      window.requestAnimationFrame(() => {
-				const isContinue = !this.stopped || (this.beatProgress > 75 && this.beatProgress < 99);
-        if (isContinue) this.tick(song, stepDuration);
-      });
     },
     sendNotes(song, songStart, start, end, isDrums = false, active) {
       if (!song) return;
@@ -1238,6 +1277,7 @@ export default {
   },
   beforeDestroy() {
     this.stop();
+    this.stopScheduler(); // снять таймер планировщика, чтобы не завис после размонтирования
   },
 };
 </script>
