@@ -1355,6 +1355,9 @@ export default {
             this.songPiano.currentSongTime = 0;
             this.songPiano.songStart = song.songStart;
             this.songPiano.noteIndex = 0;
+            // выровнять lastCycleIndex по сброшенному currentSongTime: отложенные смены
+            // уже применены выше для барабанов, иначе piano повторит их вне границы
+            this.songPiano.lastCycleIndex = 0;
           }
         }
       }
