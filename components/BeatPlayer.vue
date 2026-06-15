@@ -294,6 +294,12 @@ export default {
       pianoStyle: "12312312",
       pianoVolume: 0.1,
       chordBeats: 4,
+      // активная ширина цикла (chordBeats звучащего пиано-рисунка). Отделена от
+      // реактивного chordBeats, чтобы смена chordBeats на лету не дёргала
+      // beatCycleDuration мгновенно: иначе детектор границы цикла (cycleIndex) сдвинется
+      // в середине цикла и применит pendingPianoRebuild/pendingInstrument не на границе.
+      // Обновляется только в момент применения рисунка (старт, стоп-смена, граница цикла).
+      chordBeatsActive: 4,
       beatProgress: 0,
       error: '',
       songDrums: null,
@@ -335,7 +341,10 @@ export default {
       return 60 / this.bpmCurrent;
     },
     beatCycleDuration() {
-      return this.beatDuration * this.chordBeats * 4;
+      // chordBeatsActive (не реактивный chordBeats): ширина цикла меняется только когда
+      // новый пиано-рисунок реально становится активным, иначе детектор границы цикла
+      // сработает в середине цикла при смене chordBeats на лету.
+      return this.beatDuration * this.chordBeatsActive * 4;
     },
     highestPitch() {
       return this.songDrums?.highestNote?.pitch;
@@ -436,8 +445,14 @@ export default {
     chordBeats() {
       // chordBeats меняет рисунок пиано (и beatCycleDuration). Раньше дёргали жёсткий
       // replay() с перезапуском с нуля; теперь — перепланирование на границе цикла.
-      if (this.stopped) this.rebuildPiano();
-      else this.pendingPianoRebuild = true;
+      // chordBeatsActive (ширину цикла) двигаем только когда рисунок реально применяется:
+      // на стопе — сразу, на лету — в applyPendingPianoRebuild на границе цикла.
+      if (this.stopped) {
+        this.chordBeatsActive = this.chordBeats;
+        this.rebuildPiano();
+      } else {
+        this.pendingPianoRebuild = true;
+      }
     },
   },
   methods: {
@@ -498,6 +513,8 @@ export default {
     play({force = true}) {
       this.stop();
       this.error = '';
+      // на старте активная ширина цикла = текущий выбранный chordBeats
+      this.chordBeatsActive = this.chordBeats;
       this.forcePlay = force || (!this?.songDrums?.song && !this?.songPiano?.song) || this.firstPlay;
       this.firstPlay = false;
       if (this.forcePlay) {
@@ -781,6 +798,8 @@ export default {
     applyPendingPianoRebuild() {
       if (this.pendingPianoRebuild) {
         this.pendingPianoRebuild = false;
+        // активируем новую ширину цикла ровно на границе — вместе с пересборкой рисунка
+        this.chordBeatsActive = this.chordBeats;
         this.rebuildPiano();
       }
     },
@@ -1314,9 +1333,12 @@ export default {
       if (!song || !song.song) return;
       this.ensureSchedule(song);
       while (song.nextStepTime < horizon) {
+        const cycle = this.beatCycleDuration;
         // граница 4 тактов: применяем отложенную смену инструмента ровно перед
         // постановкой нот нового цикла, чтобы переход попал в ритм и был бесшовным.
-        const cycleIndex = Math.floor(song.currentSongTime / this.beatCycleDuration);
+        // epsilon — чтобы floor у точной границы (currentSongTime == k*cycle, с учётом
+        // float-погрешности после умножения) надёжно давал новый индекс, а не k-1.
+        const cycleIndex = Math.floor((song.currentSongTime + 1e-9) / cycle);
         if (cycleIndex !== song.lastCycleIndex) {
           song.lastCycleIndex = cycleIndex;
           this.applyPendingInstrument();
@@ -1325,15 +1347,38 @@ export default {
           // чтобы дальше в этом проходе ставить ноты уже из нового рисунка
           this.ensureSchedule(song);
         }
-        this.queueWindow(song, song.currentSongTime, song.currentSongTime + stepDuration);
-        song.currentSongTime = song.currentSongTime + stepDuration;
-        song.nextStepTime = song.nextStepTime + stepDuration;
+        // не пересекать границу цикла одним окном: иначе ноты ровно на границе
+        // (первый аккорд нового цикла) попадут в очередь со старыми настройками ДО
+        // того, как applyPending* отработает на следующей итерации. Обрезаем окно по
+        // ближайшей границе, чтобы детектор cycleIndex был точен для каждой ноты окна.
+        // Также обрезаем по songBeatsDuration: для пиано она кратна cycle (cap по границе
+        // цикла и так ложится точно), но барабанная петля (songBeatsDuration не кратна
+        // cycle, напр. 16 бит при cycle=32) иначе перешагнула бы конец петли на величину
+        // до stepDuration. Этот overshoot не сбрасывался бы из nextStepTime (currentSongTime
+        // обнуляется, а songStart прыгает на точную сетку) и копился бы по петле, съедая
+        // look-ahead. Cap по songBeatsDuration сажает финальное окно ровно на конец петли.
+        const nextBoundary = (cycleIndex + 1) * cycle;
+        const windowEnd = Math.min(
+          song.currentSongTime + stepDuration,
+          nextBoundary,
+          song.songBeatsDuration
+        );
+        const stepDelta = windowEnd - song.currentSongTime;
+        this.queueWindow(song, song.currentSongTime, windowEnd);
+        song.currentSongTime = windowEnd;
+        song.nextStepTime = song.nextStepTime + stepDelta;
 
         // прогресс-бар обновляет отдельный RAF (updateProgress), а не планировщик —
         // так перерисовка UI не влияет на тайминг звука.
 
         // the end of the song, loop, sync
-        if (song.currentSongTime > song.songBeatsDuration) {
+        // >= (а не >): окно теперь обрезается по границе цикла (windowEnd cap выше),
+        // а для пиано songBeatsDuration кратно cycle — значит финальное окно ложится
+        // ТОЧНО на songBeatsDuration. С `>` сброс не сработал бы до следующего пустого
+        // чанка [duration, duration+stepDuration), что сдвигает старт новой петли на один
+        // stepDuration и съедает look-ahead (и копит дрейф nextStepTime). epsilon — на
+        // случай, когда cap из-за порядка float-умножений ляжет на волос ниже границы.
+        if (song.currentSongTime >= song.songBeatsDuration - 1e-9) {
           song.currentSongTime = 0;
           song.noteIndex = 0; // перенос индекса через границу цикла без потерь/дублей
           song.lastCycleIndex = 0; // граница цикла — применяем отложенную смену инструмента
@@ -1343,12 +1388,17 @@ export default {
           song.plays++;
           if (debug) console.log('plays: ', song.plays);
 
-          // adjust songStart for better bpm sync with external apps
+          // Перепривязать songStart к абсолютной сетке тактов, заданной songStartFirst.
+          // ВАЖНО: опираемся на запланированную границу (сетку), а НЕ на
+          // audioContext.currentTime. Этот блок срабатывает в look-ahead проходе, когда
+          // курсор (currentSongTime) пересекает границу петли на величину до
+          // scheduleAheadTime РАНЬШЕ, чем аудио-часы реально до неё дойдут. Если считать
+          // дрейф по currentTime, он окажется заниженным, songStart уедет в будущее (до
+          // ~scheduleAheadTime ≈ 120 мс) и на стыке петли будет слышен провал/заикание.
+          // songStartFirst + timeFromPlay — это и есть бесшовное продолжение
+          // (songStart предыдущей петли + songBeatsDuration), без накопления float-дрейфа.
           const timeFromPlay = song.plays * song.songBeatsDuration;
-          song.songStartRounded = timeFromPlay;
-          song.songStartRelative = this.audioContext.currentTime - song.songStartFirst;
-          song.songDelta = song.songStartRelative - song.songStartRounded;
-          song.songStart = song.songStartFirst + timeFromPlay - song.songDelta;
+          song.songStart = song.songStartFirst + timeFromPlay;
 
           if (song.isDrums && this.songPiano.song) {
             // reset piano also
