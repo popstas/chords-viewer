@@ -19,6 +19,7 @@ export default ({store}) => {
       "showBeats",
       "webhookShow",
       "beatCustomInstruments",
+      "queue",
     ]
   })(store);
 };

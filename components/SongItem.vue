@@ -37,6 +37,14 @@
             >
               <icon name="drum"></icon>
             </el-button>
+            <el-button
+              :class="{'song-transpose__queue': true, 'song-transpose__queue_active': inQueue}"
+              size="mini"
+              :title="inQueue ? 'Убрать из очереди' : 'Добавить в очередь'"
+              @click="toggleQueue"
+            >
+              <icon :name="inQueue ? 'check' : 'list-ul'"></icon>
+            </el-button>
             <FontSize style="float: right"></FontSize>
           </div>
           <div v-else>
@@ -149,6 +157,8 @@ import "vue-awesome/icons/edit";
 import "vue-awesome/icons/qrcode";
 import "vue-awesome/icons/share-alt";
 import "vue-awesome/icons/link";
+import "vue-awesome/icons/list-ul";
+import "vue-awesome/icons/check";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
 import "vue-awesome/icons/drum";
@@ -217,6 +227,10 @@ export default {
 
     isBeat() {
       return !!this.song.beat?.name;
+    },
+
+    inQueue() {
+      return this.$store.state.queue.includes(this.song.url);
     },
 
     isPiano() {
@@ -321,6 +335,10 @@ export default {
     changeFilter(name, value) {
       this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
+    },
+
+    toggleQueue() {
+      this.$store.dispatch("toggleQueue", this.song.url);
     },
 
     share() {

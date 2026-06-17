@@ -28,6 +28,7 @@ export const state = () => ({
   autoscroll: false,
   playlist: [],
   playlistCurrent: -1,
+  queue: [],
   toolbarHidden: false,
   shows: {},
   comments: {},
@@ -165,6 +166,9 @@ export const mutations = {
   },
   playlistCurrent(state, newValue) {
     state.playlistCurrent = newValue;
+  },
+  queue(state, newValue) {
+    state.queue = newValue;
   },
   fontSize(state, newValue) {
     state.fontSize = newValue;
@@ -345,7 +349,11 @@ export const actions = {
         );
       } else if (isGenre) {
         let g = state.filter.q.replace("жанр: ", "");
-        result = result.filter(song => song.genres && song.genres.includes(g));
+        if (g === "next") {
+          result = result.filter(song => state.queue.includes(song.url));
+        } else {
+          result = result.filter(song => song.genres && song.genres.includes(g));
+        }
       } else {
         const isFuse = false;
 
@@ -430,7 +438,27 @@ export const actions = {
       });
     }
 
+    // queue ("next") keeps the order songs were added in
+    if (state.filter.q === "жанр: next") {
+      result = state.queue
+        .map(url => result.find(song => song.url === url))
+        .filter(Boolean);
+    }
+
     commit("setFilteredSongs", result);
+  },
+
+  toggleQueue({commit, state, dispatch}, url) {
+    const queue = state.queue.includes(url)
+      ? state.queue.filter(u => u !== url)
+      : [...state.queue, url];
+    commit("queue", queue);
+    if (state.filter.q === "жанр: next") dispatch("filterSongs");
+  },
+
+  clearQueue({commit, state, dispatch}) {
+    commit("queue", []);
+    if (state.filter.q === "жанр: next") dispatch("changeFilter", {name: "q", value: ""});
   },
 
   updateTranspose({commit, state}) {

@@ -100,6 +100,9 @@
   .song-transpose .el-button {
     border: none;
   }
+  .song-transpose__queue_active {
+    color: #409eff;
+  }
 
   &__link {
     display: inline-block;

@@ -76,6 +76,12 @@
 
       <ul class="toolbar__search-genres search-genres">
         <li
+          v-if="queueLength"
+          :class="{'search-genres__genre': true, 'search-genres__genre_queue': true, active: q === 'жанр: next'}"
+          @click="q = q === 'жанр: next' ? '' : 'жанр: next'"
+        >next ({{ queueLength }})<i class="el-icon-close search-genres__clear" title="Очистить очередь" @click.stop="clearQueue"></i>
+        </li>
+        <li
           :class="{'search-genres__genre': true, active: q === 'жанр: ' + genre}"
           v-for="genre in genres"
           :key="genre"
@@ -289,6 +295,21 @@
         color: #409eff;
       }
     }
+
+    &__genre_queue {
+      font-weight: bold;
+    }
+
+    &__clear {
+      margin-left: 4px;
+      cursor: pointer;
+      opacity: 0.6;
+
+      &:hover {
+        opacity: 1;
+        color: #f56c6c;
+      }
+    }
   }
 
   .search-artists {
@@ -453,6 +474,10 @@ export default {
 
     playlistCurrent() {
       return this.$store.state.playlistCurrent;
+    },
+
+    queueLength() {
+      return this.$store.state.queue.length;
     }
   },
 
@@ -479,6 +504,10 @@ export default {
     changeFilter(name, value) {
       this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
+    },
+
+    clearQueue() {
+      this.$store.dispatch("clearQueue");
     },
 
     isMobile() {
