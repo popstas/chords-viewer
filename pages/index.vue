@@ -6,6 +6,7 @@
     </div>
     <ChordsFloating v-if="!$store.state.readerMode"></ChordsFloating>
     <PlayerFloating></PlayerFloating>
+    <VerseNav></VerseNav>
     <div v-if="!activeSong.url && isTest && !isMobile()">
       <!-- <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer> -->
       <details>
@@ -46,6 +47,7 @@ import Toolbar from "~/components/Toolbar";
 import PlayerFloating from "~/components/PlayerFloating";
 import SongList from "~/components/SongList";
 import ChordsFloating from "~/components/ChordsFloating";
+import VerseNav from "~/components/VerseNav";
 import BeatPlayer from "~/components/BeatPlayer";
 import BeatPlayerAll from "~/components/BeatPlayerAll";
 
@@ -54,6 +56,7 @@ export default {
     Toolbar,
     SongList,
     ChordsFloating,
+    VerseNav,
     PlayerFloating,
     BeatPlayer,
     BeatPlayerAll,
