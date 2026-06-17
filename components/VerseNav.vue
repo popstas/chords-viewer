@@ -47,10 +47,14 @@ const ONE_COLUMN_MAX_WIDTH = 1200;
 // отступ сверху, чтобы строка после <hr> не пряталась под floating-аккордами
 const TOP_OFFSET = 60;
 
+// длительность анимации прокрутки, мс — быстро, но плавно
+const SCROLL_DURATION = 450;
+
 export default {
   data() {
     return {
       isNarrow: true,
+      scrollRaf: null,
     };
   },
 
@@ -107,11 +111,29 @@ export default {
         if (delta <= 0) return;
       }
 
-      if (container) {
-        container.scrollBy({ top: delta, behavior: "smooth" });
-      } else {
-        window.scrollBy({ top: delta, behavior: "smooth" });
-      }
+      this.animateScrollBy(container, delta);
+    },
+
+    // плавная прокрутка через rAF: нативный smooth у контейнера виртуального
+    // списка часто срабатывает мгновенным прыжком, поэтому анимируем сами
+    animateScrollBy(container, delta) {
+      if (this.scrollRaf) cancelAnimationFrame(this.scrollRaf);
+
+      const getPos = () => (container ? container.scrollTop : window.scrollY);
+      const setPos = pos =>
+        container ? (container.scrollTop = pos) : window.scrollTo(0, pos);
+      // easeInOutQuad — быстрый разгон/торможение, мягкие края
+      const ease = t => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+      const start = getPos();
+      const startTime = performance.now();
+
+      const step = now => {
+        const t = Math.min(1, (now - startTime) / SCROLL_DURATION);
+        setPos(start + delta * ease(t));
+        this.scrollRaf = t < 1 ? requestAnimationFrame(step) : null;
+      };
+      this.scrollRaf = requestAnimationFrame(step);
     },
   },
 
@@ -122,6 +144,7 @@ export default {
 
   destroyed() {
     window.removeEventListener("resize", this.updateIsNarrow);
+    if (this.scrollRaf) cancelAnimationFrame(this.scrollRaf);
   },
 };
 </script>
