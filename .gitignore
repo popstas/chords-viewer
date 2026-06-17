@@ -20,3 +20,8 @@ data
 assets/instruments_raw/*
 assets/midi/other/*
 assets/wav/*
+
+# Playwright
+test-results/
+playwright-report/
+.playwright/
