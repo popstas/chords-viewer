@@ -25,9 +25,9 @@
           <div v-if="active && !$store.state.readerMode" class="song-transpose">
             <input type="hidden" v-shortkey="{cDown: ['ctrl', 'arrowdown']}" @shortkey="transposeLevel--"/>
             <input type="hidden" v-shortkey="{cUp: ['ctrl', 'arrowup']}" @shortkey="transposeLevel++"/>
-            <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
-            <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
-            <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+            <el-button size="small" @click="transposeLevel--">&minus;</el-button>
+            <el-button size="small" disabled>{{ transposeLevel }}</el-button>
+            <el-button size="small" @click="transposeLevel++">&plus;</el-button>
             <el-button
               v-if="$store.state.showBeats && (isBeat || isPianoAllowed)"
               class="song-transpose__beat"
@@ -124,9 +124,9 @@
             >{{ genre }}
             </li>
             <li class="song-categories__item song-categories__item_shows">просмотров:
-              <el-button size="mini" disabled v-html="shows"></el-button>
-              <el-button size="mini" icon="el-icon-minus" @click="addShows(-1)"></el-button>
-              <el-button size="mini" icon="el-icon-plus" @click="addShows(1)"></el-button>
+              <el-button size="small" disabled v-html="shows"></el-button>
+              <el-button size="small" @click="addShows(-1)">&minus;</el-button>
+              <el-button size="small" @click="addShows(1)">&plus;</el-button>
             </li>
           </ul>
 
