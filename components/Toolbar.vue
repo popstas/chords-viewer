@@ -79,7 +79,7 @@
           v-if="queueLength"
           :class="{'search-genres__genre': true, 'search-genres__genre_queue': true, active: q === 'жанр: next'}"
           @click="q = q === 'жанр: next' ? '' : 'жанр: next'"
-        >next ({{ queueLength }})<i class="el-icon-close search-genres__clear" title="Очистить очередь" @click.stop="clearQueue"></i>
+        >next ({{ queueLength }})<span class="search-genres__clear" title="Очистить очередь" @click.stop="clearQueue">×</span>
         </li>
         <li
           :class="{'search-genres__genre': true, active: q === 'жанр: ' + genre}"
@@ -303,6 +303,9 @@
     &__clear {
       margin-left: 4px;
       cursor: pointer;
+      color: var(--color);
+      font-size: 16px;
+      line-height: 1;
       opacity: 0.6;
 
       &:hover {
