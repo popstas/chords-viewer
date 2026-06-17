@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "~/utils/firebase";
 
 export default {
   data() {
@@ -38,7 +39,7 @@ export default {
     };
   },
   created() {
-    firebase.auth().onAuthStateChanged(user => {
+    onAuthStateChanged(auth, user => {
       if (user) {
         this.user = user;
       }

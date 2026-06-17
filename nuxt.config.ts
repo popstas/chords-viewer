@@ -37,6 +37,10 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'static',
+    // keep the generated site in dist/ so scripts/deploy.sh (cd dist) keeps working
+    output: {
+      publicDir: 'dist',
+    },
   },
 
   compatibilityDate: '2025-09-13',
