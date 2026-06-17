@@ -1,3 +1,22 @@
+# [4.7.0](https://github.com/popstas/chords-viewer/compare/v4.6.0...v4.7.0) (2026-06-17)
+
+
+### Bug Fixes
+
+* **queue:** make next-list clear control visible on dark theme ([c8b22d7](https://github.com/popstas/chords-viewer/commit/c8b22d7110e2100803cd932bba9982dd6b19a16a))
+
+
+### Features
+
+* **beat-player:** collapse beat controls behind a drum toggle button ([a6f63a8](https://github.com/popstas/chords-viewer/commit/a6f63a8136910c5718bebba8b761d79287bdcea5))
+* **queue:** add song queue with "next" genre filter ([3bdbad5](https://github.com/popstas/chords-viewer/commit/3bdbad56ad5dd25de5a99a4f52a2bdc6c5174e22))
+* **queue:** collapse song after adding it to the queue ([5eb28a6](https://github.com/popstas/chords-viewer/commit/5eb28a63a400443aedd29ba5fd297032272ed418))
+* **songlist:** shift opened song one line down ([a123937](https://github.com/popstas/chords-viewer/commit/a123937c39f2312d9d41b9adb8bfebf309b0b8ef))
+* **verse-nav:** add corner button to scroll to next <hr> ([38945ab](https://github.com/popstas/chords-viewer/commit/38945ab7959652e9431bca163b69565b0e11ee0f))
+* **verse-nav:** smooth rAF scroll instead of native discrete jump ([a371032](https://github.com/popstas/chords-viewer/commit/a37103210c0ebcabc276dc237c6c977edcb44440))
+
+
+
 # [4.6.0](https://github.com/popstas/chords-viewer/compare/v4.5.0...v4.6.0) (2026-06-15)
 
 
@@ -12,6 +31,8 @@
 * **mobile:** metronome progressbar in chords panel ([0e5cc66](https://github.com/popstas/chords-viewer/commit/0e5cc66a7b63852641aff328a1aaa444bf757eff))
 * rewrite MIDI/beat player with look-ahead audio-clock scheduler ([#48](https://github.com/popstas/chords-viewer/issues/48)) ([5187256](https://github.com/popstas/chords-viewer/commit/51872563d1cba4dd096c612e1b77821cbb9dec6a))
 
+
+
 # [4.5.0](https://github.com/popstas/chords-viewer/compare/v4.4.1...v4.5.0) (2024-08-13)
 
 
@@ -19,6 +40,8 @@
 
 * bpm progress color ([b930ee3](https://github.com/popstas/chords-viewer/commit/b930ee3f7c90af9784a6906d8ee08019ea3271c3))
 * show size, show beats switches ([63cb71f](https://github.com/popstas/chords-viewer/commit/63cb71f532502378ce3b9871a642c0fb9ee50e8e))
+
+
 
 ## [4.4.1](https://github.com/popstas/chords-viewer/compare/v4.4.0...v4.4.1) (2024-08-13)
 
@@ -28,6 +51,8 @@
 * add chords Cmaj7, Ab ([ff26fba](https://github.com/popstas/chords-viewer/commit/ff26fba0685670bdcce29a6bbffa2c58d2f5b532))
 * autoscoll on mobile ([96d9fc3](https://github.com/popstas/chords-viewer/commit/96d9fc3a31f5968b79b1e714c90f14aafe7c7332))
 * update beats, intro parse ([9ff59f7](https://github.com/popstas/chords-viewer/commit/9ff59f7edc001f4bc8d27be107cc2244c1a8c012))
+
+
 
 # [4.4.0](https://github.com/popstas/chords-viewer/compare/v4.3.0...v4.4.0) (2024-01-08)
 
@@ -47,6 +72,8 @@
 * beat progress bar ([2e41276](https://github.com/popstas/chords-viewer/commit/2e4127640317589b7f6b6774ec35da13d66a94ce))
 * instrument style presets for quick change while playing ([ecbbcbd](https://github.com/popstas/chords-viewer/commit/ecbbcbdf8600bca00c8dd1cad8a209e892772106))
 * select any webaudiofont instrument (online only) ([c83a374](https://github.com/popstas/chords-viewer/commit/c83a37453179675228d442eb7bafb287f60fe9bd))
+
+
 
 # [4.3.0](https://github.com/popstas/chords-viewer/compare/v4.2.0...v4.3.0) (2024-01-06)
 
@@ -68,6 +95,8 @@
 
 * BPMMeter, tune BPM with taps ([ac6ca88](https://github.com/popstas/chords-viewer/commit/ac6ca889429881036a10470f80457bafe8985c27))
 * reader mode, hide all except text ([9ede90a](https://github.com/popstas/chords-viewer/commit/9ede90a63be46df51c05e2030c45c64f3d28f9d7))
+
+
 
 # [4.2.0](https://github.com/popstas/chords-viewer/compare/v4.1.0...v4.2.0) (2024-01-05)
 
@@ -94,6 +123,8 @@
 * untranspose chords for piano ([97e59fd](https://github.com/popstas/chords-viewer/commit/97e59fde6e9ca00b002b24fbbcc4b8f2333aac24))
 * url arguments for piano config ([0c64617](https://github.com/popstas/chords-viewer/commit/0c64617dfad5007809aed392c2a7f7b3b4c22db9))
 
+
+
 # [4.1.0](https://github.com/popstas/chords-viewer/compare/v4.0.0...v4.1.0) (2023-12-17)
 
 
@@ -110,12 +141,16 @@
 * play drums and piano at the same time ([952b7ff](https://github.com/popstas/chords-viewer/commit/952b7ffc113c00d93ec4f2103fa0e90711a67b1c))
 * support song custom bpm, beat intro ([cc5e50c](https://github.com/popstas/chords-viewer/commit/cc5e50c80cc479ae3d68ca8efdf6a47bad98475d))
 
+
+
 # [4.0.0](https://github.com/popstas/chords-viewer/compare/v3.0.0...v4.0.0) (2023-12-12)
 
 
 ### Features
 
 * beats midi player ([b26e8c0](https://github.com/popstas/chords-viewer/commit/b26e8c0ef093af584fd913a6f04659a2aaffdb8d))
+
+
 
 # [3.0.0](https://github.com/popstas/chords-viewer/compare/v2.9.0...v3.0.0) (2023-12-01)
 
@@ -124,6 +159,8 @@
 
 * virtual scroll for mobile, allow unlimited song collection (1000+) ([32b3ef1](https://github.com/popstas/chords-viewer/commit/32b3ef1b86c28725d8d4f1793f88a5e511b84138))
 
+
+
 # [2.9.0](https://github.com/popstas/chords-viewer/compare/v2.8.1...v2.9.0) (2023-09-18)
 
 
@@ -131,6 +168,8 @@
 
 * sort artists by rate shows/songs ([b49144f](https://github.com/popstas/chords-viewer/commit/b49144f5b437fae5bdc0c4e68344c499f8828bd7))
 * xl screen size (2000+ px) ([3422436](https://github.com/popstas/chords-viewer/commit/3422436a281b3fd865fe80ec88a420ee8f7ba790))
+
+
 
 ## [2.8.1](https://github.com/popstas/chords-viewer/compare/v2.8.0...v2.8.1) (2023-08-21)
 
@@ -148,6 +187,8 @@
 * add hide button to toolbar ([868cc01](https://github.com/popstas/chords-viewer/commit/868cc011a0e5e1318f4fb94567ac622bafcbb841))
 * shows by artists ([3aaf46c](https://github.com/popstas/chords-viewer/commit/3aaf46c806c35f5a4fe33646d0aee0ac705204ed))
 
+
+
 # [2.8.0](https://github.com/popstas/chords-viewer/compare/v2.7.0...v2.8.0) (2023-06-04)
 
 
@@ -161,6 +202,8 @@
 
 * customizable show shows ([b03a972](https://github.com/popstas/chords-viewer/commit/b03a9724cb5e0b37449e8236e456acc497e3edd9))
 * remove filter "popular", it replaced by genre filters ([29489a0](https://github.com/popstas/chords-viewer/commit/29489a0c4faf202207f612d2a2f8f042c977fdd7))
+
+
 
 # [2.7.0](https://github.com/popstas/chords-viewer/compare/v2.6.2...v2.7.0) (2023-03-21)
 
@@ -176,6 +219,8 @@
 
 * copy song text to clipboard ([7820eb0](https://github.com/popstas/chords-viewer/commit/7820eb06724b42e59c5717759340acd6fc012de4))
 
+
+
 ## [2.6.2](https://github.com/popstas/chords-viewer/compare/v2.6.1...v2.6.2) (2023-02-03)
 
 
@@ -188,12 +233,16 @@
 
 * get url with filtered songs, read from get query ?q=... ([1fdc42a](https://github.com/popstas/chords-viewer/commit/1fdc42a3ab220cf757d7684a8aaaf8f1879b8b60))
 
+
+
 ## [2.6.1](https://github.com/popstas/chords-viewer/compare/v2.6.0...v2.6.1) (2023-01-01)
 
 
 ### Bug Fixes
 
 * better detect of chords line for english songs ([fc0223f](https://github.com/popstas/chords-viewer/commit/fc0223f0d0a2a14f57eac227402d9b371ede99c4))
+
+
 
 # [2.6.0](https://github.com/popstas/chords-viewer/compare/v2.5.0...v2.6.0) (2022-08-06)
 
@@ -205,9 +254,11 @@
 
 ### Features
 
+* выбор размера добавлен в песню ([fe87cbe](https://github.com/popstas/chords-viewer/commit/fe87cbe0c1a5bb23ab4e7c5d06b88df4d1dfb6af))
 * comments for song ([3f78cb2](https://github.com/popstas/chords-viewer/commit/3f78cb2a09e7c934df841e9c834676f4b28dca6f))
 * filter by comment ([54dd814](https://github.com/popstas/chords-viewer/commit/54dd81430eacf938652dd8dbc742ac775b7839af))
-* выбор размера добавлен в песню ([fe87cbe](https://github.com/popstas/chords-viewer/commit/fe87cbe0c1a5bb23ab4e7c5d06b88df4d1dfb6af))
+
+
 
 # [2.5.0](https://github.com/popstas/chords-viewer/compare/v2.4.7...v2.5.0) (2021-12-05)
 
@@ -222,7 +273,11 @@
 
 * выбор тёмной темы при первом открытии, если в системе установлена тёмная тема по умолчанию ([af85869](https://github.com/popstas/chords-viewer/commit/af858695ee780283a945d5be599881628099c4ae))
 
+
+
 ## [2.4.7](https://github.com/popstas/chords-viewer/compare/v2.4.6...v2.4.7) (2021-09-05)
+
+
 
 ## [2.4.6](https://github.com/popstas/chords-viewer/compare/v2.4.5...v2.4.6) (2021-09-05)
 
@@ -231,15 +286,19 @@
 
 * hr as text separator ([7ea7bb3](https://github.com/popstas/chords-viewer/commit/7ea7bb3f98f72dbb727375d21c8e701939844026))
 
+
+
 ## [2.4.5](https://github.com/popstas/chords-viewer/compare/v2.4.4...v2.4.5) (2021-08-29)
 
 
 ### Bug Fixes
 
+* уменьшено расстояние между аккордами с точкой ([eff9769](https://github.com/popstas/chords-viewer/commit/eff97694a63851fd54a67509ff91a6636dc4d021))
 * add app name to title ([81a1999](https://github.com/popstas/chords-viewer/commit/81a1999a03b1bf1f70d932331edbe5bed427cf48))
 * amdm chords images url fix ([5c649de](https://github.com/popstas/chords-viewer/commit/5c649def562ce8f80c3558a2ae61d9dbee1409b4))
 * try to fix autoscroll freeze on mobile ([80fad9f](https://github.com/popstas/chords-viewer/commit/80fad9f41b1986491bb6ca985a009ef1b5782375))
-* уменьшено расстояние между аккордами с точкой ([eff9769](https://github.com/popstas/chords-viewer/commit/eff97694a63851fd54a67509ff91a6636dc4d021))
+
+
 
 ## [2.4.4](https://github.com/popstas/chords-viewer/compare/v2.4.3...v2.4.4) (2021-01-13)
 
@@ -248,6 +307,8 @@
 
 * fix qrcod ([9877246](https://github.com/popstas/chords-viewer/commit/9877246ba00e108bb0b2635f94dce80731715569))
 
+
+
 ## [2.4.3](https://github.com/popstas/chords-viewer/compare/v2.4.2...v2.4.3) (2021-01-13)
 
 
@@ -255,6 +316,8 @@
 
 * fix empty song addShow error ([9e9de60](https://github.com/popstas/chords-viewer/commit/9e9de60c65b3779aca3e2910fc370c6b501b1aeb))
 * stop autoscroll when scroll to top ([9834f3d](https://github.com/popstas/chords-viewer/commit/9834f3d233334a0a6ede63548068c0fbe54d3ec2))
+
+
 
 ## [2.4.2](https://github.com/popstas/chords-viewer/compare/v2.4.1...v2.4.2) (2021-01-13)
 
@@ -265,6 +328,8 @@
 * faster startup, change filter, songs loading indicator ([eab755b](https://github.com/popstas/chords-viewer/commit/eab755bb2afa88b4aa444eb4bfeca2ff34cac0b6))
 * group controls in sidebar ([4e3d0ba](https://github.com/popstas/chords-viewer/commit/4e3d0ba77969122496ce57c85f5c27a2a35cb7ec))
 
+
+
 ## [2.4.1](https://github.com/popstas/chords-viewer/compare/v2.4.0...v2.4.1) (2021-01-12)
 
 
@@ -274,12 +339,16 @@
 * less saruration for primary color in dark mode ([f072eb9](https://github.com/popstas/chords-viewer/commit/f072eb970c78be32c18bbe4c410c0432ce8fcd31))
 * qr code in dark mode ([aabee6c](https://github.com/popstas/chords-viewer/commit/aabee6c9f00117c1b18c207264a1c646e42a11b3))
 
+
+
 # [2.4.0](https://github.com/popstas/chords-viewer/compare/v2.3.0...v2.4.0) (2021-01-12)
 
 
 ### Features
 
 * dark mode ([14030a7](https://github.com/popstas/chords-viewer/commit/14030a73a2a38d3f09becd307fa0bdca179ad131))
+
+
 
 # [2.3.0](https://github.com/popstas/chords-viewer/compare/v2.2.1...v2.3.0) (2021-01-10)
 
@@ -294,7 +363,11 @@
 * qr code generate, go to song on qrcode read ([630c6e8](https://github.com/popstas/chords-viewer/commit/630c6e8bd7d6eb42e7fda7a397a82a431a2c0a5c))
 * qr code scanner ([c8d7a6c](https://github.com/popstas/chords-viewer/commit/c8d7a6c79ffbf3e6876404a2551c7f385fc4610a))
 
+
+
 ## [2.2.1](https://github.com/popstas/chords-viewer/compare/v2.2.0...v2.2.1) (2020-12-17)
+
+
 
 # [2.2.0](https://github.com/popstas/chords-viewer/compare/v2.1.0...v2.2.0) (2020-10-16)
 
@@ -303,19 +376,23 @@
 
 * webhookShow, send http request on song view ([0b6d328](https://github.com/popstas/chords-viewer/commit/0b6d328e03a5a475f612772b78d9b2c3b3cb8ed3))
 
+
+
 # [2.1.0](https://github.com/popstas/chords-viewer/compare/v2.0.0...v2.1.0) (2020-07-14)
 
 
 ### Bug Fixes
 
-* Bb -> A#, Eb -> F# ([fba5dea](https://github.com/popstas/chords-viewer/commit/fba5deac3ce2d9816fd2589b14506e411d92612c))
-* картинки для аккордов укулеле и пианино типа G#, G#m ([b45b85a](https://github.com/popstas/chords-viewer/commit/b45b85a6c34b198072e6d0e66037b4dbfc8a4e98)), closes [G#m](https://github.com/G/issues/m)
+* картинки для аккордов укулеле и пианино типа G#, G#m ([b45b85a](https://github.com/popstas/chords-viewer/commit/b45b85a6c34b198072e6d0e66037b4dbfc8a4e98))
 * при открытии песни по урлу просмотр не учитывается ([a32d88e](https://github.com/popstas/chords-viewer/commit/a32d88e07f1b17e180555a3a3e458651bec5094a))
+* Bb -> A#, Eb -> F# ([fba5dea](https://github.com/popstas/chords-viewer/commit/fba5deac3ce2d9816fd2589b14506e411d92612c))
 
 
 ### Features
 
 * возможность менять просмотры ([2749415](https://github.com/popstas/chords-viewer/commit/2749415c46fb55b643bc23b3ee0d355d284896fa))
+
+
 
 # [2.0.0](https://github.com/popstas/chords-viewer/compare/v1.22.0...v2.0.0) (2020-07-12)
 
@@ -333,10 +410,12 @@
 
 ### Features
 
-* ctrl+up/down - транспонирование ([6e18ee5](https://github.com/popstas/chords-viewer/commit/6e18ee5580b305d85706cc2349f09128f28347eb))
 * авторизация Google для хранения счётчика просмотров ([ddb1150](https://github.com/popstas/chords-viewer/commit/ddb1150ac506c9c5c164bf6e1e0f548add899356))
 * сортировка по популярности ([150ab88](https://github.com/popstas/chords-viewer/commit/150ab881befe459a6ce89513fb0c9c3dda2b9b3d))
 * сортировка по просмотрам ([477f61f](https://github.com/popstas/chords-viewer/commit/477f61fb3619ad11800ca010f6092a677f7ef4fc))
+* ctrl+up/down - транспонирование ([6e18ee5](https://github.com/popstas/chords-viewer/commit/6e18ee5580b305d85706cc2349f09128f28347eb))
+
+
 
 # [1.22.0](https://github.com/popstas/chords-viewer/compare/v1.21.0...v1.22.0) (2020-07-09)
 
@@ -345,6 +424,8 @@
 
 * по умолчанию иконки в списке скрыты, включается через настройку ([99e7c63](https://github.com/popstas/chords-viewer/commit/99e7c637c8048015e0b0bc300ad581b939242977))
 
+
+
 # [1.21.0](https://github.com/popstas/chords-viewer/compare/v1.20.0...v1.21.0) (2020-07-05)
 
 
@@ -352,12 +433,16 @@
 
 * счётчик просмотров в localStorage ([76ad9c0](https://github.com/popstas/chords-viewer/commit/76ad9c0744004eecf3e55e8ea3684e289381ed6f))
 
+
+
 # [1.20.0](https://github.com/popstas/chords-viewer/compare/v1.19.0...v1.20.0) (2020-06-14)
 
 
 ### Features
 
 * фильтр по жанру или исполнителю из песни ([5c3ac12](https://github.com/popstas/chords-viewer/commit/5c3ac1211a4dce807b4a0f4945724b9376deec38))
+
+
 
 # [1.19.0](https://github.com/popstas/chords-viewer/compare/v1.18.1...v1.19.0) (2020-05-02)
 
@@ -371,12 +456,16 @@
 
 * show images inline ([82a9dca](https://github.com/popstas/chords-viewer/commit/82a9dcac4153c834a3d197bbcf82f207df8c8981))
 
+
+
 ## [1.18.1](https://github.com/popstas/chords-viewer/compare/v1.18.0...v1.18.1) (2020-01-03)
 
 
 ### Bug Fixes
 
 * correct container width on medium screens (1200-1599) ([c93e689](https://github.com/popstas/chords-viewer/commit/c93e6893683b752462179fca319fb9c77a5011aa))
+
+
 
 # [1.18.0](https://github.com/popstas/chords-viewer/compare/v1.17.2...v1.18.0) (2019-12-19)
 
@@ -393,6 +482,8 @@
 * filter input clear button ([b5f0ca6](https://github.com/popstas/chords-viewer/commit/b5f0ca6300381f6ffc503a6c210aead1400ebe83))
 * stop autoscroll when 2+ columns ([9ee0f59](https://github.com/popstas/chords-viewer/commit/9ee0f59d5a4f7d86c4570481e5c53664408d40a3))
 
+
+
 ## [1.17.2](https://github.com/popstas/chords-viewer/compare/v1.17.1...v1.17.2) (2019-12-19)
 
 
@@ -400,12 +491,16 @@
 
 * allow caps in genre ([5043ae4](https://github.com/popstas/chords-viewer/commit/5043ae4f64b26b269f6d37f23869dc4e4966a508))
 
+
+
 ## [1.17.1](https://github.com/popstas/chords-viewer/compare/v1.17.0...v1.17.1) (2019-12-15)
 
 
 ### Bug Fixes
 
 * move popular icon after title ([b8bfc5a](https://github.com/popstas/chords-viewer/commit/b8bfc5a7846aa9b01d9586b28be7e1dd5c7b42dd))
+
+
 
 # [1.17.0](https://github.com/popstas/chords-viewer/compare/v1.16.2...v1.17.0) (2019-12-15)
 
@@ -419,12 +514,16 @@
 
 * filter by genre ([2a48055](https://github.com/popstas/chords-viewer/commit/2a48055e00efcd40c0c126525a8f89105efeccaf))
 
+
+
 ## [1.16.2](https://github.com/popstas/chords-viewer/compare/v1.16.1...v1.16.2) (2019-11-30)
 
 
 ### Bug Fixes
 
 * add quint chords A5 etc ([8d8425b](https://github.com/popstas/chords-viewer/commit/8d8425b4bc82664a9720c52e91fc505a2d1002d5))
+
+
 
 ## [1.16.1](https://github.com/popstas/chords-viewer/compare/v1.16.0...v1.16.1) (2019-09-14)
 
@@ -433,12 +532,16 @@
 
 * sort by date by default ([22f7b6a](https://github.com/popstas/chords-viewer/commit/22f7b6ab979ede0168bd670ad9cd180e396c9d2e))
 
+
+
 # [1.16.0](https://github.com/popstas/chords-viewer/compare/v1.15.0...v1.16.0) (2019-07-16)
 
 
 ### Features
 
 * display song created date when sort by date ([c67a056](https://github.com/popstas/chords-viewer/commit/c67a056a5df03f0f85a2f989e1569e3447ed08bb))
+
+
 
 # [1.15.0](https://github.com/popstas/chords-viewer/compare/v1.14.1...v1.15.0) (2019-06-19)
 
@@ -452,12 +555,16 @@
 
 * scroll to top button in toolbar ([f403de7](https://github.com/popstas/chords-viewer/commit/f403de74cc872ce1655c7df9ee083b8e4d33b618))
 
+
+
 ## [1.14.1](https://github.com/popstas/chords-viewer/compare/v1.14.0...v1.14.1) (2019-06-19)
 
 
 ### Features
 
 * filter for chords and popular: any/yes/no ([a5ecc34](https://github.com/popstas/chords-viewer/commit/a5ecc346790fdd7941fde135fee8cd0bfcf93c7b))
+
+
 
 # [1.14.0](https://github.com/popstas/chords-viewer/compare/v1.13.1...v1.14.0) (2019-06-19)
 
@@ -466,7 +573,11 @@
 
 * text filter any/yes/no ([3e1b8e7](https://github.com/popstas/chords-viewer/commit/3e1b8e74b049c28b4f9dc3269a67edd8ad341581))
 
+
+
 ## [1.13.1](https://github.com/popstas/chords-viewer/compare/v1.13.0...v1.13.1) (2019-06-19)
+
+
 
 # [1.13.0](https://github.com/popstas/chords-viewer/compare/v1.12.1...v1.13.0) (2019-06-15)
 
@@ -475,6 +586,8 @@
 
 * artists select sort by count ([3df44d1](https://github.com/popstas/chords-viewer/commit/3df44d17673450a4f2eb2152b6be7715790c0ce6))
 
+
+
 ## [1.12.1](https://github.com/popstas/chords-viewer/compare/v1.12.0...v1.12.1) (2019-06-12)
 
 
@@ -482,6 +595,8 @@
 
 * +7, /, +5 chords support ([7500c09](https://github.com/popstas/chords-viewer/commit/7500c09303552ac1eb7ad28f11e9a7cc0be5a22e))
 * sus2 chords support ([247368c](https://github.com/popstas/chords-viewer/commit/247368cfb1df1079ef35696b3feabcc781c19b41))
+
+
 
 # [1.12.0](https://github.com/popstas/chords-viewer/compare/v1.11.1...v1.12.0) (2019-06-12)
 
@@ -496,12 +611,16 @@
 
 * artists list with songs count ([3fce113](https://github.com/popstas/chords-viewer/commit/3fce1137399ee123ff9f5fd2c94b011f2b85bb47))
 
+
+
 ## [1.11.1](https://github.com/popstas/chords-viewer/compare/v1.11.0...v1.11.1) (2019-06-12)
 
 
 ### Bug Fixes
 
 * transpose was inverted on songs with "capo" in title ([134c569](https://github.com/popstas/chords-viewer/commit/134c569e572bc5dc8d1efa35058e1dd4e05427ca))
+
+
 
 # [1.11.0](https://github.com/popstas/chords-viewer/compare/v1.10.3...v1.11.0) (2019-06-07)
 
@@ -516,12 +635,16 @@
 
 * ukulele and piano chords, replace H to B ([8679b3d](https://github.com/popstas/chords-viewer/commit/8679b3d02f511dc06900d4604572626339a56196))
 
+
+
 ## [1.10.3](https://github.com/popstas/chords-viewer/compare/v1.10.2...v1.10.3) (2019-02-04)
 
 
 ### Bug Fixes
 
 * remove playlist duplicates ([203074f](https://github.com/popstas/chords-viewer/commit/203074fe821d755f9cbdbbde8247ca325e301da6))
+
+
 
 ## [1.10.2](https://github.com/popstas/chords-viewer/compare/v1.10.1...v1.10.2) (2018-12-22)
 
@@ -530,6 +653,8 @@
 
 * popular icon in list, song title improvements ([0ada81f](https://github.com/popstas/chords-viewer/commit/0ada81f83cd320031e5dbaf6804a6dc8d7b7302b))
 * share button for pwa ([6d47aa7](https://github.com/popstas/chords-viewer/commit/6d47aa7fa3a8481b33ff078f41d7cb2abf2ae47c))
+
+
 
 ## [1.10.1](https://github.com/popstas/chords-viewer/compare/v1.10.0...v1.10.1) (2018-12-22)
 
@@ -543,6 +668,8 @@
 
 * chords now fixed at top right on mobile, not all width ([7f66c09](https://github.com/popstas/chords-viewer/commit/7f66c09cbc378cb75d44df9d3225df82e7c5f023))
 
+
+
 # [1.10.0](https://github.com/popstas/chords-viewer/compare/v1.9.0...v1.10.0) (2018-12-22)
 
 
@@ -551,6 +678,8 @@
 * change fontSize, refactorings, reformat ([d5a7a9d](https://github.com/popstas/chords-viewer/commit/d5a7a9d6b17b4273080a779c74fbb73a3ef35be1))
 * current song title on mobile ([93daf1a](https://github.com/popstas/chords-viewer/commit/93daf1aac87969cdd5d77f36860edf2222504c1d))
 * store current song in browser history ([0be6f65](https://github.com/popstas/chords-viewer/commit/0be6f65a08da5e179d4ba7fc58b00e30372cb695))
+
+
 
 # [1.9.0](https://github.com/popstas/chords-viewer/compare/v1.8.0...v1.9.0) (2018-12-15)
 
@@ -564,6 +693,8 @@
 
 * 2 column song text on desktops ([a60fc33](https://github.com/popstas/chords-viewer/commit/a60fc33e75067c72c387160f104760addec571ef))
 * default transpose level from title (cap 4) ([54c5680](https://github.com/popstas/chords-viewer/commit/54c5680cbcf7a773ac05898c12460cb3db504cee))
+
+
 
 # [1.8.0](https://github.com/popstas/chords-viewer/compare/v1.7.1...v1.8.0) (2018-12-15)
 
@@ -580,6 +711,8 @@
 * show current song on desktops ([3f35eb8](https://github.com/popstas/chords-viewer/commit/3f35eb81eb7eaf41d9c905a11a8a4aadac5d75ba))
 * song complexity ([d77737f](https://github.com/popstas/chords-viewer/commit/d77737f0706e191d368b87970a8ca5cf18975a00))
 
+
+
 ## [1.7.1](https://github.com/popstas/chords-viewer/compare/v1.7.0...v1.7.1) (2018-11-22)
 
 
@@ -593,12 +726,16 @@
 * highlight even sequence different ([63c9f69](https://github.com/popstas/chords-viewer/commit/63c9f692bbbb8169c3a2c566dff293c01e6e5a77))
 * hotkeys j/k, arrows, space for song navigation ([8dd9ea1](https://github.com/popstas/chords-viewer/commit/8dd9ea1cb4f19e48e511d2d063e86c10bd28b196))
 
+
+
 # [1.7.0](https://github.com/popstas/chords-viewer/compare/v1.6.0...v1.7.0) (2018-11-22)
 
 
 ### Features
 
 * playlist, prev/next song, toolbar moved bottom ([a8b21d7](https://github.com/popstas/chords-viewer/commit/a8b21d7ec3fcef16fb7fceb3d69eef2396c0e3f3))
+
+
 
 # [1.6.0](https://github.com/popstas/chords-viewer/compare/v1.5.0...v1.6.0) (2018-09-14)
 
@@ -607,12 +744,16 @@
 
 * popular chords filter ([181b1bd](https://github.com/popstas/chords-viewer/commit/181b1bd40357dbfb36f2c503bda1af1c2b0a75d8))
 
+
+
 # [1.5.0](https://github.com/popstas/chords-viewer/compare/v1.4.3...v1.5.0) (2018-09-13)
 
 
 ### Features
 
 * persistent app state (filters and noSleep) ([7a236e6](https://github.com/popstas/chords-viewer/commit/7a236e64f999b4833eb6a956e3a403f91327b7f2))
+
+
 
 ## [1.4.3](https://github.com/popstas/chords-viewer/compare/v1.4.2...v1.4.3) (2018-09-12)
 
@@ -622,6 +763,8 @@
 * incorrect offset bug on change random song ([7a79783](https://github.com/popstas/chords-viewer/commit/7a797838f8d5ecc5a90bd8205e44bba6a396bfcf))
 * toolbar overflow issue ([d1858d3](https://github.com/popstas/chords-viewer/commit/d1858d34189930c82e192593d32b6ab5ef3f0f84))
 
+
+
 ## [1.4.2](https://github.com/popstas/chords-viewer/compare/v1.4.1...v1.4.2) (2018-07-15)
 
 
@@ -629,12 +772,16 @@
 
 * random only for filtered songs ([9360d60](https://github.com/popstas/chords-viewer/commit/9360d6051c141f077b494ef73f9df5efeabbd82f))
 
+
+
 ## [1.4.1](https://github.com/popstas/chords-viewer/compare/v1.4.0...v1.4.1) (2018-07-09)
 
 
 ### Features
 
 * скрытие тулбара при начале автоскролла ([a2839e4](https://github.com/popstas/chords-viewer/commit/a2839e46f0983534a9d84d6b9cd8c39352afabb3))
+
+
 
 # [1.4.0](https://github.com/popstas/chords-viewer/compare/v1.3.0...v1.4.0) (2018-06-30)
 
@@ -654,12 +801,16 @@
 * replace icon, change site.webmanifest for PWA criteria ([2ea8ac4](https://github.com/popstas/chords-viewer/commit/2ea8ac43adad32f0ce572c86fb7903ae8cfea5b6))
 * search on amdm.ru ([59e8e7f](https://github.com/popstas/chords-viewer/commit/59e8e7feb86a8f3679df03e4cdae21070910413c))
 
+
+
 # [1.3.0](https://github.com/popstas/chords-viewer/compare/v1.2.0...v1.3.0) (2018-06-08)
 
 
 ### Features
 
 * add sidebar with filters ([dc4b28a](https://github.com/popstas/chords-viewer/commit/dc4b28a102a87f350ce0517712b213f5f7b23b45))
+
+
 
 # [1.2.0](https://github.com/popstas/chords-viewer/compare/v1.1.0...v1.2.0) (2018-06-04)
 
@@ -677,6 +828,8 @@
 * open single filtered song ([846e6da](https://github.com/popstas/chords-viewer/commit/846e6daf3b7c6e64862725da0a7d85d430a4d207))
 * voice search with SpeechRecognition ([3bbc990](https://github.com/popstas/chords-viewer/commit/3bbc990cd0242c67472f0a6aefed451dcec2a71a))
 
+
+
 # [1.1.0](https://github.com/popstas/chords-viewer/compare/v1.0.0...v1.1.0) (2018-06-02)
 
 
@@ -693,6 +846,8 @@
 * footer ([87ef159](https://github.com/popstas/chords-viewer/commit/87ef159c96082c53e98c96c4d7d92f479c4d03b6))
 * sort by created date ([3ca1a20](https://github.com/popstas/chords-viewer/commit/3ca1a20e9bd78ed5fa16648d5b5d872b47ce6fb0))
 * update data from popstas/chords-data before deploy ([c7eb984](https://github.com/popstas/chords-viewer/commit/c7eb984436ea7321a5675e1156e05431cb5c0a38))
+
+
 
 # [1.0.0](https://github.com/popstas/chords-viewer/compare/a31280212dc037698f3538c3f25e90cd643995b1...v1.0.0) (2018-06-02)
 
@@ -726,3 +881,6 @@
 * show toolbar on scroll up ([039d9a4](https://github.com/popstas/chords-viewer/commit/039d9a4f4059a1c7918c67b0b3a800f82c350613))
 * toolbar autoscroll row ([de868cd](https://github.com/popstas/chords-viewer/commit/de868cd513978d2d3f68286920d2da2ae30f2357))
 * toolbar close button ([d4de99f](https://github.com/popstas/chords-viewer/commit/d4de99f6c49c1fc6dcf8e0b02cbd183c842a3f36))
+
+
+
