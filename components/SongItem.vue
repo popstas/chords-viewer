@@ -338,7 +338,10 @@ export default {
     },
 
     toggleQueue() {
+      const added = !this.inQueue;
       this.$store.dispatch("toggleQueue", this.song.url);
+      // collapse the song after adding it to the queue
+      if (added) this.$emit("change");
     },
 
     share() {
