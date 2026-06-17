@@ -41,8 +41,4 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 
   nuxtApp.vueApp.config.globalProperties.$store = compat;
-
-  // no-op directive so legacy `v-shortkey` templates don't warn/crash;
-  // real keyboard handling is reimplemented with @vueuse in phase 3.
-  nuxtApp.vueApp.directive('shortkey', {});
 });

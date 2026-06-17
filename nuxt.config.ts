@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     '@/plugins/vue-virtual-scroller',
     '@/plugins/yametrika',
     '~/plugins/localStorage',
+    '~/plugins/shortkey',
   ],
 
   app: {

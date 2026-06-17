@@ -99,14 +99,15 @@
 
 export default {
   props: {
-    value: {
+    modelValue: {
       default: ""
     }
   },
+  emits: ["update:modelValue"],
 
   data() {
     return {
-      q: this.value,
+      q: this.modelValue,
       recognition: false,
       isSpeechRunning: false,
       runtimeTranscription: "",
@@ -115,12 +116,12 @@ export default {
   },
 
   watch: {
-    value(val) {
+    modelValue(val) {
       this.q = val;
     },
 
     q(val) {
-      this.$emit("input", val);
+      this.$emit("update:modelValue", val);
     }
   },
 
