@@ -228,10 +228,22 @@ export default {
       this.$store.dispatch('changeSong', url);
     },
 
+    // height of one song text line, used to shift the opened song down
+    // so floating chords (pinned at top) don't cover the first line
+    songLineHeight() {
+      const el = document.querySelector('.song-item.active .song-item__line_text');
+      if (el) {
+        const lh = parseFloat(getComputedStyle(el).lineHeight);
+        if (lh) return lh;
+      }
+      return 30;
+    },
+
     scrollTo(offset) {
       setTimeout(() => {
         this.lastOffset = offset;
-        const fixedTopOffset = 0;
+        // on desktop shift the song one line lower so floating chords don't cover the first line
+        const fixedTopOffset = this.isMobile() ? 0 : this.songLineHeight();
         window.scrollTo(0, offset - fixedTopOffset);
       }, 100);
     },
