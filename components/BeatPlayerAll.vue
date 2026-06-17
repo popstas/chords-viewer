@@ -60,7 +60,7 @@ export default {
   mounted() {
     this.bpmCurrent = this.bpm;
   },
-  beforeDestroy() {
+  beforeUnmount() {
   },
 };
 </script>

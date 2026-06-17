@@ -210,7 +210,7 @@ import "../assets/instruments/piano0.js";
 import "../assets/instruments/accordion.js";
 import "../assets/instruments/vocal.js";
 import BPMMeter from "@/components/BPMMeter.vue";
-import {chordNotesMap} from "~/store";
+import {chordNotesMap} from "~/utils/chords";
 
 const debug = false;
 
@@ -1493,7 +1493,7 @@ export default {
       if (octave) this.pianoPitchOffset = octave * 12;
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.stop();
     this.stopScheduler(); // снять таймер планировщика, чтобы не завис после размонтирования
   },

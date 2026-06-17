@@ -96,7 +96,6 @@
 </style>
 
 <script>
-import "vue-awesome/icons/microphone";
 
 export default {
   props: {

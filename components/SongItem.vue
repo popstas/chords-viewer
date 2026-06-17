@@ -153,28 +153,8 @@ import Chord from "~/components/Chord";
 import FontSize from "~/components/FontSize";
 import BeatPlayer from "~/components/BeatPlayer";
 // import { transposeMap } from "~/store";
-import "vue-awesome/icons/edit";
-import "vue-awesome/icons/qrcode";
-import "vue-awesome/icons/share-alt";
-import "vue-awesome/icons/link";
-import "vue-awesome/icons/list-ul";
-import "vue-awesome/icons/check";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
-import "vue-awesome/icons/drum";
-import Icon from "vue-awesome/components/Icon";
-
-Icon.register({
-  piano: {
-    width: 64,
-    height: 64,
-    paths: [
-      {
-        d: 'M60,0H4C1.789,0,0,1.789,0,4v56c0,2.211,1.789,4,4,4h56c2.211,0,4-1.789,4-4V4C64,1.789,62.211,0,60,0z M28,56H8V8h12v28c0,2.211,1.789,4,4,4h4V56z M56,56H36V40h4c2.211,0,4-1.789,4-4V8h12V56z'
-      }
-    ]
-  }
-})
 
 export default {
   components: {Chord, FontSize, BeatPlayer},

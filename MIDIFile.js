@@ -1421,4 +1421,4 @@ MIDIFile.prototype.getContent = function () {
 // Exports Track/Header constructors
 MIDIFile.Header = MIDIFileHeader;
 MIDIFile.Track = MIDIFileTrack;
-module.exports = MIDIFile;
+export default MIDIFile;

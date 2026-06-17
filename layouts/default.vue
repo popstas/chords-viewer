@@ -1,42 +1,32 @@
 <template>
-  <div :class="{'container-wrap': true}" :style="{ paddingTop: chordsHeight + 'px' }">
-    <el-container>
-      <!-- https://github.com/Mango/slideout#user-content-slideoutoptions -->
-      <Slideout
-        :toggleSelectors="['.menu-toggle']"
-        panel="#panel"
-        menu="#menu"
-        side="left"
-        :padding="140"
-        :touch="false"
-      >
-        <div id="panel">
-          <!-- коммент, чтобы кодировка не переключалась -->
-          <el-header height="42px">
-            <button class="menu-toggle">☰</button>
-            <button class="input-clear" @click="onInputClear">&cross;</button>
-            <button class="input-clear" @click="showQrCode = !showQrCode">
-              <icon name="qrcode"></icon>
-            </button>
-            <Profile></Profile>
-          </el-header>
-          <el-main>
-            <div class="qrcode-wrapper" v-if="showQrCode">
-              <qrcode-drop-zone v-if="isDesktop" @decode="onDecode">
-                <div class="drop-area">
-                  Drop QR code here
-                </div>
-              </qrcode-drop-zone>
-              <qrcode-stream @decode="onDecode"></qrcode-stream>
-            </div>
-            <nuxt/>
-          </el-main>
-        </div>
-      </Slideout>
-    </el-container>
-    <nav id="menu">
+  <div :class="{'container-wrap': true, 'slideout-open': menuOpen}" :style="{ paddingTop: chordsHeight + 'px' }">
+    <nav id="menu" class="slideout-menu slideout-menu-left">
       <Sidebar></Sidebar>
     </nav>
+    <el-container>
+      <div id="panel" class="slideout-panel" @click="onPanelClick">
+        <!-- коммент, чтобы кодировка не переключалась -->
+        <el-header height="42px">
+          <button class="menu-toggle" @click.stop="menuOpen = !menuOpen">☰</button>
+          <button class="input-clear" @click="onInputClear">&cross;</button>
+          <button class="input-clear" @click="showQrCode = !showQrCode">
+            <icon name="qrcode"></icon>
+          </button>
+          <Profile></Profile>
+        </el-header>
+        <el-main>
+          <div class="qrcode-wrapper" v-if="showQrCode">
+            <qrcode-drop-zone v-if="isDesktop" @detect="onDetect">
+              <div class="drop-area">
+                Drop QR code here
+              </div>
+            </qrcode-drop-zone>
+            <qrcode-stream @detect="onDetect"></qrcode-stream>
+          </div>
+          <slot/>
+        </el-main>
+      </div>
+    </el-container>
   </div>
 </template>
 
@@ -125,6 +115,11 @@ textarea {
   // will-change: transform; - it breaks position: fixed
   min-height: 100vh;
   background: var(--bg);
+  transition: transform 0.3s ease;
+
+  .slideout-open & {
+    transform: translateX(140px);
+  }
   @media (min-width: $container-width-xs) {
     min-width: $container-width-xs;
   }
@@ -232,45 +227,50 @@ input {
 <script>
 import Profile from "~/components/Profile";
 import Sidebar from "~/components/Sidebar";
-import Slideout from "vue-slideout";
-import "vue-awesome/icons/qrcode";
-
-import firebase from "firebase";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAi6BptwN63ruuHJiTmm_ofYUyquAaPf9U",
-  authDomain: "chords-viewer.firebaseapp.com",
-  databaseURL: "https://chords-viewer.firebaseio.com",
-  projectId: "chords-viewer",
-  storageBucket: "chords-viewer.appspot.com",
-  messagingSenderId: "98010485379",
-  appId: "1:98010485379:web:bf6700c3e06ba149ce81b6",
-  measurementId: "G-YYGZ8HR9JB"
-};
-firebase.initializeApp(firebaseConfig);
+import { useAppStore } from "~/stores/app";
+import "~/utils/firebase"; // initialize firebase app
 
 export default {
-  components: {Slideout, Sidebar, Profile},
+  components: {Sidebar, Profile},
+
+  setup() {
+    const store = useAppStore();
+    useHead(() => ({
+      title: store.activeSong && store.activeSong.title
+        ? `${store.activeSong.title} - ${store.name}`
+        : store.name,
+      bodyAttrs: {
+        class: store.darkMode ? 'dark-mode' : '',
+      },
+      link: [
+        {rel: "manifest", href: "/site.webmanifest"},
+        {rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5"},
+        {rel: "apple-touch-icon", type: "image/png", sizes: "180x180", href: "/apple-touch-icon.png"},
+        {rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png"},
+        {rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png"},
+      ],
+    }));
+    return {};
+  },
+
   data() {
     return {
       chordsHeight: 0,
       showQrCode: false,
+      menuOpen: false,
     };
   },
 
   computed: {
-    title() {
-      const t = [];
-      if (this.$store.state.activeSong.title) t.push(this.$store.state.activeSong.title);
-      t.push(this.$store.state.name);
-      return t.join(' - ');
-    },
     isDesktop() {
       return window.innerWidth > 768;
     },
   },
 
   methods: {
+    onPanelClick() {
+      if (this.menuOpen) this.menuOpen = false;
+    },
     // handleScroll() {
     //   const chords = this.$el.querySelector(".song-item.active .chords");
     //   if (!chords) return;
@@ -285,9 +285,13 @@ export default {
       // this.$store.dispatch("filterSongs");
     },
 
-    onDecode(url) {
+    // vue-qrcode-reader v4: @detect emits an array of detected codes
+    onDetect(detected) {
       try {
-        const res = url.match(/song_num=(\d+)/);
+        const codes = Array.isArray(detected) ? detected : [detected];
+        const url = codes[0] && (codes[0].rawValue || codes[0].content || codes[0]);
+        if (!url) return;
+        const res = String(url).match(/song_num=(\d+)/);
         if (res) {
           const song_num = parseInt(res[1]);
           const song = this.$store.state.songs[song_num];
@@ -302,49 +306,11 @@ export default {
     },
   },
 
-  head() {
-    return {
-      title: this.title,
-      bodyAttrs: {
-        class: this.$store.state.darkMode ? 'dark-mode' : ''
-      },
-      link: [
-        {rel: "manifest", href: "/site.webmanifest"},
-        {rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5"},
-        {
-          rel: "apple-touch-icon",
-          type: "image/png",
-          sizes: "180x180",
-          href: "/apple-touch-icon.png"
-        },
-        {
-          rel: "icon",
-          type: "image/png",
-          sizes: "16x16",
-          href: "/favicon-16x16.png"
-        },
-        {
-          rel: "icon",
-          type: "image/png",
-          sizes: "32x32",
-          href: "/favicon-32x32.png"
-        }
-      ]
-    };
-  },
-
   created() {
-    // window.addEventListener("scroll", this.handleScroll);
-
-    // console.log('this.$store.state.darkMode: ', this.$store.state.darkMode);
     if (this.$store.state.darkMode === undefined) {
       const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       this.$store.commit('darkMode', isDark);
     }
   },
-
-  destroyed() {
-    // window.removeEventListener("scroll", this.handleScroll);
-  }
 };
 </script>

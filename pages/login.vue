@@ -11,7 +11,9 @@
 </style>
 
 <script>
-import firebase from "firebase";
+import "~/utils/firebase"; // ensure the default firebase app is initialized
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
@@ -25,7 +27,7 @@ export default {
     if (!ui) {
       ui = new firebaseui.auth.AuthUI(firebase.auth());
     }
-    var uiConfig = {
+    const uiConfig = {
       signInSuccessUrl: "/", // This redirect can be achived by route using callback.
       signInFlow: "popup",
       signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]

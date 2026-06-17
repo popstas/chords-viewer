@@ -8,9 +8,10 @@
     chord_separator_bracket_right: chord === ')'
     }" :data-chord="chord">
     <el-popover v-if="isKnown" placement="top-start" trigger="hover">
-      <el-button slot="reference">{{ html }} <img v-if="image" :alt="chord" height="100" class="chord__image" :src="imageUrl"
-                                                  slot="default"></el-button>
-      <img class="chord__image" :alt="chord" :src="imageUrl" slot="default">
+      <template #reference>
+        <el-button>{{ html }} <img v-if="image" :alt="chord" height="100" class="chord__image" :src="imageUrl"></el-button>
+      </template>
+      <img class="chord__image" :alt="chord" :src="imageUrl">
     </el-popover>
     <template v-if="!isKnown">{{ html }}</template>
     <slot></slot>

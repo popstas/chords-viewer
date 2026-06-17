@@ -101,8 +101,24 @@ const SafeFontAwesomeIcon = defineComponent({
   }
 });
 
+// Legacy vue-awesome <icon name="play" /> alias -> font-awesome-icon.
+// Maps the vue-awesome `name` prop to the FA `icon` prop (solid by default).
+const IconAlias = defineComponent({
+  name: 'IconAlias',
+  props: {
+    name: { type: String, default: '' },
+    scale: { type: [String, Number], default: undefined },
+    spin: { type: Boolean, default: false },
+  },
+  setup(props, { attrs }) {
+    return () => h(SafeFontAwesomeIcon as any, { icon: props.name, spin: props.spin, ...attrs });
+  },
+});
+
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component('font-awesome-icon', SafeFontAwesomeIcon)
   // Also register PascalCase to cover either usage in templates
   nuxtApp.vueApp.component('FontAwesomeIcon', SafeFontAwesomeIcon)
+  // Legacy vue-awesome tag used across templates
+  nuxtApp.vueApp.component('icon', IconAlias)
 })

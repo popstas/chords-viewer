@@ -25,7 +25,8 @@
 </style>
 
 <script>
-import firebase from "firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "~/utils/firebase";
 
 export default {
   data() {
@@ -41,7 +42,7 @@ export default {
   },
 
   created() {
-    firebase.auth().onAuthStateChanged(user => {
+    onAuthStateChanged(auth, user => {
       if (user) {
         this.$store.dispatch("setUser", user);
         this.isLogin = false;
@@ -53,7 +54,7 @@ export default {
 
   methods: {
     logout() {
-      firebase.auth().signOut();
+      signOut(auth);
       this.isLogin = true;
       this.$store.dispatch('setUser', false);
     }

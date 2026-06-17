@@ -380,12 +380,6 @@
 <script>
 import SearchInput from "~/components/SearchInput";
 import _ from "lodash";
-import "vue-awesome/icons/play";
-import "vue-awesome/icons/pause";
-import "vue-awesome/icons/backward";
-import "vue-awesome/icons/forward";
-import "vue-awesome/icons/chevron-up";
-import "vue-awesome/icons/chevron-down";
 
 /*const speedMapping = {
   1: 1024,
@@ -676,7 +670,7 @@ export default {
     this.fontSize = this.$store.state.fontSize;
   },
 
-  destroyed() {
+  unmounted() {
     window.removeEventListener("scroll", this.handleScroll);
     clearInterval(this.scrollInterval);
   }

@@ -38,7 +38,6 @@
 </style>
 
 <script>
-import "vue-awesome/icons/angle-double-down";
 
 // верстка переключается на несколько колонок с min-width: 1200px (см. SongItem.scss),
 // поэтому "мобильный или 1 колонка" = ширина вьюпорта < 1200px
@@ -142,7 +141,7 @@ export default {
     window.addEventListener("resize", this.updateIsNarrow);
   },
 
-  destroyed() {
+  unmounted() {
     window.removeEventListener("resize", this.updateIsNarrow);
     if (this.scrollRaf) cancelAnimationFrame(this.scrollRaf);
   },

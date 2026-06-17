@@ -306,12 +306,6 @@
 
 <script>
 import SearchInput from "~/components/SearchInput";
-import "vue-awesome/icons/play";
-import "vue-awesome/icons/pause";
-import "vue-awesome/icons/backward";
-import "vue-awesome/icons/forward";
-import "vue-awesome/icons/chevron-up";
-import "vue-awesome/icons/chevron-down";
 
 /*const speedMapping = {
   1: 1024,
@@ -518,7 +512,7 @@ export default {
     this.fontSize = this.$store.state.fontSize;
   },
 
-  destroyed() {
+  unmounted() {
     const scroller = document.querySelector(".vue-recycle-scroller");
     if (scroller) scroller.removeEventListener("scroll", this.handleScroll);
     else window.removeEventListener("scroll", this.handleScroll);

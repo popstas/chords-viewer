@@ -150,7 +150,7 @@ export default {
     },
     activeSong(song) {
       // update url
-      const query = {...this.$router.history.current.query};
+      const query = {...this.$route.query};
       if (query.song_num !== undefined) delete (query.song_num);
       if (song.url) query.url = song.url;
       else delete query.url;

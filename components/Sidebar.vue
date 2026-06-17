@@ -96,7 +96,9 @@
         j/k, left/right - переключение песен,
         space - автопрокрутка,
         ctrl+up/down - транспонировать">
-          <span slot="reference">help</span>
+          <template #reference>
+            <span>help</span>
+          </template>
         </el-popover>
       </span>
     </el-row>
@@ -140,8 +142,6 @@
 
 <script>
 import FontSize from "~/components/FontSize";
-import "vue-awesome/icons/brands/github";
-import "vue-awesome/icons/calendar-alt";
 
 import NoSleep from "nosleep.js";
 
