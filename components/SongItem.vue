@@ -28,13 +28,22 @@
             <el-button size="mini" icon="el-icon-minus" @click="transposeLevel--"></el-button>
             <el-button size="mini" disabled>{{ transposeLevel }}</el-button>
             <el-button size="mini" icon="el-icon-plus" @click="transposeLevel++"></el-button>
+            <el-button
+              v-if="$store.state.showBeats && (isBeat || isPianoAllowed)"
+              class="song-transpose__beat"
+              size="mini"
+              title="Beat"
+              @click="showBeatControls = !showBeatControls"
+            >
+              <icon name="drum"></icon>
+            </el-button>
             <FontSize style="float: right"></FontSize>
           </div>
           <div v-else>
             <FontSize style="float: right"></FontSize>
           </div>
 
-          <template v-if="$store.state.showBeats">
+          <template v-if="$store.state.showBeats && showBeatControls">
             <div v-if="isBeat" class="song-midi">
               <BeatPlayer :beat="song.beat" name="beat" :rever="true" :piano="false"
                           :chords="song.details.chords"></BeatPlayer>
@@ -167,6 +176,7 @@ export default {
       shows: 0,
       showQrCode: false,
       showComment: false,
+      showBeatControls: false,
     };
   },
 
