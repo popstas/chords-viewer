@@ -1,3 +1,38 @@
+# [5.0.0](https://github.com/popstas/chords-viewer/compare/v4.7.0...v5.0.0) (2026-06-18)
+
+
+### Bug Fixes
+
+* **build:** repair build-beats under glob v13 ([68c00e9](https://github.com/popstas/chords-viewer/commit/68c00e91ff48dd668d0003a0be9bcb0cecabd5af))
+* **deploy:** add .nojekyll so GitHub Pages serves _nuxt assets ([2f36b1c](https://github.com/popstas/chords-viewer/commit/2f36b1c4a73e0b4718dc10587515777f5e597901))
+* **dev:** disable PWA dev service worker to stop ENOENT overlay ([a5a5c24](https://github.com/popstas/chords-viewer/commit/a5a5c248027c004873b509fba200ae6f81779368))
+* **login:** initialize firebase compat app for FirebaseUI ([c3ab993](https://github.com/popstas/chords-viewer/commit/c3ab9939dccbf3ac162337741191d86f81a1bf93))
+* **song:** big hr as single solid line, same color as normal hr ([41ff7aa](https://github.com/popstas/chords-viewer/commit/41ff7aa56cdcf4bf3bb9e9deddacd7b45290cac7))
+* **song:** vertically center text in просмотров stepper buttons ([d4d83ed](https://github.com/popstas/chords-viewer/commit/d4d83ed327fd9c0e5cafedce23b509fe0ac0a8a9))
+* **verse-nav:** hide the hr when scrolling to next verse ([f2e49df](https://github.com/popstas/chords-viewer/commit/f2e49df1b7dee6e7f22f647cb768a5db01dd0f57))
+* **vue3:** badge/select/radio/player polish ([7f7eaac](https://github.com/popstas/chords-viewer/commit/7f7eaac7c55c99b2ebc06bb3be639c1f51ec15b0))
+* **vue3:** clear virtual-scroller size cache on song toggle ([1cc3887](https://github.com/popstas/chords-viewer/commit/1cc3887fddb66f7e966f157a39451b318f611235))
+* **vue3:** compact floating chord chips ([7ee53c9](https://github.com/popstas/chords-viewer/commit/7ee53c9579f3d7b33e8dccd722fb140a0c84aac4))
+* **vue3:** mobile beats panel + button padding polish ([293f385](https://github.com/popstas/chords-viewer/commit/293f385c4b6b9cc8d8b8846018bceee6795a3054))
+* **vue3:** mobile/parity CSS regressions vs original ([0cdec74](https://github.com/popstas/chords-viewer/commit/0cdec748b1cddb0b2b7a06f5ee489dd7e73a6630)), closes [#f9f9f9](https://github.com/popstas/chords-viewer/issues/f9f9f9)
+* **vue3:** pin app header, stop top-toolbar docking, list row insets ([20cb6aa](https://github.com/popstas/chords-viewer/commit/20cb6aa99f6d6232ebfa46a6bea582a3e5c839a3))
+* **vue3:** readable floating chords in dark mode ([83e092e](https://github.com/popstas/chords-viewer/commit/83e092e7e22b7a60696336aacf1f03a22e391521)), closes [#f9f9f9](https://github.com/popstas/chords-viewer/issues/f9f9f9)
+* **vue3:** static build — firebase v9 import + dist/ output ([7dd4b50](https://github.com/popstas/chords-viewer/commit/7dd4b50a681518ab577d7ec477018a6916c9b38b))
+* **vue3:** tighten in-text chords (were stretched) ([74f6c07](https://github.com/popstas/chords-viewer/commit/74f6c07ebe5e662373fef6136b4cf05a664f17e3))
+* **vue3:** vertically center text in compact floating chips ([8d2b00e](https://github.com/popstas/chords-viewer/commit/8d2b00e1a3b3724a74a2dfef71a1fb8369b0a9ff))
+
+
+### Features
+
+* **song:** merge double blank lines into one bold hr separator ([e36b07a](https://github.com/popstas/chords-viewer/commit/e36b07ab25a8c5ffd1002551fc5c2b3dcff78520))
+* **song:** tap spinner on open + tighter chord/lyric spacing ([5c62fb2](https://github.com/popstas/chords-viewer/commit/5c62fb2059059f3108e2d0de62adc9953bc0ab79))
+* **vue3:** phase 0 — Nuxt 3 scaffold, deps, config, plugins ([c9bef4f](https://github.com/popstas/chords-viewer/commit/c9bef4f99355fce2b62cbe5c71083b0fe7535e42))
+* **vue3:** phase 1+2 — boot on Nuxt 3 with Pinia store ([e965faa](https://github.com/popstas/chords-viewer/commit/e965faab68f25367142f6ae56a8818c20e5772a3))
+* **vue3:** phase 3 — keyboard shortcuts + SearchInput v-model ([a100a8d](https://github.com/popstas/chords-viewer/commit/a100a8d1c3fb585920e1c2330465518bf497d562))
+* **vue3:** phase 3+4 — Element Plus button icons, verify mobile list ([8a4724c](https://github.com/popstas/chords-viewer/commit/8a4724cb2371ffc0126eb3f9f60114269d4c308c))
+
+
+
 # [4.7.0](https://github.com/popstas/chords-viewer/compare/v4.6.0...v4.7.0) (2026-06-17)
 
 
