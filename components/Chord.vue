@@ -72,12 +72,16 @@
     // 25-27 wide so rows don't overlap. (0,3,0 beats .dark-mode .el-button.)
     .chords & {
       box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       height: 25px;
       min-width: 25px;
       padding: 1px 2px;
       margin: 1px 0;
-      line-height: 21px;
+      line-height: 1;
       font-size: 14px;
+      vertical-align: middle;
     }
 
     min-width: 25px;
