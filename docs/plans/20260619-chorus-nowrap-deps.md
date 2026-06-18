@@ -86,16 +86,19 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
 - [x] run `npx playwright test tests/e2e/chorus.spec.ts` + `npm run lint` — must pass before Task 2.
 
 ### Task 2: Render bolder hr after chorus blocks
-- [ ] in `components/SongItem.vue` `textLines` (or a derived computed), group classified lines
+- [x] in `components/SongItem.vue` `textLines` (or a derived computed), group classified lines
   into blocks, call `detectChoruses`, and flag each `hr` separator that **follows a chorus block**
   with a new property (e.g. `chorus: true`) — do not overload the existing double-blank `big` flag.
-- [ ] update the hr render (lines ~85-91) to `:class="{ big: line.big, big_chorus: line.chorus }"`.
-- [ ] add `.big_chorus` style in `assets/components/SongItem.scss` (thicker/bolder than `.big`,
+- [x] update the hr render (lines ~85-91) to `:class="{ big: line.big, big_chorus: line.chorus }"`.
+- [x] add `.big_chorus` style in `assets/components/SongItem.scss` (thicker/bolder than `.big`,
   same color as existing hr per prior commit `41ff7aa`).
-- [ ] verify `components/VerseNav.vue` hr querying/anchoring still works (chorus hr is still an `hr`).
-- [ ] extend `tests/e2e/chorus.spec.ts`: open a song, assert at least one `hr` renders and that
+- [x] verify `components/VerseNav.vue` hr querying/anchoring still works (chorus hr is still an `hr`).
+- [x] extend `tests/e2e/chorus.spec.ts`: open a song, assert at least one `hr` renders and that
   applying the feature doesn't break verse-next keyboard navigation (PageDown/verse-nav still scrolls).
-- [ ] run `npx playwright test tests/e2e/chorus.spec.ts` + `npm run lint` — must pass before Task 3.
+- [x] run `npx playwright test tests/e2e/chorus.spec.ts` + `npm run lint` — playwright passes (4/4);
+  `npm run lint` is pre-existing broken in this env (`.eslintrc.js` references uninstalled
+  `eslint-plugin-vue`/`babel-eslint` from the Vue2→3 migration; same state at Task 1's commit) —
+  not introduced by this task; lint config to be reconciled in the dependency-upgrade tasks.
 
 ### Task 3: chordNowrap store state + toggle action
 - [ ] add `chordNowrap: false` to `stores/app.ts` state; **do NOT** add it to `persist.pick`

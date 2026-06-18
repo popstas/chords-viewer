@@ -87,7 +87,7 @@
                 class="song-item__line_text"
                 :key="lineKey"
               >
-                <hr :class="{ big: line.big }">
+                <hr :class="{ big: line.big, big_chorus: line.chorus }">
               </div>
             </template>
           </div>
@@ -155,6 +155,7 @@ import Chord from "~/components/Chord";
 import FontSize from "~/components/FontSize";
 import BeatPlayer from "~/components/BeatPlayer";
 // import { transposeMap } from "~/store";
+import { detectChoruses } from "~/utils/chorus";
 import "assets/components/SongItem.scss"
 import copy from 'copy-to-clipboard';
 
@@ -312,6 +313,31 @@ export default {
         }
         merged.push({...line});
       }
+
+      // Group the classified lines into blocks (runs of non-hr lines between
+      // separators), detect which blocks are choruses, and flag every hr that
+      // *follows* a chorus block so it can render bolder. The `chorus` flag is
+      // independent of the double-blank `big` flag — both may apply.
+      const blocks = [];          // each block: array of raw line strings
+      const hrBlockIndex = [];    // for each hr object, the index of its preceding block
+      let current = [];
+      for (const line of merged) {
+        if (line.type === "hr") {
+          hrBlockIndex.push({ hr: line, blockIndex: blocks.length });
+          blocks.push(current);
+          current = [];
+          continue;
+        }
+        const raw = line.type === "chords" ? line.data.join(" ") : line.data;
+        current.push(raw);
+      }
+      blocks.push(current); // trailing block after the last hr (no separator)
+
+      const isChorus = detectChoruses(blocks);
+      for (const { hr, blockIndex } of hrBlockIndex) {
+        if (isChorus[blockIndex]) hr.chorus = true;
+      }
+
       return merged;
     },
 
