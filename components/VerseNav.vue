@@ -92,18 +92,40 @@ export default {
       return candidates.sort((a, b) => visibleHeight(b) - visibleHeight(a))[0];
     },
 
+    // нижняя граница перекрытой сверху области: залипающий хедер приложения
+    // (.el-header, непрозрачный) и плавающие аккорды (.chords). Всё, что выше
+    // неё, визуально скрыто — туда и прячем <hr>.
+    coverBottom() {
+      let bottom = 0;
+      for (const el of document.querySelectorAll(".el-header, .chords")) {
+        const s = getComputedStyle(el);
+        if (s.position === "fixed" || s.position === "sticky") {
+          bottom = Math.max(bottom, el.getBoundingClientRect().bottom);
+        }
+      }
+      return bottom || TOP_OFFSET;
+    },
+
     scrollToNextHr() {
       const content = this.activeContent();
       if (!content) return;
       const hrs = Array.from(content.querySelectorAll("hr"));
       const container = this.scrollContainer();
+      const cover = this.coverBottom();
 
-      // следующий <hr> — первый, чей верх ниже линии чтения
-      const next = hrs.find(hr => hr.getBoundingClientRect().top > TOP_OFFSET + 4);
+      // следующий <hr> — первый, чей верх ниже перекрытой сверху области
+      const next = hrs.find(hr => hr.getBoundingClientRect().top > cover + 4);
 
       let delta;
       if (next) {
-        delta = next.getBoundingClientRect().top - TOP_OFFSET;
+        // прячем сам <hr> под хедер/аккорды, а первую строку следующего
+        // куплета ставим сразу под перекрытой областью
+        const wrapper = next.closest(".song-item__line_text") || next;
+        const after = wrapper.nextElementSibling;
+        const anchorTop = after
+          ? after.getBoundingClientRect().top
+          : next.getBoundingClientRect().bottom;
+        delta = anchorTop - cover;
       } else {
         // куплетов больше нет — мотаем в конец песни
         delta = content.getBoundingClientRect().bottom - window.innerHeight;
