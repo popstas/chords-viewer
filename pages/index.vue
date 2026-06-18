@@ -5,7 +5,7 @@
       <Toolbar @scrollToLast="scrollTo(lastOffset)"></Toolbar>
     </div>
     <ChordsFloating v-if="!$store.state.readerMode"></ChordsFloating>
-    <PlayerFloating></PlayerFloating>
+    <PlayerFloating @scrollToLast="scrollToActiveSong"></PlayerFloating>
     <VerseNav></VerseNav>
     <div v-if="!activeSong.url && isTest && !isMobile()">
       <!-- <BeatPlayer :beat="{name: 'simple-13-tum-tum-100-bpm', bpm: 240}" :rever="false"></BeatPlayer> -->
@@ -35,7 +35,7 @@
       <BeatPlayer :beat="{name: 'piano Am F C E', bpm: 100}" :rever="true" :piano="true" chords="Am F C E"></BeatPlayer>
       <BeatPlayer :beat="{name: 'piano Em G D C', bpm: 100}" :rever="true" :piano="true" chords="Em G D C"></BeatPlayer> -->
     </div>
-    <SongList></SongList>
+    <SongList ref="songList"></SongList>
   </div>
 </template>
 
@@ -89,6 +89,11 @@ export default {
       this.lastOffset = offset;
       const fixedTopOffset = 0;
       window.scrollTo(0, offset - fixedTopOffset);
+    },
+    // bottom player title click → scroll to the start of the active song
+    scrollToActiveSong() {
+      const list = this.$refs.songList;
+      if (list && list.scrollToActiveSong) list.scrollToActiveSong();
     },
   }
 };

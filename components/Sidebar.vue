@@ -45,34 +45,34 @@
 
     <el-row style="text-align:center">
       <label>chords:</label>
-      <el-radio-group v-model="withChords" size="mini">
-        <el-radio-button label="-1">any</el-radio-button>
-        <el-radio-button label="1">yes</el-radio-button>
-        <el-radio-button label="0">no</el-radio-button>
+      <el-radio-group v-model="withChords" size="small">
+        <el-radio-button value="-1">any</el-radio-button>
+        <el-radio-button value="1">yes</el-radio-button>
+        <el-radio-button value="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
     <el-row style="text-align:center">
       <label>texts:</label>
-      <el-radio-group v-model="withTexts" size="mini">
-        <el-radio-button label="-1">any</el-radio-button>
-        <el-radio-button label="1">yes</el-radio-button>
-        <el-radio-button label="0">no</el-radio-button>
+      <el-radio-group v-model="withTexts" size="small">
+        <el-radio-button value="-1">any</el-radio-button>
+        <el-radio-button value="1">yes</el-radio-button>
+        <el-radio-button value="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
     <el-row style="text-align:center">
       <label>comments:</label>
-      <el-radio-group v-model="comments" size="mini">
-        <el-radio-button label="-1">any</el-radio-button>
-        <el-radio-button label="1">yes</el-radio-button>
-        <el-radio-button label="0">no</el-radio-button>
+      <el-radio-group v-model="comments" size="small">
+        <el-radio-button value="-1">any</el-radio-button>
+        <el-radio-button value="1">yes</el-radio-button>
+        <el-radio-button value="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
     <el-row style="text-align:center">
       <label>beats:</label>
-      <el-radio-group v-model="beats" size="mini">
-        <el-radio-button label="-1">any</el-radio-button>
-        <el-radio-button label="1">yes</el-radio-button>
-        <el-radio-button label="0">no</el-radio-button>
+      <el-radio-group v-model="beats" size="small">
+        <el-radio-button value="-1">any</el-radio-button>
+        <el-radio-button value="1">yes</el-radio-button>
+        <el-radio-button value="0">no</el-radio-button>
       </el-radio-group>
     </el-row>
 
@@ -86,7 +86,7 @@
     </el-row>
     <el-row style="text-align:center">
       <a class="sidebar__link" href="https://github.com/popstas/chords-data" target="_blank">
-        <icon name="calendar-alt"></icon>
+        <icon name="calendar-days"></icon>
         songs updated: {{ $store.getters.lastUpdated }}
       </a>
     </el-row>
@@ -113,7 +113,7 @@
     margin-bottom: 10px;
   }
 
-  .el-radio-button--mini .el-radio-button__inner {
+  .el-radio-button--small .el-radio-button__inner {
     padding: 7px !important;
   }
 
@@ -152,11 +152,12 @@ export default {
 
   data() {
     return {
-      // filters
-      withChords: -1,
-      withTexts: -1,
-      comments: -1,
-      beats: -1,
+      // filters (strings so they match the el-radio-button values; the store's
+      // filter logic compares withChords/withTexts against '1'/'0')
+      withChords: '-1',
+      withTexts: '-1',
+      comments: '-1',
+      beats: '-1',
       sortByDate: false,
       sortByShows: false,
     };
@@ -268,7 +269,13 @@ export default {
   },
 
   mounted() {
-    ["withChords", "withTexts", "comments", "beats", "sortByDate", "sortByShows"].forEach(name => {
+    // radio filters: coerce to String so a persisted number (-1) still matches
+    // the string el-radio-button values and shows "any" selected on load
+    ["withChords", "withTexts", "comments", "beats"].forEach(name => {
+      const v = this.$store.state.filter[name];
+      this[name] = v === undefined || v === null ? '-1' : String(v);
+    });
+    ["sortByDate", "sortByShows"].forEach(name => {
       this[name] = this.$store.state.filter[name];
     });
   }

@@ -83,7 +83,7 @@ const SafeFontAwesomeIcon = defineComponent({
         if (lookup) {
           const def: IconDefinition | undefined = findIconDefinition(lookup as IconLookup);
           if (!def) {
-            if (process.client) console.warn('[font-awesome-icon] icon not found in library', lookup);
+            if (process.client) console.warn('[font-awesome-icon] icon not found in library', lookup.prefix + ':' + lookup.iconName);
             return null;
           }
           // In Vue 3, pass props directly and merge attrs
@@ -111,7 +111,16 @@ const IconAlias = defineComponent({
     spin: { type: Boolean, default: false },
   },
   setup(props, { attrs }) {
-    return () => h(SafeFontAwesomeIcon as any, { icon: props.name, spin: props.spin, ...attrs });
+    return () => {
+      // legacy vue-awesome supported "brands/github" / "regular/x" pack prefixes
+      let icon: any = props.name;
+      if (typeof props.name === 'string' && props.name.includes('/')) {
+        const [pack, n] = props.name.split('/');
+        const prefixMap: Record<string, IconPrefix> = { brands: 'fab', regular: 'far', solid: 'fas' };
+        icon = [prefixMap[pack] || 'fas', n];
+      }
+      return h(SafeFontAwesomeIcon as any, { icon, spin: props.spin, ...attrs });
+    };
   },
 });
 

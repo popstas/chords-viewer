@@ -1,5 +1,5 @@
 <template>
-  <div :class="{toolbar: true, toolbar_fixed: true, toolbar_hidden: toolbarHidden}">
+  <div :class="{toolbar: true, toolbar_player: true, toolbar_fixed: true, toolbar_hidden: toolbarHidden}">
     <div class="toolbar-body">
       <div class="toolbar__current-song">
         <el-button class="toolbar__up" @click="toTop">
@@ -52,10 +52,10 @@
             >
           </el-col>
           <el-col :span="7" class="toolbar__instrument">
-            <el-radio-group v-model="instrument" size="mini">
-              <el-radio-button title="guitar" label="guitar">G</el-radio-button>
-              <el-radio-button title="ukulele" label="ukulele">U</el-radio-button>
-              <el-radio-button title="piano" label="piano">P</el-radio-button>
+            <el-radio-group v-model="instrument" size="small">
+              <el-radio-button title="guitar" value="guitar">G</el-radio-button>
+              <el-radio-button title="ukulele" value="ukulele">U</el-radio-button>
+              <el-radio-button title="piano" value="piano">P</el-radio-button>
             </el-radio-group>
           </el-col>
         </el-row>
@@ -187,6 +187,18 @@
     .el-slider {
       margin: 0 8px;
     }
+
+    // prev/play/next: el-checkbox-button (play) renders taller than el-button
+    // (prev/next), which lifts the play icon above the others — give them the
+    // same height and center the icons so all three line up
+    .el-button,
+    .el-checkbox-button__inner {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      line-height: 1;
+    }
   }
 
   &__autoscroll {
@@ -302,6 +314,34 @@
     }
   }
 }
+
+// bottom player: align the up/down buttons and the song title on one row by
+// height (the floats + inline title left them slightly off); scoped so the
+// shared `.toolbar__current-song` in the top toolbar is unaffected
+.toolbar.toolbar_player .toolbar__current-song {
+  display: flex;
+  align-items: center;
+
+  .toolbar__up,
+  .toolbar__hide {
+    float: none !important;
+    padding-left: 0; // drop the shared toolbar button's 7px left padding
+  }
+
+  // the chevron glyphs sit low relative to the title text; nudge them up so
+  // they read aligned (chevron-down reads lower than chevron-up, so raise more)
+  .toolbar__up {
+    transform: translateY(-2px);
+  }
+  .toolbar__hide {
+    transform: translateY(-4px);
+  }
+
+  .toolbar__title {
+    flex: 1;
+    text-align: center;
+  }
+}
 </style>
 
 <script>
@@ -328,6 +368,8 @@ export default {
   components: {
     SearchInput
   },
+
+  emits: ["scrollToLast"],
 
   data() {
     return {

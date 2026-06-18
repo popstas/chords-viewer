@@ -7,7 +7,7 @@
   >
     <!-- play/stop, rever, bpm -->
     <el-row :class="{beat: true, beat__playing: !stopped}" :gutter="20">
-      <el-col :span="11" class="beat__left">
+      <el-col :span="10" class="beat__left">
         <el-button
           :title="`${beat.name}, bpm: ${bpmCurrent}` + (pianoCurrent ? `, piano: ${this.chordsList.join(' ')}` : '')"
           @click="play({force: true})"
@@ -18,15 +18,14 @@
         >{{ stopped ? 'Play' : 'Stop' }}
         </el-button>
       </el-col>
-      <el-col :span="3" class="beat__rever">
+      <el-col :span="5" class="beat__rever">
         <el-checkbox-button class="beat__checkbutton" v-model="reverCurrent">rever</el-checkbox-button>
       </el-col>
       <el-col :span="4" class="beat__bpm">
         <BPMMeter :bpm="bpmCurrent" @change="setBpm"></BPMMeter>
       </el-col>
-      <el-col :span="6" class="beat__right">
+      <el-col :span="5" class="beat__right">
         <el-slider v-model="bpmCurrent" :min="bpmMin" :max="bpmMax"></el-slider>
-        <el-progress class="beat__progress" :percentage="beatProgress" :show-text="false" :color="beatProgressColor"></el-progress>
       </el-col>
     </el-row>
 
@@ -39,13 +38,13 @@
       </el-col>
       <el-col :span="16" class="beat__octave-right">
         <span class="beat__label">octave:</span>
-        <el-radio-group v-model="pianoPitchOffset" size="mini">
-          <el-radio-button :label="-12">-2</el-radio-button>
-          <el-radio-button :label="0">-1</el-radio-button>
-          <el-radio-button :label="12">0</el-radio-button>
-          <el-radio-button :label="24">+1</el-radio-button>
-          <el-radio-button :label="36">+2</el-radio-button>
-          <!-- <el-radio-button :label="48">+3</el-radio-button> -->
+        <el-radio-group v-model="pianoPitchOffset" size="small">
+          <el-radio-button :value="-12">-2</el-radio-button>
+          <el-radio-button :value="0">-1</el-radio-button>
+          <el-radio-button :value="12">0</el-radio-button>
+          <el-radio-button :value="24">+1</el-radio-button>
+          <el-radio-button :value="36">+2</el-radio-button>
+          <!-- <el-radio-button :value="48">+3</el-radio-button> -->
         </el-radio-group>
       </el-col>
     </el-row>
@@ -54,14 +53,14 @@
     <el-row v-if="pianoAllowed" class="beat__piano" :gutter="20">
       <el-col :span="24" class="beat__left">
         <!--<span class="beat__label">slow:</span>-->
-        <el-radio-group v-model="chordBeats" size="mini">
-          <el-radio-button title="2" label="2">2</el-radio-button>
-          <el-radio-button title="4" label="4">4</el-radio-button>
-          <el-radio-button title="8" label="8">8</el-radio-button>
+        <el-radio-group v-model="chordBeats" size="small">
+          <el-radio-button title="2" value="2">2</el-radio-button>
+          <el-radio-button title="4" value="4">4</el-radio-button>
+          <el-radio-button title="8" value="8">8</el-radio-button>
         </el-radio-group>
 
-        <el-radio-group v-model="pianoInstrument" size="mini">
-          <el-radio-button v-for="el of pianoInstruments" :key="el.id" :label="el.id">{{ el.label }}</el-radio-button>
+        <el-radio-group v-model="pianoInstrument" size="small">
+          <el-radio-button v-for="el of pianoInstruments" :key="el.id" :value="el.id">{{ el.label }}</el-radio-button>
         </el-radio-group>
         <el-checkbox-button class="beat__checkbutton" v-model="beatCustomInstruments">...</el-checkbox-button>
       </el-col>
@@ -72,7 +71,7 @@
       <el-col :span="24" class="beat__left">
         <span class="beat__label">custom instrument:</span>
         <el-input-number v-model="customInstrumentNum" :min="0" :max="customInstruments.length - 1"
-                         size="mini"></el-input-number>
+                         size="small"></el-input-number>
         <br/>
         <span class="beat__label" style="display: inline-block; width: 22px">best:&nbsp;</span>
         <el-select style="width: 324px" v-model="customInstrumentNum" placeholder="Select">
@@ -100,17 +99,17 @@
     <el-row v-if="pianoAllowed" class="beat__piano" :gutter="20">
       <el-col :span="24" class="beat__left">
         <span class="beat__label">style:</span>
-        <el-radio-group v-model="pianoStyle" size="mini">
-          <el-radio-button class="piano-style-button" title="12312312" label="12312312">12312312</el-radio-button>
-          <el-radio-button class="piano-style-button" title="min-3-4" label="min-3-4">min 3/4</el-radio-button>
-          <el-radio-button class="piano-style-button" title="force" label="force">force</el-radio-button>
-          <el-radio-button class="piano-style-button" title="flat" label="flat">flat</el-radio-button>
+        <el-radio-group v-model="pianoStyle" size="small">
+          <el-radio-button class="piano-style-button" title="12312312" value="12312312">12312312</el-radio-button>
+          <el-radio-button class="piano-style-button" title="min-3-4" value="min-3-4">min 3/4</el-radio-button>
+          <el-radio-button class="piano-style-button" title="force" value="force">force</el-radio-button>
+          <el-radio-button class="piano-style-button" title="flat" value="flat">flat</el-radio-button>
           <br/>
-          <el-radio-button class="piano-style-button" title="1232" label="1232">1232</el-radio-button>
-          <el-radio-button class="piano-style-button" title="1-123--1-123" label="1-123--1-123">min</el-radio-button>
-          <el-radio-button class="piano-style-button" title="force_3_4" label="force_3_4">force 3/4</el-radio-button>
-          <el-radio-button class="piano-style-button" title="flat-full" label="flat-full">flat-full</el-radio-button>
-          <!-- <el-radio-button title="test" label="test">test</el-radio-button> -->
+          <el-radio-button class="piano-style-button" title="1232" value="1232">1232</el-radio-button>
+          <el-radio-button class="piano-style-button" title="1-123--1-123" value="1-123--1-123">min</el-radio-button>
+          <el-radio-button class="piano-style-button" title="force_3_4" value="force_3_4">force 3/4</el-radio-button>
+          <el-radio-button class="piano-style-button" title="flat-full" value="flat-full">flat-full</el-radio-button>
+          <!-- <el-radio-button title="test" value="test">test</el-radio-button> -->
         </el-radio-group>
         <!-- <el-slider v-model="pianoVolume" :min="0" :max="1" :step="0.1"></el-slider> -->
       </el-col>
@@ -166,10 +165,6 @@
   padding-top: 6px;
 }
 
-.beat__progress .el-progress-bar__inner {
-  transition: none;
-}
-
 .beat__octave-right {
   text-align: right;
 }
@@ -182,7 +177,9 @@
 
 .beat__checkbutton {
   .el-checkbox-button__inner {
-    padding: 3px 6px;
+    // !important: the compiled Element theme sets a larger default padding that
+    // otherwise wins, making "rever" overflow its column onto the bpm meter
+    padding: 3px 6px !important;
     border-radius: 4px !important;
     border: 1px solid var(--border) !important;
     font-weight: normal !important;
@@ -194,6 +191,108 @@
     border-color: var(--border-hover) !important;
     color: var(--color) !important;
     box-shadow: none;
+  }
+}
+
+// Mobile: Element keeps the fixed 24-col spans (10/5/4/5) on the flex row even
+// at ~390px, which wraps the play buttons mid-line and crushes the bpm slider.
+// Fit all five controls (beat, Play, rever, bpm tap, bpm slider) on one line,
+// left-aligned, with equal-height buttons and a wide slider.
+@media (max-width: 600px) {
+  .beat {
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    column-gap: 6px;
+    margin-left: 0 !important; // el-row gutter adds negative margins; would overflow
+  }
+
+  .beat > .el-col {
+    // !important throughout to outrank the old Element UI float-grid theme
+    // (.dark-mode .el-col-10 sets width:41.66% ≈ 158px, which left a gap after the
+    // buttons and pushed the slider off-screen) and the el-row gutter's inline
+    // 10px col padding. Reclaiming both is what lets the row pack left + size the
+    // columns to content so the slider can take the rest.
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  // beat, Play, bpm tap and rever: one shared height with vertically centered text
+  // (the old theme used uneven padding + line-height, so heights and baselines differed)
+  .beat > .beat__left .el-button,
+  .beat > .beat__bpm .el-button,
+  .beat > .beat__rever .el-checkbox-button__inner {
+    height: 28px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  .beat > .beat__left {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+
+    .el-button {
+      margin-left: 0 !important; // theme's .el-button + .el-button margin; gap handles spacing
+      padding-left: 9px;
+      padding-right: 9px;
+    }
+  }
+
+  .beat > .beat__bpm .el-button {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  // pack rever to the left instead of right-aligning it in its column
+  .beat__rever {
+    text-align: left;
+  }
+
+  // bpm slider: take the reclaimed width (~2x+ wider than before) and grow to fill
+  // the row's remaining space. !important to re-enable grow, which the col rule
+  // above forces to 0.
+  .beat > .beat__right {
+    flex: 1 1 auto !important;
+    min-width: 120px;
+  }
+
+  // piano/sustain sat with stray inline-block whitespace; use a controlled gap
+  .beat__octave-left {
+    display: flex;
+    gap: 6px;
+  }
+}
+
+// custom-instrument stepper: Element Plus moved the bordered box from
+// .el-input__inner to .el-input__wrapper, which the old Element UI dark-theme
+// never themed — so the wrapper rendered white and narrower than the control,
+// detaching the + button. Theme it transparent, make it fill the control, and
+// pad it by exactly the button width so the value sits flush between +/-.
+// (Doubled .el-input-number class outranks the equally-specific theme rule on
+// .el-input__inner regardless of source order.)
+.beat__custom-instrument .el-input-number.el-input-number--small {
+  .el-input,
+  .el-input__wrapper {
+    width: 100%;
+  }
+
+  .el-input__wrapper {
+    background-color: transparent;
+    box-shadow: none !important;
+    padding-left: 32px; // = button width, so +/- sit flush against the value
+    padding-right: 32px;
+  }
+
+  .el-input__inner {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 </style>
@@ -1484,7 +1583,7 @@ export default {
         piano_style,
         chord_beats,
         piano_sustain
-      } = this.$router.history.current.query;
+      } = this.$route.query;
       if (piano) this.pianoCurrent = true;
       if (piano_instrument) this.pianoInstrument = pianoInstrumentsMap[piano_instrument];
       if (piano_style) this.pianoStyle = piano_style;

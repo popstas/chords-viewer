@@ -117,8 +117,22 @@
     margin-top: 0;
   }
 
-  .song-transpose .el-button {
-    border: none;
+  .song-transpose {
+    // align transpose, the beat/queue buttons and the font-size picker by height
+    display: flex;
+    align-items: center;
+
+    .el-button {
+      border: none;
+    }
+
+    // push the beat/queue buttons and font-size picker to the right
+    &__right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
   }
   .song-transpose__queue_active {
     color: #409eff;
@@ -166,6 +180,14 @@
 
     &_date, &_shows {
       cursor: default;
+    }
+
+    &_shows {
+      // vertically center the "−"/"+"/count buttons with the "просмотров:" text
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      vertical-align: middle;
     }
 
     &_shows .el-button {

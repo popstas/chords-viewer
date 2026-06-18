@@ -5,7 +5,7 @@
     title="К следующему куплету"
     @click="scrollToNextHr"
   >
-    <icon name="angle-double-down" scale="2"></icon>
+    <icon name="angles-down" scale="2"></icon>
   </button>
 </template>
 

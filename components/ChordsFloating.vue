@@ -21,7 +21,8 @@
 <style lang="scss">
 .chords {
   position: fixed;
-  z-index: 2;
+  // mobile: keep chord names + metronome above the sticky app header (z-index 5)
+  z-index: 6;
   top: 0;
   left: auto;
   right: 0;

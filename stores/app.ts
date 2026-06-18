@@ -60,6 +60,10 @@ export const useAppStore = defineStore('app', {
     showBadges: false,
     showShows: true,
     showBeats: true,
+    // transient (not persisted): is the beats panel expanded for the active song.
+    // Store-backed instead of SongItem-local so the mobile virtual scroller can
+    // recycle/re-render the item without losing the open panel (was closing itself).
+    showBeatControls: false,
     noSleep: false,
     darkMode: undefined as boolean | undefined,
 
@@ -345,6 +349,7 @@ export const useAppStore = defineStore('app', {
       if (this.activeSong.url === url) return;
 
       this.activeSong = activeSong;
+      this.showBeatControls = false; // collapse beats panel when switching songs
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent + 1;
       this.playlist = [...this.playlist, activeSong];

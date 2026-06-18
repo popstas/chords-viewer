@@ -6,7 +6,7 @@
       {{ title }}
 
       <icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" name="drum"></icon>
-      <icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" name="piano"></icon>
+      <icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" name="keyboard"></icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
         <span class="song-item__shows" v-html="shows || ''"></span>
@@ -27,24 +27,26 @@
             <el-button size="small" @click="transposeLevel--">&minus;</el-button>
             <el-button size="small" disabled>{{ transposeLevel }}</el-button>
             <el-button size="small" @click="transposeLevel++">&plus;</el-button>
-            <el-button
-              v-if="$store.state.showBeats && (isBeat || isPianoAllowed)"
-              class="song-transpose__beat"
-              size="mini"
-              title="Beat"
-              @click="showBeatControls = !showBeatControls"
-            >
-              <icon name="drum"></icon>
-            </el-button>
-            <el-button
-              :class="{'song-transpose__queue': true, 'song-transpose__queue_active': inQueue}"
-              size="mini"
-              :title="inQueue ? 'Убрать из очереди' : 'Добавить в очередь'"
-              @click="toggleQueue"
-            >
-              <icon :name="inQueue ? 'check' : 'list-ul'"></icon>
-            </el-button>
-            <FontSize style="float: right"></FontSize>
+            <span class="song-transpose__right">
+              <el-button
+                v-if="$store.state.showBeats && (isBeat || isPianoAllowed)"
+                class="song-transpose__beat"
+                size="small"
+                title="Beat"
+                @click="showBeatControls = !showBeatControls"
+              >
+                <icon name="drum"></icon>
+              </el-button>
+              <el-button
+                :class="{'song-transpose__queue': true, 'song-transpose__queue_active': inQueue}"
+                size="small"
+                :title="inQueue ? 'Убрать из очереди' : 'Добавить в очередь'"
+                @click="toggleQueue"
+              >
+                <icon :name="inQueue ? 'check' : 'list-ul'"></icon>
+              </el-button>
+              <FontSize></FontSize>
+            </span>
           </div>
           <div v-else>
             <FontSize style="float: right"></FontSize>
@@ -93,16 +95,16 @@
             <icon name="link"></icon>
           </a>
           <a v-if="isShare" class="song-item__link" @click.prevent="share">
-            <icon name="share-alt"></icon>
+            <icon name="share-nodes"></icon>
           </a>
           <a class="song-item__link" @click.prevent="copyText">
-            <i class="el-icon-copy-document"></i>
+            <icon name="copy"></icon>
           </a>
           <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
             <icon name="qrcode"></icon>
           </a>
           <a class="song-item__link" @click.prevent="showComment = !showComment">
-            <icon name="edit"></icon>
+            <icon name="pen-to-square"></icon>
           </a>
 
           <div class="song-item__qrcode" v-if="showQrCode">
@@ -113,7 +115,7 @@
             <li class="song-categories__item song-categories__item_date">{{ song.created.replace(/T.*/, '') }}</li>
             <li
               class="song-categories__item song-categories__item_artist"
-              @click="changeFilter('q', '^' + song.details.artist)"
+              @click="selectArtist(song.details.artist)"
             >{{ song.details.artist }}
             </li>
             <li
@@ -158,6 +160,7 @@ import copy from 'copy-to-clipboard';
 export default {
   components: {Chord, FontSize, BeatPlayer},
   props: ["song", "active"],
+  emits: ["change", "active"],
 
   data() {
     return {
@@ -165,7 +168,6 @@ export default {
       shows: 0,
       showQrCode: false,
       showComment: false,
-      showBeatControls: false,
     };
   },
 
@@ -300,6 +302,17 @@ export default {
       return this.$store.state.toolbarHidden;
     },
 
+    // store-backed so the mobile virtual scroller can recycle this component
+    // without the beats panel collapsing itself (only the active song renders it)
+    showBeatControls: {
+      get() {
+        return this.$store.state.showBeatControls;
+      },
+      set(val) {
+        this.$store.commit('showBeatControls', val);
+      }
+    },
+
     comment: {
       get() {
         return this.$store.state.comments[this.safeUrl] || "";
@@ -314,6 +327,14 @@ export default {
     changeFilter(name, value) {
       this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
+    },
+
+    // клик по артисту в конце песни: отфильтровать по артисту,
+    // закрыть открытую песню и промотать страницу в начало
+    selectArtist(artist) {
+      this.changeFilter('q', '^' + artist);
+      if (this.active) this.$emit('change'); // закрыть песню
+      window.scrollTo(0, 0);
     },
 
     toggleQueue() {

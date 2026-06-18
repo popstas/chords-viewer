@@ -1,5 +1,5 @@
 <template>
-  <div :class="{toolbar: true, toolbar_fixed: toolbarFixed, toolbar_hidden: toolbarHidden}">
+  <div :class="{toolbar: true, toolbar_top: true, toolbar_fixed: toolbarFixed, toolbar_hidden: toolbarHidden}">
     <div class="toolbar-spacer"></div>
     <div class="toolbar-body">
       <SearchInput class="toolbar__search" v-model="q"></SearchInput>
@@ -20,48 +20,6 @@
            @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
         </a>
-      </div>
-
-      <div class="toolbar__filters">
-        <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
-        <el-row class="toolbar__controls" :gutter="20">
-          <el-col :span="5" class="toolbar__autoscroll">
-            <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
-          </el-col>
-          <el-col :span="4">
-            <el-button :disabled="playlistCurrent <= 0" class="toolbar__prev" @click="prevSong">
-              <icon name="backward"></icon>
-            </el-button>
-            <input
-              type="hidden"
-              v-shortkey="{k:['k'], kRus: ['л'], left: ['arrowleft']}"
-              @shortkey="prevSong"
-            >
-          </el-col>
-          <el-col :span="4">
-            <el-checkbox-button class="toolbar__play" v-model="autoscroll">
-              <icon :name="autoscroll ? 'pause' : 'play'"></icon>
-            </el-checkbox-button>
-            <input type="hidden" v-shortkey="['space']" @shortkey="autoscroll = !autoscroll">
-          </el-col>
-          <el-col :span="4">
-            <el-button class="toolbar__next" @click="nextSong">
-              <icon name="forward"></icon>
-            </el-button>
-            <input
-              type="hidden"
-              v-shortkey="{j:['j'], jRus: ['о'], right: ['arrowright']}"
-              @shortkey="nextSong"
-            >
-          </el-col>
-          <el-col :span="7" class="toolbar__instrument">
-            <el-radio-group v-model="instrument" size="mini">
-              <el-radio-button title="guitar" label="guitar">G</el-radio-button>
-              <el-radio-button title="ukulele" label="ukulele">U</el-radio-button>
-              <el-radio-button title="piano" label="piano">P</el-radio-button>
-            </el-radio-group>
-          </el-col>
-        </el-row>
       </div>
 
       <ul class="toolbar__search-letters search-letters">
@@ -90,32 +48,34 @@
         </li>
       </ul>
 
-      <el-select class="toolbar__search-artists search-artists" placeholder="Select artist" v-model="artist">
-        <el-option
-          v-for="item in artists"
-          :key="item.name"
-          :value="item.name">
-          <span style="float: left">{{ item.name }}</span>
-          <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'rate' }">{{
-              item.rate
-            }}</span>
-          <span
-            :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'count' }">{{
-              item.count
-            }}</span>
-          <span
-            :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'shows' }">{{
-              item.shows
-            }}</span>
-        </el-option>
-      </el-select>
+      <div class="toolbar__artists-row">
+        <el-select class="toolbar__search-artists search-artists" popper-class="artists-dropdown" placeholder="Select artist" v-model="artist">
+          <el-option
+            v-for="item in artists"
+            :key="item.name"
+            :value="item.name">
+            <span style="float: left">{{ item.name }}</span>
+            <span :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'rate' }">{{
+                item.rate
+              }}</span>
+            <span
+              :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'count' }">{{
+                item.count
+              }}</span>
+            <span
+              :class="{'toolbar__artists-counter': true, 'toolbar__artists-counter_active': artistsSort === 'shows' }">{{
+                item.shows
+              }}</span>
+          </el-option>
+        </el-select>
 
-      <el-radio-group class="search-artists-sort" v-model="artistsSort" size="mini">
-        <el-radio-button label="name">name</el-radio-button>
-        <el-radio-button label="shows">shows</el-radio-button>
-        <el-radio-button label="count">count</el-radio-button>
-        <el-radio-button label="rate">rate</el-radio-button>
-      </el-radio-group>
+        <el-radio-group class="search-artists-sort" v-model="artistsSort" size="small">
+          <el-radio-button value="name" title="По алфавиту"><icon name="arrow-down-a-z"></icon></el-radio-button>
+          <el-radio-button value="shows" title="По показам"><icon name="eye"></icon></el-radio-button>
+          <el-radio-button value="count" title="По количеству"><icon name="hashtag"></icon></el-radio-button>
+          <el-radio-button value="rate" title="По рейтингу"><icon name="star"></icon></el-radio-button>
+        </el-radio-group>
+      </div>
     </div>
   </div>
 </template>
@@ -228,32 +188,19 @@
     margin: 15px 15px 15px 0;
   }
 
-  &__controls {
-    display: flex;
-    align-items: center;
-    margin-left: -5px !important;
-    margin-right: -5px !important;
-
-    > .el-col:first-child {
-      padding-left: 0 !important;
-    }
-
-    // autoscroll speed
-    .el-slider {
-      margin: 0 8px;
-    }
-  }
-
-  &__autoscroll {
-    @media (min-width: 1200px) {
-      visibility: hidden;
-    }
-  }
-
   // search letters
   .search-letters {
     list-style: none;
     padding: 0;
+
+    // mobile: keep the alphabet on a single horizontally-scrollable row
+    @media (max-width: 600px) {
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      text-align: left;
+    }
 
     &__letter {
       padding: 0;
@@ -268,7 +215,7 @@
       margin: 0;
 
       &.active {
-        color: #409eff;
+        color: var(--border-hover);
       }
     }
   }
@@ -278,6 +225,16 @@
     list-style: none;
     padding: 0;
     margin-bottom: 8px;
+
+    // mobile: keep all genre chips (incl. "next") on a single, horizontally
+    // scrollable row instead of wrapping
+    @media (max-width: 600px) {
+      white-space: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      text-align: left;
+    }
 
     &__genre {
       padding: 0 5px;
@@ -292,7 +249,7 @@
       margin: 0;
 
       &.active {
-        color: #409eff;
+        color: var(--border-hover);
       }
     }
 
@@ -315,8 +272,18 @@
     }
   }
 
-  .search-artists {
+  // artist select + sort buttons on a single row
+  &__artists-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     margin-bottom: 15px;
+  }
+
+  .search-artists {
+    flex: 0 1 180px;
+    min-width: 0;
     margin-right: 0; // for 3rd button "count"
 
     $input-height: 30px;
@@ -340,10 +307,10 @@
     }
 
     &-sort {
-      margin-bottom: 3px;
+      flex: 0 0 auto;
 
       .el-radio-button__inner {
-        padding: 7px 10px;
+        padding: 7px 9px;
       }
     }
   }
@@ -364,18 +331,6 @@
     // float: right;
   }
 
-  // font size radiobuttons
-  &__instrument {
-    text-align: right;
-    padding: 0 5px !important;
-
-    .el-radio-button__inner {
-      @media (max-width: 800px) {
-        padding: 7px 8px !important;
-      }
-    }
-  }
-
   // current song breadcrumbs
   &__current-song {
     button {
@@ -387,6 +342,37 @@
       color: var(--color);
     }
   }
+}
+
+// The top toolbar and the bottom PlayerFloating share the global `.toolbar`
+// styles, so component-specific tweaks are scoped via the `toolbar_top`
+// modifier (higher specificity, wins over PlayerFloating's duplicate rules).
+.toolbar.toolbar_top {
+  // top toolbar renders only when no song is active, so the current-song title
+  // is always empty here — collapse its line box to shrink the search↔alphabet gap
+  .toolbar__current-song {
+    line-height: 0;
+
+    button {
+      padding: 4px 10px;
+    }
+  }
+
+  // align the artist select and the sort buttons by height (zero the asymmetric
+  // bottom margins that PlayerFloating's duplicate rules apply)
+  .toolbar__artists-row .search-artists,
+  .toolbar__artists-row .search-artists-sort {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+// The artist dropdown is teleported to <body>, so it must be styled globally.
+// Widen it (the narrow select truncates artist names) so it spans to about the
+// right edge of the sort buttons.
+.artists-dropdown.el-select-dropdown {
+  width: 450px !important;
+  max-width: calc(100vw - 16px);
 }
 </style>
 
@@ -425,6 +411,11 @@ export default {
       lastScrollTop: 0,
 
       artist: "",
+      // declared here so reassignment in build*() is reactive; without this the
+      // artist list won't re-render when the name/shows/count/rate sort changes
+      letters: [],
+      genres: [],
+      artists: [],
 
       showQrCode: false,
     };
@@ -471,19 +462,6 @@ export default {
       set(val) {
         this.$store.commit("autoScrollSpeed", val);
       }
-    },
-
-    instrument: {
-      get() {
-        return this.$store.state.instrument;
-      },
-      set(val) {
-        this.$store.commit("instrument", val);
-      }
-    },
-
-    playlistCurrent() {
-      return this.$store.state.playlistCurrent;
     },
 
     queueLength() {
@@ -584,7 +562,7 @@ export default {
 
     buildLetters() {
       let letters = this.$store.state.songs.map(song => {
-        return song.title[0];
+        return song.title[0].toUpperCase();
       });
       letters.sort();
       // unique letters
@@ -662,14 +640,6 @@ export default {
       this.artists = artists.filter((letter, pos, arr) => {
         return arr.indexOf(letter) === pos;
       });
-    },
-
-    prevSong() {
-      this.$store.dispatch("setPrevSong");
-    },
-
-    nextSong() {
-      this.$store.dispatch("setNextSong");
     },
 
     toTop() {

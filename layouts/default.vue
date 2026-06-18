@@ -1,5 +1,7 @@
 <template>
   <div :class="{'container-wrap': true, 'slideout-open': menuOpen}" :style="{ paddingTop: chordsHeight + 'px' }">
+    <!-- injects <link rel="manifest"> for @vite-pwa/nuxt -->
+    <VitePwaManifest />
     <nav id="menu" class="slideout-menu slideout-menu-left">
       <Sidebar></Sidebar>
     </nav>
@@ -225,6 +227,19 @@ input {
   .el-divider {
     background-color: var(--link-disabled);
   }
+
+  // Element Plus' new .el-select__wrapper isn't covered by dark-theme.scss
+  // (which targets the old .el-input__inner), so selects stay white. Theme them
+  // globally (artist select + instrument selects in BeatPlayer) from one place.
+  .el-select__wrapper {
+    background-color: var(--bg);
+    box-shadow: 0 0 0 1px var(--border) inset;
+  }
+  .el-select__placeholder,
+  .el-select__selected-item,
+  .el-select__input {
+    color: var(--color);
+  }
 }
 
 /* .el-radio-button__orig-radio:checked+.el-radio-button__inner {
@@ -241,6 +256,15 @@ input {
   color: var(--border-hover);
   border-color: var(--border-hover);
   box-shadow: -1px 0 0 0 var(--border-hover);
+}
+
+// Light mode (no .dark-mode class): trim the default Element Plus button
+// horizontal padding (15px) to 10px. Base-specificity (0,1,0) so component rules
+// that set their own padding (toolbar 7px, beat row, chord chips) still win.
+// Dark mode's 10px comes from the dark-theme.scss .el-button rule itself.
+.el-button {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>
 
@@ -262,8 +286,12 @@ export default {
       bodyAttrs: {
         class: store.darkMode ? 'dark-mode' : '',
       },
+      meta: [
+        // match the app header (el-header uses var(--bg)) in both themes
+        {name: "theme-color", content: store.darkMode ? '#222933' : '#ffffff'},
+      ],
       link: [
-        {rel: "manifest", href: "/site.webmanifest"},
+        // @vite-pwa/nuxt injects <link rel="manifest"> automatically
         {rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5"},
         {rel: "apple-touch-icon", type: "image/png", sizes: "180x180", href: "/apple-touch-icon.png"},
         {rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png"},
@@ -309,6 +337,11 @@ export default {
       const input = this.$el.querySelector(".search-input input");
       if (input) input.value = "";
       // this.$store.dispatch("filterSongs");
+      // close the open song so the top toolbar (gated by activeSong) reappears,
+      // un-hide it, and scroll to the top (esp. mobile, where it's hidden)
+      this.$store.dispatch("changeSong", "");
+      this.$store.commit("setToolbarHidden", false);
+      this.toTop();
     },
 
     // vue-qrcode-reader v4: @detect emits an array of detected codes

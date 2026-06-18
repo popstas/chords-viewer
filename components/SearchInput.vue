@@ -3,12 +3,6 @@
     <input v-model="q" v-shortkey.avoid/>
     <span class="el-input__suffix">
       <span class="el-input__suffix-inner">
-        <button
-          :class="{'search-input__speech-toggle':true, active: isSpeechRunning}"
-          @click="speechToggle"
-        >
-          <icon v-if="recognition" name="microphone" class="el-icon-speech el-input__icon"></icon>
-        </button>
         <a
           :class="{'search-input__amdm-search':true}"
           v-if="q"
@@ -49,25 +43,6 @@
     }
   }
 
-  &__speech-toggle {
-    cursor: pointer;
-    border: none;
-    background: none;
-    padding: 6px 0;
-    width: 30px;
-    height: 100%;
-    color: #dcdfe6;
-    outline: none;
-
-    &:hover {
-      color: #666;
-    }
-
-    &.active {
-      color: #409eff;
-    }
-  }
-
   &__amdm-search {
     border: none;
     background: none;
@@ -81,14 +56,14 @@
     text-decoration: none;
 
     &:hover .search-input__amdm-search-text {
-      background: #3f9de1;
+      background: var(--bg-hover);
     }
 
     &-text {
       padding: 2px 4px;
-      background: #ccc;
+      background: var(--bg);
       border-radius: 2px;
-      color: #fff;
+      color: var(--link);
       font-size: 10px;
     }
   }
@@ -107,11 +82,7 @@ export default {
 
   data() {
     return {
-      q: this.modelValue,
-      recognition: false,
-      isSpeechRunning: false,
-      runtimeTranscription: "",
-      transcription: []
+      q: this.modelValue
     };
   },
 
@@ -123,59 +94,6 @@ export default {
     q(val) {
       this.$emit("update:modelValue", val);
     }
-  },
-
-  methods: {
-    speechStart() {
-      console.log("speech start");
-      if (!this.recognition) return;
-      this.recognition.start();
-      this.isSpeechRunning = true;
-    },
-
-    speechStop() {
-      this.recognition && this.recognition.stop();
-      this.isSpeechRunning = false;
-    },
-
-    speechToggle() {
-      return this.isSpeechRunning ? this.speechStop() : this.speechStart();
-    },
-
-    onSpeechEnd() {
-      // console.log("speech end");
-      this.speechStop();
-      if (this.runtimeTranscription === "") return;
-
-      this.transcription.push(this.runtimeTranscription);
-      this.q = this.runtimeTranscription;
-    },
-
-    checkSpeechApi() {
-      window.SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        return;
-      }
-      this.recognition = new SpeechRecognition();
-      let recognition = this.recognition;
-      this.speechStop();
-      recognition.lang = "ru-RU";
-      recognition.interimResults = true;
-      recognition.addEventListener("result", event => {
-        // console.log("speech result", event.results);
-        this.runtimeTranscription = Array.from(event.results)
-          .map(result => result[0])
-          .map(result => result.transcript)
-          .join("");
-      });
-      recognition.addEventListener("end", this.onSpeechEnd);
-      this.recognition = recognition;
-    }
-  },
-
-  mounted() {
-    this.checkSpeechApi();
   }
 };
 </script>

@@ -233,12 +233,28 @@ export default {
       setTimeout(() => {
         try {
           this.$refs.scroller.scrollToItem(index);
+          // leave one collapsed-song row above the open song so the floating
+          // chords panel (pinned at top) doesn't cover its collapse header
+          const sc = document.querySelector('.vue-recycle-scroller');
+          if (sc) sc.scrollTop = Math.max(0, sc.scrollTop - this.itemHeight);
           this.itemToScroll = false;
         } catch (e) {
           // second try, on page load
           setTimeout(() => this.$refs.scroller.scrollToItem(index), 1000);
         }
       }, 50);
+    },
+
+    // scroll the page to the start of the active song (same placement as on open).
+    // called when the song title in the bottom player is clicked.
+    scrollToActiveSong() {
+      if (!this.activeSong.url) return;
+      if (this.isMobile()) {
+        this.scrollerToActiveSong();
+      } else {
+        const el = document.querySelector('.song-item.active');
+        if (el) window.scrollTo(0, el.offsetTop - this.songLineHeight());
+      }
     },
 
     // TODO: changeSong intersects with watch for activeSong change
