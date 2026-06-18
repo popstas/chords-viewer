@@ -101,13 +101,17 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   not introduced by this task; lint config to be reconciled in the dependency-upgrade tasks.
 
 ### Task 3: chordNowrap store state + toggle action
-- [ ] add `chordNowrap: false` to `stores/app.ts` state; **do NOT** add it to `persist.pick`
+- [x] add `chordNowrap: false` to `stores/app.ts` state; **do NOT** add it to `persist.pick`
   (TODO: "не запоминает состояние, по умолчанию выключен" — transient, default off).
-- [ ] add a Pinia action/mutation to toggle it (follow `showBeats`/`readerMode` pattern so
+- [x] add a Pinia action/mutation to toggle it (follow `showBeats`/`readerMode` pattern so
   `this.$store.commit('chordNowrap', v)` / `state.chordNowrap` work via the Vuex-compat layer).
-- [ ] reset `chordNowrap` to `false` when the active song changes (so it never sticks across songs).
-- [ ] write e2e (new `tests/e2e/nowrap.spec.ts`): assert default state is off on song open.
-- [ ] run `npx playwright test tests/e2e/nowrap.spec.ts` + `npm run lint` — must pass before Task 4.
+  Added `toggleChordNowrap` action; commit('chordNowrap', v) also works via the compat layer.
+- [x] reset `chordNowrap` to `false` when the active song changes (so it never sticks across songs).
+  Reset in `changeSong`, `setPrevSong`, `setNextSong`.
+- [x] write e2e (new `tests/e2e/nowrap.spec.ts`): assert default state is off on song open.
+- [x] run `npx playwright test tests/e2e/nowrap.spec.ts` + `npm run lint` — playwright passes;
+  `npm run lint` is the same pre-existing breakage (missing `eslint-plugin-vue` from the Vue2→3
+  migration) documented at Task 2 — not introduced by this task.
 
 ### Task 4: Chord-line overflow detection
 - [ ] in `components/SongItem.vue`, add logic to detect whether any rendered `.song-item__line_chords`
