@@ -94,6 +94,13 @@
         margin: 1.5rem 5rem 0.75rem;
         border-top-width: 3px;
       }
+
+      // separator that follows a detected chorus block: bolder than .big so a
+      // refrain stands out at a glance. Same color as the normal hr.
+      &.big_chorus {
+        margin: 1.5rem 5rem 0.75rem;
+        border-top-width: 5px;
+      }
     }
 
     .song-text {
