@@ -67,6 +67,19 @@
       background: #ededed;
     }
 
+    // floating panel: compact chips. Element Plus / dark-theme.scss inflate the
+    // default .el-button padding to 12px 20px (h≈32, w≈63); keep ~25 tall and
+    // 25-27 wide so rows don't overlap. (0,3,0 beats .dark-mode .el-button.)
+    .chords & {
+      box-sizing: border-box;
+      height: 25px;
+      min-width: 25px;
+      padding: 1px 2px;
+      margin: 1px 0;
+      line-height: 21px;
+      font-size: 14px;
+    }
+
     min-width: 25px;
 
     &:hover,
