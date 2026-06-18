@@ -114,14 +114,26 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   migration) documented at Task 2 — not introduced by this task.
 
 ### Task 4: Chord-line overflow detection
-- [ ] in `components/SongItem.vue`, add logic to detect whether any rendered `.song-item__line_chords`
+- [x] in `components/SongItem.vue`, add logic to detect whether any rendered `.song-item__line_chords`
   exceeds its container width (measure `scrollWidth > clientWidth`), recomputed on song open,
   font-size change, and window resize (debounced). Store result as a component flag (e.g. `chordsOverflow`).
-- [ ] guard for SSR / no `chords.json`: only measure on client (`onMounted`/`nextTick`).
-- [ ] expose the flag so the toggle (Task 5) can conditionally render.
-- [ ] write/extend e2e in `tests/e2e/nowrap.spec.ts`: on the **mobile** Playwright profile, open a
+  Added `chordsOverflow` data flag + `measureChordsOverflow`/`scheduleOverflowMeasure` (forces
+  `white-space:nowrap` on each chord line to read its single-line content width); re-measures on
+  `active`, `transposeLevel`, `fontSizeStore` watch, and a 150ms-debounced window `resize` listener.
+- [x] guard for SSR / no `chords.json`: only measure on client (`onMounted`/`nextTick`).
+  All measurement guards on `typeof window !== "undefined"` and runs via `$nextTick`; resize
+  listener registered in `mounted`, removed in `beforeUnmount`.
+- [x] expose the flag so the toggle (Task 5) can conditionally render. `chordsOverflow` lives in
+  component `data` (reset to false on collapse), ready for the Task 5 `v-if`.
+- [x] write/extend e2e in `tests/e2e/nowrap.spec.ts`: on the **mobile** Playwright profile, open a
   song with long chord lines and assert overflow is detected (toggle becomes visible — wired in Task 5).
-- [ ] run `npx playwright test tests/e2e/nowrap.spec.ts` + `npm run lint` — must pass before Task 5.
+  Added a mobile-only test that opens a chord song, shrinks the viewport to 120px (deterministic
+  overflow + exercises the resize re-measure), and asserts a chord line's single-line content
+  exceeds its container.
+- [x] run `npx playwright test tests/e2e/nowrap.spec.ts` + `npm run lint` — playwright passes (3 passed,
+  1 skipped on desktop); `npm run lint` is the same pre-existing breakage (missing `eslint-plugin-vue`
+  from the Vue2→3 migration) documented at Tasks 2-3 — not introduced by this task, to be reconciled
+  in the dependency-upgrade tasks.
 
 ### Task 5: Nowrap toggle button (left of beat toggle)
 - [ ] add an icon toggle button in `.song-transpose__right` **before** `.song-transpose__beat`

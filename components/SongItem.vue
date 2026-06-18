@@ -171,6 +171,11 @@ export default {
       showQrCode: false,
       showComment: false,
       opening: false,
+      // true when at least one rendered chord line is wider than its container
+      // (i.e. would overflow the screen). Drives the nowrap-toggle visibility
+      // (Task 5). Measured client-only on song open / font-change / resize.
+      chordsOverflow: false,
+      _overflowResizeHandler: null,
     };
   },
 
@@ -178,16 +183,28 @@ export default {
     active(val) {
       // the song finished expanding (or collapsed) — drop the opening spinner
       this.opening = false;
-      if (!val) return;
+      if (!val) {
+        this.chordsOverflow = false;
+        return;
+      }
       this.$emit("active", this.$el.offsetTop);
+      this.scheduleOverflowMeasure();
       setTimeout(() => {
         this.$emit("active", this.$el.offsetTop);
+        this.scheduleOverflowMeasure();
       }, 1000);
     },
 
     transposeLevel(val) {
       // cycle transpose
       if (Math.abs(val) === 12) this.transposeLevel = 0;
+      // transposing can widen/narrow chord chips → re-check overflow
+      this.scheduleOverflowMeasure();
+    },
+
+    // font-size changes shrink/grow chord chips → overflow may flip
+    fontSizeStore() {
+      this.scheduleOverflowMeasure();
     },
 
     showsStore() {
@@ -345,6 +362,11 @@ export default {
       return this.$store.state.toolbarHidden;
     },
 
+    // watched so a font-size change re-measures chord-line overflow
+    fontSizeStore() {
+      return this.$store.state.fontSize;
+    },
+
     // store-backed so the mobile virtual scroller can recycle this component
     // without the beats panel collapsing itself (only the active song renders it)
     showBeatControls: {
@@ -423,12 +445,61 @@ export default {
     addShows(count) {
       this.shows = this.shows + count;
       this.$store.dispatch('setShow', {url: this.safeUrl, shows: this.shows});
+    },
+
+    // Re-measure chord-line overflow after the DOM has settled. Client-only and
+    // deferred to nextTick so chord chips are laid out before we read geometry.
+    scheduleOverflowMeasure() {
+      if (typeof window === "undefined") return;
+      this.$nextTick(() => this.measureChordsOverflow());
+    },
+
+    // True when any rendered chord line would be wider than its container.
+    // Chord lines wrap by default (so their natural scrollWidth equals
+    // clientWidth), so we temporarily force `white-space: nowrap` to read the
+    // single-line content width, then restore the inline style.
+    measureChordsOverflow() {
+      if (typeof window === "undefined" || !this.active) {
+        this.chordsOverflow = false;
+        return;
+      }
+      const el = this.$el;
+      const lines = el && el.querySelectorAll
+        ? el.querySelectorAll(".song-item__line_chords")
+        : [];
+      let overflow = false;
+      for (const line of lines) {
+        const prev = line.style.whiteSpace;
+        line.style.whiteSpace = "nowrap";
+        if (line.scrollWidth > line.clientWidth + 1) overflow = true;
+        line.style.whiteSpace = prev;
+        if (overflow) break;
+      }
+      this.chordsOverflow = overflow;
     }
   },
 
   mounted() {
     this.isShare = !!navigator.share;
     this.shows = this.$store.state.shows[this.safeUrl] || 0;
+
+    // re-check overflow on window resize (debounced ~150ms), client-only
+    if (typeof window !== "undefined") {
+      let resizeTimer = null;
+      this._overflowResizeHandler = () => {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => this.measureChordsOverflow(), 150);
+      };
+      window.addEventListener("resize", this._overflowResizeHandler);
+      if (this.active) this.scheduleOverflowMeasure();
+    }
+  },
+
+  beforeUnmount() {
+    if (typeof window !== "undefined" && this._overflowResizeHandler) {
+      window.removeEventListener("resize", this._overflowResizeHandler);
+      this._overflowResizeHandler = null;
+    }
   }
 };
 </script>
