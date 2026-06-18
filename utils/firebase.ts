@@ -2,7 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyAi6BptwN63ruuHJiTmm_ofYUyquAaPf9U',
   authDomain: 'chords-viewer.firebaseapp.com',
   databaseURL: 'https://chords-viewer.firebaseio.com',

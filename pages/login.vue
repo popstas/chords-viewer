@@ -11,7 +11,7 @@
 </style>
 
 <script>
-import "~/utils/firebase"; // ensure the default firebase app is initialized
+import { firebaseConfig } from "~/utils/firebase";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import * as firebaseui from "firebaseui";
@@ -23,6 +23,12 @@ export default {
     return {};
   },
   mounted() {
+    // FirebaseUI uses the compat SDK, which keeps its own app registry
+    // separate from the modular `initializeApp` in ~/utils/firebase, so the
+    // compat default app must be initialized here before calling firebase.auth().
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
     let ui = firebaseui.auth.AuthUI.getInstance();
     if (!ui) {
       ui = new firebaseui.auth.AuthUI(firebase.auth());
