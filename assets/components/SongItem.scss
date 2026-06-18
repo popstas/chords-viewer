@@ -82,7 +82,9 @@
 
     hr {
       margin: 1rem 5rem 0.5rem;
-      border-color: var(--bg-hover);
+      border: none;
+      // same color as the chords in the lyrics (.chord_known .el-button)
+      border-top: 1px solid #999;
 
       // two blank lines in the source -> one bolder separator between large
       // blocks (e.g. verse / chorus): thicker line, slightly bigger margin.
@@ -90,8 +92,7 @@
       // which renders as two shades), same color as the normal hr.
       &.big {
         margin: 1.5rem 5rem 0.75rem;
-        border: none;
-        border-top: 3px solid var(--bg-hover);
+        border-top-width: 3px;
       }
     }
 
