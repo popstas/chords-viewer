@@ -326,6 +326,19 @@
       height: $input-height;
     }
 
+    // Element Plus' new .el-select__wrapper isn't covered by dark-theme.scss
+    // (which targets the old .el-input__inner), so it stays white. Use theme
+    // colors: background = page bg, light text.
+    .el-select__wrapper {
+      background-color: var(--bg);
+      box-shadow: 0 0 0 1px var(--border) inset;
+    }
+    .el-select__placeholder,
+    .el-select__selected-item,
+    .el-select__input {
+      color: var(--color);
+    }
+
     &-sort {
       margin-bottom: 3px;
 

@@ -222,6 +222,17 @@ input {
   background-color: #84a1bd !important;
   border-color: #84a1bd !important;
 } */
+
+// Global: active radio buttons (sort name/shows/count/rate, instrument G/U/P,
+// font size, etc.) highlight with border + text only, no filled background.
+// The selector mirrors Element Plus' own active-fill rule but adds .el-radio-group
+// so it out-specifies it (0,6,0 > 0,5,0).
+.el-radio-group .el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner {
+  background-color: transparent;
+  color: var(--border-hover);
+  border-color: var(--border-hover);
+  box-shadow: -1px 0 0 0 var(--border-hover);
+}
 </style>
 
 <script>

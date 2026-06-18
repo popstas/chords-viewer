@@ -8,7 +8,7 @@
         <el-button class="toolbar__hide" @click="hideToolbar">
           <icon name="chevron-down"></icon>
         </el-button>
-        <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
+        <button class="toolbar__title" @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle || '\xa0' }}</button>
 
         <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
           <qr-code :size="340" :text="activeSongQrCode"></qr-code>

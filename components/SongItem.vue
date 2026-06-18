@@ -15,7 +15,6 @@
       <span class="song-item__badges" v-if="$store.state.showBadges">
         <span v-if="complexity !== ''" :class="{ 'song-item__complexity': true, [complexityClass]: true }"
               v-html="complexity" title="song complexity"></span>
-        <i v-if="song.text" class="el-icon-tickets" title="with text"></i>
       </span>
     </div>
 

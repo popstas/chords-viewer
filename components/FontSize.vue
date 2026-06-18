@@ -22,16 +22,6 @@
 .font-size3 .el-radio-button__inner {
   font-size: $font-size-3 !important;
 }
-
-// active size button: highlight with border + text only, no filled background.
-// Must out-specify Element Plus' own active-fill rule
-// (.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner)
-.font-size .el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner {
-  background-color: transparent;
-  color: var(--border-hover);
-  border-color: var(--border-hover);
-  box-shadow: -1px 0 0 0 var(--border-hover);
-}
 </style>
 
 <script>
