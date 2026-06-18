@@ -87,7 +87,7 @@
                 class="song-item__line_text"
                 :key="lineKey"
               >
-                <hr>
+                <hr :class="{ big: line.big }">
               </div>
             </template>
           </div>
@@ -288,7 +288,7 @@ export default {
         .replace(/вст\./g, 'Intro')
         .replace(/Кода:/g, 'Coda:')
         .replace(/Проигрыш/g, 'Coda')
-      return textFixed.split("\n").map(line => {
+      const lines = textFixed.split("\n").map(line => {
         if (!line.match(/[а-яА-Я]/)) {
           if (!line.trim()) {
             return {type: "hr", data: ''};
@@ -300,6 +300,19 @@ export default {
         }
         return {type: "text", data: line};
       });
+
+      // collapse runs of consecutive blank lines into a single "big" separator
+      // (two empty lines usually divide large blocks, e.g. verse / chorus)
+      const merged = [];
+      for (const line of lines) {
+        const prev = merged[merged.length - 1];
+        if (line.type === "hr" && prev && prev.type === "hr") {
+          prev.big = true;
+          continue;
+        }
+        merged.push({...line});
+      }
+      return merged;
     },
 
     toolbarHidden() {

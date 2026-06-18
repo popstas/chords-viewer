@@ -81,8 +81,16 @@
     overflow-x: auto;
 
     hr {
-      margin: 1.5rem;
+      margin: 1rem 5rem 0.5rem;
       border-color: var(--bg-hover);
+
+      // two blank lines in the source -> one bolder separator between large
+      // blocks (e.g. verse / chorus): thicker line, slightly bigger margin
+      &.big {
+        margin: 1.5rem 5rem 0.75rem;
+        border-width: 2px;
+        border-color: var(--border);
+      }
     }
 
     .song-text {
