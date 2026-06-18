@@ -227,6 +227,16 @@
       border: none;
       padding: 0;
       margin: 0;
+      // dark-theme.scss forces .el-button to display:block, so its small
+      // line-height sits below center in the 24px box — flex-center the glyph
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      .dark-mode & {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 }
