@@ -55,6 +55,18 @@
       background: #ededed;
     }
 
+    // dark mode: the light alternating chips are unreadable on the dark page
+    // (even sections render light-on-light). In the floating panel, drop the
+    // chip backgrounds and use theme text, matching the song body.
+    .dark-mode .chords & {
+      background: transparent;
+      border-color: transparent;
+      color: var(--color);
+    }
+    .dark-mode .chords .chords__section:nth-child(even) & {
+      background: var(--bg-hover);
+    }
+
     min-width: 25px;
 
     &:hover,
