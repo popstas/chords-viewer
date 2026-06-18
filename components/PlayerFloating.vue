@@ -498,6 +498,8 @@ export default {
     },
 
     toTop() {
+      const sc = document.querySelector('.vue-recycle-scroller');
+      if (sc) sc.scrollTo(0, 0);
       window.scrollTo(0, 0);
     }
   },

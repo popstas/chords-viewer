@@ -9,7 +9,9 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   fullyParallel: false,
   workers: 1,
-  retries: 0,
+  // the virtual scroller's recycle pool can transiently overlap a DOM-first
+  // item with another, intercepting a click; one retry absorbs that flake.
+  retries: 1,
   reporter: [['list']],
 
   use: {

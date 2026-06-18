@@ -545,7 +545,10 @@ export default {
     handleScroll() {
       const delta = window.scrollY - this.lastScrollTop;
       this.lastScrollTop = window.scrollY;
-      this.toolbarFixed = window.scrollY > 0;
+      // top toolbar no longer docks to the bottom on scroll (that produced a
+      // second bottom bar over PlayerFloating + an empty 212px spacer). It now
+      // scrolls away in normal flow; the pinned app header gives quick access.
+      // this.toolbarFixed = window.scrollY > 0;
 
       if (window.scrollY === 0) {
         this.autoscroll = false;
@@ -670,6 +673,8 @@ export default {
     },
 
     toTop() {
+      const sc = document.querySelector('.vue-recycle-scroller');
+      if (sc) sc.scrollTo(0, 0);
       window.scrollTo(0, 0);
     }
   },

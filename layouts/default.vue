@@ -12,6 +12,9 @@
           <button class="input-clear" @click="showQrCode = !showQrCode">
             <icon name="qrcode"></icon>
           </button>
+          <button class="input-clear" title="В начало" @click="toTop">
+            <icon name="chevron-up"></icon>
+          </button>
           <Profile></Profile>
         </el-header>
         <el-main>
@@ -160,6 +163,12 @@ textarea {
 
 .el-header {
   padding: 0 5px !important;
+  // pin the app header (menu / clear / qr / scroll-to-top / profile) so it's
+  // always reachable while the search/filters scroll away below it
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
 
   .menu-toggle,
   .input-clear {
@@ -281,6 +290,12 @@ export default {
   methods: {
     onPanelClick() {
       if (this.menuOpen) this.menuOpen = false;
+    },
+
+    toTop() {
+      const sc = document.querySelector('.vue-recycle-scroller');
+      if (sc) sc.scrollTo(0, 0);
+      window.scrollTo(0, 0);
     },
     // handleScroll() {
     //   const chords = this.$el.querySelector(".song-item.active .chords");

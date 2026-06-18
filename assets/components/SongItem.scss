@@ -30,17 +30,17 @@
     // dark-theme.scss re-applies flex under .dark-mode (same specificity), so
     // override that too with a higher-specificity selector.
     display: block;
+    // the header had padding: 0 8px 0 0 -> date flush-left (0) but shows/badges
+    // sat 8px from the right. Drop the right padding so the right edge matches.
+    padding-right: 0;
     .dark-mode & {
       display: block;
+      padding-right: 0;
     }
   }
 
   &__date, &__shows {
     color: #999;
-  }
-
-  &__date {
-    margin-right: 6px;
   }
 
   &__complexity {
