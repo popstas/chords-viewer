@@ -64,6 +64,9 @@ export const useAppStore = defineStore('app', {
     // Store-backed instead of SongItem-local so the mobile virtual scroller can
     // recycle/re-render the item without losing the open panel (was closing itself).
     showBeatControls: false,
+    // transient (not persisted, default off): switch chord lines from wrapping to
+    // horizontal scroll for the active song. Resets when the active song changes.
+    chordNowrap: false,
     noSleep: false,
     darkMode: undefined as boolean | undefined,
 
@@ -322,6 +325,10 @@ export const useAppStore = defineStore('app', {
       this.filteredSongs = result;
     },
 
+    toggleChordNowrap() {
+      this.chordNowrap = !this.chordNowrap;
+    },
+
     toggleQueue(url: string) {
       const queue = this.queue.includes(url)
         ? this.queue.filter(u => u !== url)
@@ -350,6 +357,7 @@ export const useAppStore = defineStore('app', {
 
       this.activeSong = activeSong;
       this.showBeatControls = false; // collapse beats panel when switching songs
+      this.chordNowrap = false; // transient nowrap never sticks across songs
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent + 1;
       this.playlist = [...this.playlist, activeSong];
@@ -365,6 +373,7 @@ export const useAppStore = defineStore('app', {
     setPrevSong() {
       if (this.playlistCurrent <= 0) return;
       this.activeSong = this.playlist[this.playlistCurrent - 1];
+      this.chordNowrap = false;
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent - 1;
     },
@@ -381,6 +390,7 @@ export const useAppStore = defineStore('app', {
         this.playlist = [...this.playlist, randomSong];
       }
       this.playlistCurrent = this.playlistCurrent + 1;
+      this.chordNowrap = false;
       this.updateTranspose();
     },
 
