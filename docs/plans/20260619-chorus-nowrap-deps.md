@@ -74,16 +74,16 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
 ## Implementation Steps
 
 ### Task 1: Chorus detection helper
-- [ ] add a pure helper `utils/chorus.ts` exporting `detectChoruses(blocks: string[][]): boolean[]`
+- [x] add a pure helper `utils/chorus.ts` exporting `detectChoruses(blocks: string[][]): boolean[]`
   where each `block` is an array of its raw lines; returns, per block, whether it is a chorus.
-- [ ] heuristic: (a) blocks whose first 1-2 non-empty lines repeat across ≥2 blocks → choruses;
+- [x] heuristic: (a) blocks whose first 1-2 non-empty lines repeat across ≥2 blocks → choruses;
   (b) a block whose first line matches an explicit marker (case-insensitive, RU+EN):
   `припев` / `chorus` → chorus, `куплет` / `verse` → verse (explicit marker overrides (a)).
   Keep it small/readable; normalize whitespace+case when comparing block starts.
-- [ ] export the marker regex/constants so they're reusable and self-documenting.
-- [ ] write Playwright e2e (new `tests/e2e/chorus.spec.ts`): open a song and assert the suite
+- [x] export the marker regex/constants so they're reusable and self-documenting.
+- [x] write Playwright e2e (new `tests/e2e/chorus.spec.ts`): open a song and assert the suite
   loads without console errors (structural smoke — exact heuristic verified manually).
-- [ ] run `npx playwright test tests/e2e/chorus.spec.ts` + `npm run lint` — must pass before Task 2.
+- [x] run `npx playwright test tests/e2e/chorus.spec.ts` + `npm run lint` — must pass before Task 2.
 
 ### Task 2: Render bolder hr after chorus blocks
 - [ ] in `components/SongItem.vue` `textLines` (or a derived computed), group classified lines
