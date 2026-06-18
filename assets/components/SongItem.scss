@@ -25,10 +25,22 @@
 
   .el-collapse-item__header {
     overflow: hidden;
+    // Element Plus makes the header a flexbox; restore block so the date/title
+    // inline spacing and the right-floated badges/shows behave like before.
+    // dark-theme.scss re-applies flex under .dark-mode (same specificity), so
+    // override that too with a higher-specificity selector.
+    display: block;
+    .dark-mode & {
+      display: block;
+    }
   }
 
   &__date, &__shows {
     color: #999;
+  }
+
+  &__date {
+    margin-right: 6px;
   }
 
   &__complexity {

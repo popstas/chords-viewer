@@ -55,16 +55,16 @@
       background: #ededed;
     }
 
-    // dark mode: the light alternating chips are unreadable on the dark page
-    // (even sections render light-on-light). In the floating panel, drop the
-    // chip backgrounds and use theme text, matching the song body.
+    // dark mode: Element Plus' dark .el-button overrides the light chip bg/text,
+    // making even-section chips light-on-light (unreadable). Re-assert the light
+    // chips with dark text in the floating panel so they match the original.
     .dark-mode .chords & {
-      background: transparent;
-      border-color: transparent;
-      color: var(--color);
+      background: #f9f9f9;
+      border-color: #ededed;
+      color: #000;
     }
     .dark-mode .chords .chords__section:nth-child(even) & {
-      background: var(--bg-hover);
+      background: #ededed;
     }
 
     min-width: 25px;

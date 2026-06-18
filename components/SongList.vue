@@ -55,20 +55,22 @@
 }
 
 // global text size
+// NOTE: dark-theme.scss has `.dark-mode .el-collapse-item__content { font-size: 13px }`
+// (same specificity, loaded later) so the size classes must be more specific.
 .el-collapse-item__content {
   font-size: 13px;
+}
 
-  .size1 & {
-    font-size: $font-size-1;
-  }
+.song-list.size1 .el-collapse-item__content {
+  font-size: $font-size-1;
+}
 
-  .size2 & {
-    font-size: $font-size-2;
-  }
+.song-list.size2 .el-collapse-item__content {
+  font-size: $font-size-2;
+}
 
-  .size3 & {
-    font-size: $font-size-3;
-  }
+.song-list.size3 .el-collapse-item__content {
+  font-size: $font-size-3;
 }
 </style>
 

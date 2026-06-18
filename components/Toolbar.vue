@@ -25,7 +25,7 @@
       <div class="toolbar__filters">
         <!-- <el-button icon="el-icon-close" class="hidden-xs-only" size="mini" circle @click="toolbarHidden = true"></el-button> -->
         <el-row class="toolbar__controls" :gutter="20">
-          <el-col :span="6" class="toolbar__autoscroll">
+          <el-col :span="5" class="toolbar__autoscroll">
             <el-slider v-model="autoScrollSpeed" :min="1" :max="6"></el-slider>
           </el-col>
           <el-col :span="4">
