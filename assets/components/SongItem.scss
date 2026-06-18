@@ -43,6 +43,25 @@
     color: #999;
   }
 
+  // instant tap feedback while the song content renders (1-2s on mobile)
+  .el-collapse-item__header.is-opening {
+    background: var(--bg-hover);
+  }
+
+  &__spinner {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    vertical-align: middle;
+    border: 2px solid var(--link-hover, #999);
+    border-top-color: transparent;
+    border-radius: 50%;
+    // transform animation runs on the compositor, so it keeps spinning even
+    // while the main thread is blocked rendering the song
+    animation: song-item-spin 0.6s linear infinite;
+  }
+
   &__complexity {
     padding: 2px 4px;
     border-radius: 100%;
@@ -108,10 +127,13 @@
 
   &__line_chords_glue {
     min-height: 2em;
-    margin-bottom: -2.8em;
+    // pull the lyric line a touch closer under its chord row
+    margin-bottom: -2.95em;
   }
   &__line_text {
     margin-top: 2em;
+    // tighten spacing between consecutive lyric lines (was the inherited ~1.77)
+    line-height: 1.55;
   }
   &__line_text + &__line_text {
     margin-top: 0;
@@ -203,5 +225,9 @@ details {
     list-style: none !important;
     cursor: pointer;
   }
+}
+
+@keyframes song-item-spin {
+  to { transform: rotate(360deg); }
 }
 

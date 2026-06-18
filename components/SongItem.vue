@@ -1,9 +1,10 @@
 <template>
   <div :class="{'el-collapse-item': true, 'song-item': true, active: active}">
-    <div role="button" class="el-collapse-item__header" @click="$emit('change')">
+    <div role="button" :class="{'el-collapse-item__header': true, 'is-opening': opening}" @click="onHeaderClick">
       <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
       <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
       {{ title }}
+      <span v-if="opening" class="song-item__spinner" aria-hidden="true"></span>
 
       <icon v-if="isBeat && $store.state.filter.beats !== '1' && !$store.state.readerMode" style="margin-left: 5px" name="drum"></icon>
       <icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" name="keyboard"></icon>
@@ -168,11 +169,14 @@ export default {
       shows: 0,
       showQrCode: false,
       showComment: false,
+      opening: false,
     };
   },
 
   watch: {
     active(val) {
+      // the song finished expanding (or collapsed) — drop the opening spinner
+      this.opening = false;
       if (!val) return;
       this.$emit("active", this.$el.offsetTop);
       setTimeout(() => {
@@ -324,6 +328,25 @@ export default {
   },
 
   methods: {
+    // Rendering a song's content can freeze the main thread for 1-2s on mobile,
+    // so the tap feels unresponsive. Show a spinner immediately and defer the
+    // (heavy) expand by two frames so the browser paints the feedback first.
+    // The spinner animates via CSS transform (compositor thread), so it keeps
+    // spinning even while the main thread is blocked by the render.
+    onHeaderClick() {
+      if (this.active) {
+        // collapsing is cheap — no spinner needed
+        this.$emit("change");
+        return;
+      }
+      this.opening = true;
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        this.$emit("change");
+      }));
+      // safety net in case `active` never flips (e.g. song filtered out)
+      setTimeout(() => { this.opening = false; }, 2500);
+    },
+
     changeFilter(name, value) {
       this.$store.dispatch("changeFilter", {name, value});
       // this.$emit("changeFilter", { name, value });
