@@ -50,7 +50,7 @@
     "@playwright/test": "^1.48.0",
     "@vite-pwa/nuxt": "^0.10.6",
     "eslint": "^8.56.0",
-    "nuxt": "3.13.2",
+    "nuxt": "3.21.7",
     "sass": "^1.69.0"
   }
 }
