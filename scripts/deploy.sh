@@ -5,6 +5,9 @@ rm -rf dist
 npm run update-data
 npm run build-beats
 npm run generate
+# GitHub Pages runs Jekyll, which ignores underscore-prefixed dirs (_nuxt).
+# .nojekyll disables Jekyll so _nuxt assets are served instead of 404'd.
+touch dist/.nojekyll
 cd dist
 git init
 git add -A
