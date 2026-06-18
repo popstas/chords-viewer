@@ -66,6 +66,29 @@ test('keyboard j/k navigate between songs', async ({ page }) => {
   await expect.poll(titleOf).not.toBe(first);
 });
 
+test('lazy list: no empty gap after closing a song', async ({ page }) => {
+  const scroller = page.locator('.vue-recycle-scroller');
+  test.skip((await scroller.count()) === 0, 'desktop: no virtual scroller');
+
+  // open the top song, then close it; the virtual scroller must re-measure so
+  // the collapsed row doesn't keep its expanded height (empty gap).
+  await page.locator('.vue-recycle-scroller__item-view .el-collapse-item__header').first().click();
+  await expect(page.locator(ACTIVE).first()).toBeVisible();
+  await page.locator(`${ACTIVE} .el-collapse-item__header`).first().click();
+  await page.waitForTimeout(500);
+
+  const maxGap = await page.evaluate(() => {
+    const rects = [...document.querySelectorAll('.vue-recycle-scroller__item-view')]
+      .map(v => v.getBoundingClientRect())
+      .filter(r => r.top > -600 && r.top < 2500)
+      .sort((a, b) => a.top - b.top);
+    let max = 0;
+    for (let i = 1; i < rects.length; i++) max = Math.max(max, rects[i].top - rects[i - 1].bottom);
+    return Math.round(max);
+  });
+  expect(maxGap).toBeLessThan(60);
+});
+
 test('queue: adding a song marks it queued', async ({ page }) => {
   await page.locator(SONG_HEADER).first().click();
   const active = page.locator(ACTIVE).first();

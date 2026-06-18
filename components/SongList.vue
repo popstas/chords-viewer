@@ -159,6 +159,12 @@ export default {
       // const query = song.url ? {url: song.url} : {};
       this.$router.push({query});
 
+      // vue-virtual-scroller can keep a just-collapsed song's *expanded* size
+      // cached (ResizeObserver/recycle race), leaving an empty gap the height
+      // of the song. Clear the size cache so visible items are re-measured
+      // from the real DOM whenever the active song toggles.
+      this.remeasureScroller();
+
       if (!song) return;
 
       // show timer
@@ -206,6 +212,16 @@ export default {
           }
         }, speedMapping2[this.autoScrollSpeed]);
       }
+    },
+
+    // Clear the virtual scroller's size cache after a song expands/collapses
+    // so every visible item is re-measured (fixes stale expanded heights that
+    // leave an empty gap). No-op on desktop (no scroller).
+    remeasureScroller() {
+      this.$nextTick(() => {
+        const sc = this.$refs.scroller;
+        if (sc && typeof sc.forceUpdate === 'function') sc.forceUpdate(true);
+      });
     },
 
     scrollerToActiveSong() {
