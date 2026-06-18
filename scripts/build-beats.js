@@ -8,17 +8,14 @@
 
 const fs = require('fs');
 const path = require('path');
-const glob = require('glob');
-const { promisify } = require('util');
+const { glob } = require('glob');
 const { basename } = require('path');
-
-const globAsync = promisify(glob);
 
 const assetsPath = path.resolve(__dirname, '../assets');
 const midiPath = path.resolve(assetsPath, 'midi');
 
 const build = async () => {
-  const files = await globAsync(`${midiPath}/*.mid`);
+  const files = (await glob(`${midiPath}/*.mid`)).sort();
   const data = files.map((file) => {
     const name = basename(file, '.mid');
     const data = fs.readFileSync(file).toString('base64');
