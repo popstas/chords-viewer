@@ -66,8 +66,10 @@ export default defineNuxtConfig({
       maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
     },
     client: { installPrompt: true },
-    // lets us verify the manifest/SW in `npm run dev` without a full generate
-    devOptions: { enabled: true, type: 'module', suppressWarnings: true },
+    // Dev SW is disabled: @vite-pwa/nuxt intermittently fails to generate
+    // .nuxt/dev-sw-dist/sw.js, throwing an ENOENT overlay that blocks the page.
+    // The production SW is still built by `npm run generate`.
+    devOptions: { enabled: false, type: 'module', suppressWarnings: true },
   },
 
   nitro: {
