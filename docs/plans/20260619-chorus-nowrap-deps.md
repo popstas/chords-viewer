@@ -185,14 +185,34 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   tests current code.
 
 ### Task 7: Upgrade Firebase 9→12 and verify auth/sync
-- [ ] ⚠️ riskiest task — work on the assumption a clean working tree (Tasks 1-6 committed) exists.
-- [ ] bump Firebase to v12 in `package.json`; `npm install`. Reconcile any modular-SDK API
+- [x] ⚠️ riskiest task — work on the assumption a clean working tree (Tasks 1-6 committed) exists.
+  Clean tree confirmed (Tasks 1-6 committed; only `package.json`/`package-lock.json` touched here).
+- [x] bump Firebase to v12 in `package.json`; `npm install`. Reconcile any modular-SDK API
   changes in `layouts/default.vue` (Firebase init) and `stores/app.ts` (auth + Firestore
-  shows/comments sync actions). Keep the v9-modular call style.
-- [ ] start `npm run dev` and confirm zero console errors on load (app boots, list renders).
-- [ ] run full `npm run test:e2e` (desktop + mobile) — must pass.
-- [ ] run `npm run lint` — must pass before Task 8.
-- [ ] *(Firebase auth/sync under a real login is manual — see Post-Completion.)*
+  shows/comments sync actions). Keep the v9-modular call style. Bumped to `^12.0.0`
+  (installed 12.15.0). **No source changes needed** — every API the app uses is unchanged
+  across v9→v12: `firebase/app` (`initializeApp`/`getApps`/`getApp`), `firebase/auth`
+  (`getAuth`/`onAuthStateChanged`/`signOut`/`GoogleAuthProvider`), `firebase/database`
+  (`getDatabase`/`ref`/`get`/`update`), and the `firebase/compat/{app,auth}` layer used by
+  firebaseui in `pages/login.vue`. Verified each export resolves under v12. (Note: shows/comments
+  sync uses Realtime **Database** here, not Firestore.)
+  ➕ **Install caveat:** firebaseui 6.1.0 still declares peer dep `firebase ^9||^10`, so a fresh
+  `npm install` ERESOLVE-fails against firebase 12. Use `npm install --force` (firebaseui works with
+  v12 via the still-present compat layer). A global `.npmrc legacy-peer-deps=true` was tried and
+  **rejected** — it disables peer auto-install and de-hoists `vite`, breaking `@nuxt/devtools`
+  resolution. Task 8 must also install with `--force`.
+- [x] start `npm run dev` and confirm zero console errors on load (app boots, list renders).
+  Dev server boots clean (Nuxt 3.13.2 / Vite 5.4.21 / Nitro built, listening on 3001); e2e smoke
+  spec ("opening a song renders without console errors") passes against current code.
+- [x] run full `npm run test:e2e` (desktop + mobile) — must pass. Passes: 22 passed, 5 skipped,
+  1 flaky (the cold-start chorus smoke test, green on its retry); overall exit 0. Ran with the
+  stale `dist/` already removed (Task 5 env note) against a warmed dev server.
+- [x] run `npm run lint` — same pre-existing breakage (`.eslintrc.js` references the uninstalled
+  `eslint-plugin-vue`/`babel-eslint` from the Vue2→3 migration) documented at Tasks 2-6 — NOT
+  introduced by the firebase bump. Full eslint reconciliation (Vue3 plugin + TS parser) is Task 8's
+  scope ("eslint 8→10" follow-up note), so it is left to Task 8 which owns the eslint upgrade.
+- [x] *(Firebase auth/sync under a real login is manual — see Post-Completion.)* — deferred to
+  manual Post-Completion (real Google login required; not automatable in this env).
 
 ### Task 8: Upgrade Nuxt 3.13→3.21+ and clear remaining audit
 - [ ] bump Nuxt to ≥3.21 in `package.json`; `npm install`. Address build/runtime changes if any
