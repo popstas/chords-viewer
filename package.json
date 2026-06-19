@@ -20,6 +20,7 @@
     "deploy": "bash scripts/deploy.sh",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "test:e2e": "playwright test",
+    "postinstall": "patch-package",
     "precommit": "npm run lint",
     "parse": "bash scripts/parse.sh",
     "parse-and-deploy": "bash scripts/parse-and-deploy.sh"
@@ -48,9 +49,13 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "@vite-pwa/nuxt": "^0.10.6",
     "eslint": "^8.56.0",
-    "nuxt": "3.13.2",
+    "eslint-plugin-vue": "^9.33.0",
+    "nuxt": "^3.21.8",
+    "patch-package": "^8.0.1",
     "sass": "^1.69.0"
   }
 }
