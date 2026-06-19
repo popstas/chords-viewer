@@ -30,7 +30,7 @@
             <el-button size="small" @click="transposeLevel++">&plus;</el-button>
             <span class="song-transpose__right">
               <el-button
-                v-if="chordsOverflow"
+                v-if="chordsOverflow || $store.state.chordNowrap"
                 :class="{'song-transpose__nowrap': true, 'song-transpose__nowrap_active': $store.state.chordNowrap}"
                 size="small"
                 :title="$store.state.chordNowrap ? 'Перенос аккордов' : 'Без переноса аккордов'"

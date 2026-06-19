@@ -8,7 +8,7 @@ Nuxt 3 SPA/PWA for viewing guitar chords (chords.popstas.ru). Static site, no se
 
 ## Commands
 
-- `npm install` — install dependencies (yarn also works). Runs `patch-package` on `postinstall`; firebaseui pins firebase ^9||^10 as a peer, so install with `npm install --force` (do not set global `legacy-peer-deps`).
+- `npm install` — install dependencies (yarn also works). Runs `patch-package` on `postinstall`. firebaseui's stale `firebase ^9||^10` peer is reconciled with firebase 12 via a `package.json` `overrides` entry (`firebaseui` → `firebase: "$firebase"`), so a plain `npm install`/`npm ci` resolves without ERESOLVE — no `--force` and no global `legacy-peer-deps` needed.
 - `npm run update-data` — download `chords.json` into project root (required before build/dev)
 - `npm run dev` — dev server at http://localhost:3001 (HOST=0.0.0.0)
 - `npm run generate` — static build to `dist/`

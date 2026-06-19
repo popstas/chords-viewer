@@ -57,5 +57,10 @@
     "nuxt": "^3.21.8",
     "patch-package": "^8.0.1",
     "sass": "^1.69.0"
+  },
+  "overrides": {
+    "firebaseui": {
+      "firebase": "$firebase"
+    }
   }
 }
