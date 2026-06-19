@@ -215,14 +215,45 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   manual Post-Completion (real Google login required; not automatable in this env).
 
 ### Task 8: Upgrade Nuxt 3.13→3.21+ and clear remaining audit
-- [ ] bump Nuxt to ≥3.21 in `package.json`; `npm install`. Address build/runtime changes if any
+- [x] bump Nuxt to ≥3.21 in `package.json`; `npm install`. Address build/runtime changes if any
   (nuxt.config, Vite builder, unhead/`useHead`). Keep the Windows Vite fixes intact.
-- [ ] run `npm audit`; apply remaining safe fixes (`npm audit fix`, and `--force` only for the
+  Bumped `nuxt` to `^3.21.8` (latest 3.x; installed 3.21.8 — closes tar/giget/c12/unhead advisories).
+  Installed with `npm install --force` per the Task 7 firebaseui peer-dep caveat. No `nuxt.config`
+  source changes needed; the app's `useHead`/SPA setup is unchanged.
+  ➕ **Dev-server regression (patched):** Nuxt 3.21.8 ships the same `resolveServerEntry`
+  regression as Nuxt 4.4.5 (issue [nuxt/nuxt#35033](https://github.com/nuxt/nuxt/issues/35033)) —
+  in SPA mode (`ssr: false`) `nuxt dev` crashes with `No entry found in rollupOptions.input`.
+  Production `nuxt build`/`generate` is unaffected (verified). Backported the official 4.4.8 fix
+  (use `appDir/entry-spa` as the vite-node SPA entry instead of calling `resolveServerEntry`) to the
+  installed `@nuxt/vite-builder@3.21.8` via **patch-package** (`patches/@nuxt+vite-builder+3.21.8.patch`,
+  applied by a new `postinstall` script). Added `patch-package` devDependency. After the patch,
+  `npm run dev` boots clean and serves HTTP 200.
+- [x] run `npm audit`; apply remaining safe fixes (`npm audit fix`, and `--force` only for the
   intended Firebase/Nuxt-related advisories). Record residual advisories that need optional
   non-security majors (@vueuse/core, fuse.js, vue-virtual-scroller, eslint, fortawesome) as a ➕
   follow-up note rather than forcing them here.
-- [ ] confirm `npm run dev` boots clean; run full `npm run test:e2e` (desktop + mobile) — must pass.
-- [ ] run `npm run lint` — must pass before Task 9.
+  Audit went **15 → 1**: the Nuxt bump cleared all 7 high + 5 moderate + remaining low (tar/giget/
+  c12/@nuxt/kit + unhead XSS). ➕ **Residual:** 1 **low** `esbuild ≤0.28.0` "dev server arbitrary
+  file read **on Windows**" (transitive under `@nuxt/vite-builder`/`vite-node`, dev-only, non-Windows
+  hosts unaffected) — cannot be cleared without forcing a vite/esbuild major; left for the optional
+  major-upgrade follow-up. ➕ **Optional non-security majors** still outstanding (per plan): @vueuse/core
+  11→14, fuse.js 6→7, vue-virtual-scroller 2→3, eslint 8→10, fortawesome 6→7.
+- [x] confirm `npm run dev` boots clean; run full `npm run test:e2e` (desktop + mobile) — must pass.
+  `npm run dev` boots clean (Nuxt 3.21.8 / Vite, HTTP 200 after the vite-builder patch).
+  Full `npm run test:e2e`: **22 passed, 5 skipped**; the only failure was the known cold-start
+  chorus smoke test (`opening a song renders without console errors`) — confirmed a cold-start flake
+  (passes 4/4 on the warm route), same flake documented at Task 7. Ran with `dist/` removed (Task 5
+  env note). Re-verified `tests/e2e/nowrap.spec.ts` (6 passed) after the `overflowResizeHandler` rename.
+- [x] run `npm run lint` — must pass before Task 9.
+  **Reconciled the Vue2→3 lint config** (the pre-existing breakage documented across Tasks 2-7):
+  rewrote `.eslintrc.js` from the Vue2 `babel-eslint` + `plugin:vue/essential` setup to a Vue 3 + TS
+  config (`vue-eslint-parser` + `@typescript-eslint/parser`, `plugin:vue/vue3-essential`,
+  `@typescript-eslint/recommended`); installed `eslint-plugin-vue@9`, `@typescript-eslint/parser@7`,
+  `@typescript-eslint/eslint-plugin@7` (eslint-8-compatible). Relaxed convention rules that fire on
+  the migrated codebase (Nuxt auto-imports/`no-undef`, single-word page names, CommonJS build-script
+  requires, legacy escapes/template patterns) and ignored vendored `MIDIFile.js`. Fixed one **real**
+  issue from Task 4: renamed the Vue-reserved `_overflowResizeHandler` data key → `overflowResizeHandler`.
+  `npm run lint` now exits **0**.
 
 ### Task 9: Verify acceptance criteria
 - [ ] chorus detection: bold `hr` renders after chorus blocks; explicit markers respected;
