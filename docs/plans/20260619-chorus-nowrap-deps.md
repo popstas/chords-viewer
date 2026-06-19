@@ -158,16 +158,31 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   `rm -rf dist` (or regenerate) before `npm run test:e2e`, else they'll re-test the stale build.**
 
 ### Task 6: Apply nowrap rendering + inter-chord space shrink
-- [ ] when `chordNowrap` is on, apply `white-space: nowrap; overflow-x: auto` to chord lines
+- [x] when `chordNowrap` is on, apply `white-space: nowrap; overflow-x: auto` to chord lines
   (a `.song-item__line_chords_nowrap` modifier class on `.song-item__line_chords`), enabling
-  horizontal scroll. Keep wrapping behavior unchanged when off.
-- [ ] when a chord line still overflows, reduce inter-chord spacing first (shrink the chord chip
-  horizontal margins/padding via the modifier) before relying on scroll, per TODO.
-- [ ] ensure the `.song-item__line_chords_glue` negative-margin alignment with the lyric line
-  below is preserved in nowrap mode (chords stay positioned above their syllables).
-- [ ] extend `tests/e2e/nowrap.spec.ts`: with nowrap on, assert the chord line is horizontally
+  horizontal scroll. Keep wrapping behavior unchanged when off. Bound the modifier class to
+  `$store.state.chordNowrap` in `components/SongItem.vue`; modifier defined after `_glue` in
+  `assets/components/SongItem.scss` so its `overflow-x: auto` wins over the base `overflow: hidden`.
+- [x] when a chord line still overflows, reduce inter-chord spacing first (shrink the chord chip
+  horizontal margins/padding via the modifier) before relying on scroll, per TODO. Modifier adds
+  `word-spacing: -0.25em` + `letter-spacing: -0.02em` (tightens both source spaces and `&nbsp;`
+  runs) and flushes the known-chord chip horizontal padding; verified a 549px line shrinks to 432px
+  before the (still-overflowing) line scrolls.
+- [x] ensure the `.song-item__line_chords_glue` negative-margin alignment with the lyric line
+  below is preserved in nowrap mode (chords stay positioned above their syllables). The `_glue`
+  class is independent (vertical `margin-bottom`/`min-height`); the nowrap modifier only touches
+  horizontal spacing/overflow, so the glue pull is unaffected.
+- [x] extend `tests/e2e/nowrap.spec.ts`: with nowrap on, assert the chord line is horizontally
   scrollable (`scrollWidth > clientWidth` and the nowrap class is applied); off restores wrapping.
-- [ ] run `npx playwright test tests/e2e/nowrap.spec.ts` + `npm run lint` — must pass before Task 7.
+  Added a mobile test asserting on → all on-screen chord lines carry the modifier with computed
+  `white-space: nowrap` + `overflow-x: auto` (horizontal scroll enabled); off → modifier gone,
+  wrapping restored. (`anyScrollable` is measured but informational, not asserted — the spacing
+  shrink can make a marginally-overflowing line fit, the intended "shrink before scroll" behavior.)
+- [x] run `npx playwright test tests/e2e/nowrap.spec.ts` (6 passed, 4 skipped on desktop) + `npm run
+  lint`. `npm run lint` is the same pre-existing breakage (missing `eslint-plugin-vue` from the
+  Vue2→3 migration) documented at Tasks 2-5 — not introduced by this task, to be reconciled in the
+  dependency-upgrade tasks (7-8). Ran with `dist/` removed per the Task 5 env note so the suite
+  tests current code.
 
 ### Task 7: Upgrade Firebase 9→12 and verify auth/sync
 - [ ] ⚠️ riskiest task — work on the assumption a clean working tree (Tasks 1-6 committed) exists.

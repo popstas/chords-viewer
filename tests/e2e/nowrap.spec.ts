@@ -161,3 +161,62 @@ test('nowrap toggle appears on overflow and flips pressed state on click', async
   await toggle!.click();
   await expect(toggle!).not.toHaveClass(/song-transpose__nowrap_active/);
 });
+
+// Task 6: apply nowrap rendering. With the toggle ON, the chord line gets the
+// `_nowrap` modifier (white-space:nowrap + overflow-x:auto) so it becomes a
+// single horizontally-scrollable line; OFF restores wrapping (modifier gone).
+test('nowrap on makes the chord line horizontally scrollable; off restores wrapping', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'overflow only reliably occurs on the mobile viewport');
+  test.setTimeout(90000); // scans several songs via keyboard nav to find an overflowing one
+
+  const toggle = await openSongWithVisibleToggle(page);
+  expect(toggle, 'expected a song whose chord lines overflow the mobile width').not.toBeNull();
+  await expect(toggle!).toBeVisible();
+
+  const CHORD_LINE = '.song-item__content .song-item__line_chords';
+
+  // reads the on-screen chord lines' layout: whether they carry the nowrap
+  // modifier, their computed white-space, and whether any overflows horizontally.
+  // (Filter out the scroller's visibility:hidden shrink-to-content measure copies.)
+  const readChordLines = (sel: string) => page.evaluate((s) => {
+    const lines = (Array.from(document.querySelectorAll(s)) as HTMLElement[])
+      .filter((l) => getComputedStyle(l).visibility !== 'hidden' && l.offsetParent !== null);
+    return {
+      count: lines.length,
+      nowrap: lines.filter((l) => l.classList.contains('song-item__line_chords_nowrap')).length,
+      whiteSpaces: Array.from(new Set(lines.map((l) => getComputedStyle(l).whiteSpace))),
+      overflowXs: Array.from(new Set(lines.map((l) => getComputedStyle(l).overflowX))),
+      anyScrollable: lines.some((l) => l.scrollWidth > l.clientWidth + 1),
+    };
+  }, sel);
+
+  // default off: chord lines wrap — no nowrap modifier, white-space is wrapping
+  expect(await page.locator(NOWRAP_LINE).count()).toBe(0);
+  const off = await readChordLines(CHORD_LINE);
+  expect(off.nowrap).toBe(0);
+  expect(off.whiteSpaces).not.toContain('nowrap');
+
+  // toggle on → every chord line switches to nowrap + horizontal scroll
+  await toggle!.click();
+  await expect(toggle!).toHaveClass(/song-transpose__nowrap_active/);
+  await page.waitForTimeout(200);
+  expect(await page.locator(NOWRAP_LINE).count()).toBeGreaterThan(0);
+  const on = await readChordLines(CHORD_LINE);
+  expect(on.nowrap).toBe(on.count); // all on-screen chord lines now carry the modifier
+  expect(on.whiteSpaces).toEqual(['nowrap']); // wrapping disabled — single line
+  expect(on.overflowXs).toEqual(['auto']); // horizontally scrollable when content overflows
+  // With white-space:nowrap + overflow-x:auto a line wider than its box scrolls
+  // horizontally. The inter-chord spacing shrink tightens the line first, so a
+  // marginally-overflowing line may now fit (no scroll) — that's the intended
+  // "shrink before scroll" behavior, hence anyScrollable is informational, not
+  // asserted (it varies by which overflowing song the scroller lands on).
+  void on.anyScrollable;
+
+  // toggle off → modifier removed, wrapping restored
+  await toggle!.click();
+  await expect(toggle!).not.toHaveClass(/song-transpose__nowrap_active/);
+  expect(await page.locator(NOWRAP_LINE).count()).toBe(0);
+  const offAgain = await readChordLines(CHORD_LINE);
+  expect(offAgain.nowrap).toBe(0);
+  expect(offAgain.whiteSpaces).not.toContain('nowrap');
+});

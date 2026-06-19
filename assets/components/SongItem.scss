@@ -148,6 +148,28 @@
     // pull the lyric line a touch closer under its chord row
     margin-bottom: -2.95em;
   }
+
+  // chordNowrap mode (transient store flag, toggled left of the beat button):
+  // switch the chord line from wrapping to a single horizontally-scrollable line.
+  // To avoid scrolling when the line nearly fits, tighten the inter-chord spacing
+  // FIRST — negative word/letter spacing shrinks the source spaces and the &nbsp;
+  // runs between chord chips; the scroll (overflow-x: auto) only engages once the
+  // tightened line still overflows. Defined after _glue so its overflow-x wins
+  // over the base `overflow: hidden`; the _glue vertical pull is unaffected, so
+  // chords stay positioned above their syllables.
+  &__line_chords_nowrap {
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    word-spacing: -0.25em;
+    letter-spacing: -0.02em;
+    .chord_known .el-button {
+      // already tight in the body, but make the chips flush in nowrap mode so
+      // spacing comes only from the (shrunk) gaps between chords.
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
   &__line_text {
     margin-top: 2em;
     // tighten spacing between consecutive lyric lines (was the inherited ~1.77)
