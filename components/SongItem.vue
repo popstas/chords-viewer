@@ -185,6 +185,7 @@ export default {
       // (Task 5). Measured client-only on song open / font-change / resize.
       chordsOverflow: false,
       overflowResizeHandler: null,
+      overflowResizeTimer: null,
     };
   },
 
@@ -498,10 +499,9 @@ export default {
 
     // re-check overflow on window resize (debounced ~150ms), client-only
     if (typeof window !== "undefined") {
-      let resizeTimer = null;
       this.overflowResizeHandler = () => {
-        if (resizeTimer) clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => this.measureChordsOverflow(), 150);
+        if (this.overflowResizeTimer) clearTimeout(this.overflowResizeTimer);
+        this.overflowResizeTimer = setTimeout(() => this.measureChordsOverflow(), 150);
       };
       window.addEventListener("resize", this.overflowResizeHandler);
       if (this.active) this.scheduleOverflowMeasure();
@@ -512,6 +512,10 @@ export default {
     if (typeof window !== "undefined" && this.overflowResizeHandler) {
       window.removeEventListener("resize", this.overflowResizeHandler);
       this.overflowResizeHandler = null;
+    }
+    if (this.overflowResizeTimer) {
+      clearTimeout(this.overflowResizeTimer);
+      this.overflowResizeTimer = null;
     }
   }
 };
