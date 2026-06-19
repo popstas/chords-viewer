@@ -76,7 +76,7 @@
           <div v-if="song.text" class="song-text">
             <template class="song-text__line" v-for="(line, lineKey) in textLines">
               <div v-if="line.type === 'chords' && !$store.state.readerMode"
-                   :class="{'song-item__line_chords': true, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type === 'text'}"
+                   :class="{'song-item__line_chords': true, 'song-item__line_chords_nowrap': $store.state.chordNowrap, 'song-item__line_chords_glue': textLines[lineKey+1] && textLines[lineKey+1].type && textLines[lineKey+1].type === 'text'}"
                    :key="lineKey">
                 <template v-for="(chord, chordKey) in line.data">
                   <template v-if="chord !== ''">
