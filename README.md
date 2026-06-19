@@ -55,7 +55,7 @@
 
 Сайт и база аккордов хостятся на GitHub Pages, авторизация и счётчик просмотров сделан через Google Firebase.
 
-Сайт - PWA приложение на Nuxt, Element UI.
+Сайт - PWA приложение на Nuxt 3, Element Plus.
 
 
 ## English

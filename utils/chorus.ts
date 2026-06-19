@@ -12,10 +12,16 @@
 export const CHORUS_MARKERS = ['припев', 'chorus', 'refrain'] as const;
 export const VERSE_MARKERS = ['куплет', 'verse'] as const;
 
-// Matches a leading marker word (optionally followed by punctuation/number),
-// case-insensitive, RU+EN. e.g. "Припев:", "Chorus 2", "куплет 1".
-export const CHORUS_MARKER_RE = new RegExp(`^\\s*(?:${CHORUS_MARKERS.join('|')})\\b`, 'i');
-export const VERSE_MARKER_RE = new RegExp(`^\\s*(?:${VERSE_MARKERS.join('|')})\\b`, 'i');
+// Matches a leading marker word (optionally inside a bracket and/or followed by
+// punctuation/number), case-insensitive, RU+EN. e.g. "Припев:", "Chorus 2",
+// "куплет 1", "[Припев]", "[Verse 1]" — the bracketed form is what chords.json
+// actually uses for most explicit markers.
+// NB: we use a negative lookahead `(?![a-zа-яё])` instead of `\b`, because JS
+// `\b` is ASCII-only and never matches a boundary after a Cyrillic word — so
+// `\b` would silently fail to match RU markers like "Припев"/"Куплет".
+const MARKER_TAIL = '(?![a-zа-яё])';
+export const CHORUS_MARKER_RE = new RegExp(`^\\s*\\[?\\s*(?:${CHORUS_MARKERS.join('|')})${MARKER_TAIL}`, 'i');
+export const VERSE_MARKER_RE = new RegExp(`^\\s*\\[?\\s*(?:${VERSE_MARKERS.join('|')})${MARKER_TAIL}`, 'i');
 
 // Normalize a line for comparison: trim, lowercase, collapse inner whitespace.
 function normalizeLine(line: string): string {
