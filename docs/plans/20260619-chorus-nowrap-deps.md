@@ -280,9 +280,16 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   Task 8 Vue3+TS eslint reconciliation.
 
 ### Task 10: [Final] Update docs
-- [ ] update project `CLAUDE.md`/README notes only if a new architectural pattern was introduced
-  (e.g. chorus helper, overflow detection) worth recording.
-- [ ] check off the corresponding items in `docs/TODO.md`.
+- [x] update project `CLAUDE.md`/README notes only if a new architectural pattern was introduced
+  (e.g. chorus helper, overflow detection) worth recording. Added Architecture notes to
+  `CLAUDE.md` for (a) the `utils/chorus.ts` `detectChoruses` helper → `chorus` hr flag → `.big_chorus`
+  (kept separate from `big`, dividers stay real `<hr>` for VerseNav), and (b) the transient
+  `chordNowrap` flag (default off, not persisted, reset per song) + client-only `chordsOverflow`
+  measurement gating the toggle and the `.song-item__line_chords_nowrap` shrink-then-scroll behavior.
+  Left the stale Nuxt-2/`store/index.js` references untouched (full migration rewrite is out of this
+  task's scope).
+- [x] check off the corresponding items in `docs/TODO.md`. Checked all three TODO items
+  (npm audit upgrades, chorus detection, nowrap mode).
 
 *Note: ralphex automatically moves completed plans to `docs/plans/completed/`.*
 
