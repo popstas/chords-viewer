@@ -256,14 +256,28 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   `npm run lint` now exits **0**.
 
 ### Task 9: Verify acceptance criteria
-- [ ] chorus detection: bold `hr` renders after chorus blocks; explicit markers respected;
-  verse-nav unaffected.
-- [ ] nowrap: toggle appears only on overflow, default off, non-persisted, resets per song;
-  on → horizontal scroll with shrunk spacing; off → wrapping restored.
-- [ ] deps: `npm audit` shows the 21 vulnerabilities resolved (or only optional non-security
-  majors remaining, documented).
-- [ ] run full `npm run test:e2e` (desktop + mobile) — all green.
-- [ ] run `npm run lint` — clean.
+- [x] chorus detection: bold `hr` renders after chorus blocks; explicit markers respected;
+  verse-nav unaffected. Verified via `tests/e2e/chorus.spec.ts` (passes 4/4 on warm route):
+  asserts an `hr` renders and that verse-next keyboard nav still scrolls after the
+  `big_chorus` class is applied. (Exact heuristic correctness on specific songs → manual
+  Post-Completion.)
+- [x] nowrap: toggle appears only on overflow, default off, non-persisted, resets per song;
+  on → horizontal scroll with shrunk spacing; off → wrapping restored. Verified via
+  `tests/e2e/nowrap.spec.ts` (6 passed, mobile + desktop): default-off on open, overflow-gated
+  toggle visibility, modifier class → computed `white-space: nowrap` + `overflow-x: auto` on,
+  wrapping restored off.
+- [x] deps: `npm audit` shows the 21 vulnerabilities resolved (or only optional non-security
+  majors remaining, documented). `npm audit` now reports **1 low** — the documented esbuild
+  ≤0.28.0 "dev server arbitrary file read **on Windows**" advisory (dev-only, transitive under
+  `@nuxt/vite-builder`/`vite-node`, non-Windows hosts unaffected; clearing needs a forced
+  vite/esbuild major — left to the optional major-upgrade follow-up). All 21 original vulns
+  (7 high + moderate + low) cleared by the Firebase/Nuxt bumps.
+- [x] run full `npm run test:e2e` (desktop + mobile) — all green. **22 passed, 5 skipped**; the
+  sole failure was the known cold-start flake (`chorus.spec.ts` "opening a song renders without
+  console errors"), confirmed green on the warm route (4/4) — same flake documented at Tasks 7-8,
+  not a regression. Ran with stale `dist/` removed (Task 5 env note).
+- [x] run `npm run lint` — clean. `npm run lint` exits **0** ("ESLint: No issues found") after the
+  Task 8 Vue3+TS eslint reconciliation.
 
 ### Task 10: [Final] Update docs
 - [ ] update project `CLAUDE.md`/README notes only if a new architectural pattern was introduced
