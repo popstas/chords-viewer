@@ -136,14 +136,26 @@ and needs manual Firebase auth/sync verification, so it runs last on a clean, wo
   in the dependency-upgrade tasks.
 
 ### Task 5: Nowrap toggle button (left of beat toggle)
-- [ ] add an icon toggle button in `.song-transpose__right` **before** `.song-transpose__beat`
+- [x] add an icon toggle button in `.song-transpose__right` **before** `.song-transpose__beat`
   in `components/SongItem.vue`; bind `active`/pressed state to `chordNowrap`, click → toggle action.
-- [ ] render the button **only** when `chordsOverflow` is true (Task 4 flag).
-- [ ] pick an existing FontAwesome icon (via `<icon name="...">`) that reads as "no-wrap / horizontal".
-- [ ] style the button consistently with the beat/queue buttons (reuse `.song-transpose` styles).
-- [ ] extend `tests/e2e/nowrap.spec.ts`: toggle is hidden when no overflow; visible + clickable
-  when overflow; clicking flips the chord-line nowrap class (verified in Task 6).
-- [ ] run `npx playwright test tests/e2e/nowrap.spec.ts` + `npm run lint` — must pass before Task 6.
+  Added an `el-button.song-transpose__nowrap` bound to `$store.state.chordNowrap`
+  (`song-transpose__nowrap_active` class when on); click → `toggleChordNowrap` dispatch.
+- [x] render the button **only** when `chordsOverflow` is true (Task 4 flag) — `v-if="chordsOverflow"`.
+- [x] pick an existing FontAwesome icon (via `<icon name="...">`) that reads as "no-wrap / horizontal" —
+  used `arrows-left-right` (the whole `fas` pack is registered in `plugins/vue-awesome.ts`).
+- [x] style the button consistently with the beat/queue buttons (reuse `.song-transpose` styles) —
+  added `.song-transpose__nowrap_active { color: #409eff }` mirroring `.song-transpose__queue_active`.
+- [x] extend `tests/e2e/nowrap.spec.ts`: toggle is hidden when no overflow (desktop: visibility tracks
+  measured overflow); visible + clickable when overflow (mobile: `j`-navigate to an overflowing song,
+  click the in-viewport non-hidden toggle, assert pressed-class flips on/off).
+- [x] run `npx playwright test tests/e2e/nowrap.spec.ts` (5 passed, 3 skipped) + full `npm run test:e2e`
+  (22 passed, 4 skipped). `npm run lint` is the same pre-existing breakage (missing `eslint-plugin-vue`
+  from the Vue2→3 migration) documented at Tasks 2-4 — not introduced by this task.
+- ➕ **Discovered (env):** the e2e dev server was silently serving the stale pre-migration `dist/`
+  build (nitro `output.publicDir: 'dist'` shadows `nuxt dev`), so all prior task e2e ran against OLD
+  code that happened to pass the loose assertions. Removed `dist/` (git-ignored build artifact;
+  `npm run deploy`/`generate` regenerates it) so the suite tests current code. **Tasks 7-8 must run
+  `rm -rf dist` (or regenerate) before `npm run test:e2e`, else they'll re-test the stale build.**
 
 ### Task 6: Apply nowrap rendering + inter-chord space shrink
 - [ ] when `chordNowrap` is on, apply `white-space: nowrap; overflow-x: auto` to chord lines

@@ -30,6 +30,15 @@
             <el-button size="small" @click="transposeLevel++">&plus;</el-button>
             <span class="song-transpose__right">
               <el-button
+                v-if="chordsOverflow"
+                :class="{'song-transpose__nowrap': true, 'song-transpose__nowrap_active': $store.state.chordNowrap}"
+                size="small"
+                :title="$store.state.chordNowrap ? 'Перенос аккордов' : 'Без переноса аккордов'"
+                @click="toggleChordNowrap"
+              >
+                <icon name="arrows-left-right"></icon>
+              </el-button>
+              <el-button
                 v-if="$store.state.showBeats && (isBeat || isPianoAllowed)"
                 class="song-transpose__beat"
                 size="small"
@@ -419,6 +428,10 @@ export default {
       this.changeFilter('q', '^' + artist);
       if (this.active) this.$emit('change'); // закрыть песню
       window.scrollTo(0, 0);
+    },
+
+    toggleChordNowrap() {
+      this.$store.dispatch("toggleChordNowrap");
     },
 
     toggleQueue() {
