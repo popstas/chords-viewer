@@ -357,7 +357,9 @@ export const useAppStore = defineStore('app', {
 
       this.activeSong = activeSong;
       this.showBeatControls = false; // collapse beats panel when switching songs
-      this.chordNowrap = false; // transient nowrap never sticks across songs
+      // chordNowrap is (re)derived per song open by SongItem.measureChordsOverflow
+      // (default ON when chord lines overflow) — not reset here, to avoid racing
+      // that auto-apply. It is transient (not persisted) and re-measured each open.
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent + 1;
       this.playlist = [...this.playlist, activeSong];
@@ -373,7 +375,6 @@ export const useAppStore = defineStore('app', {
     setPrevSong() {
       if (this.playlistCurrent <= 0) return;
       this.activeSong = this.playlist[this.playlistCurrent - 1];
-      this.chordNowrap = false;
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent - 1;
     },
@@ -390,7 +391,6 @@ export const useAppStore = defineStore('app', {
         this.playlist = [...this.playlist, randomSong];
       }
       this.playlistCurrent = this.playlistCurrent + 1;
-      this.chordNowrap = false;
       this.updateTranspose();
     },
 

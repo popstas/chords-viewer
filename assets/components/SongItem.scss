@@ -146,28 +146,27 @@
   &__line_chords_glue {
     min-height: 2em;
     // pull the lyric line a touch closer under its chord row
-    margin-bottom: -2.95em;
+    // (+1px gap between the chord row and its lyric line)
+    margin-bottom: calc(-2.95em + 1px);
   }
 
   // chordNowrap mode (transient store flag, toggled left of the beat button):
   // switch the chord line from wrapping to a single horizontally-scrollable line.
-  // To avoid scrolling when the line nearly fits, tighten the inter-chord spacing
-  // FIRST — negative word/letter spacing shrinks the source spaces and the &nbsp;
-  // runs between chord chips; the scroll (overflow-x: auto) only engages once the
-  // tightened line still overflows. Defined after _glue so its overflow-x wins
-  // over the base `overflow: hidden`; the _glue vertical pull is unaffected, so
-  // chords stay positioned above their syllables.
+  // To avoid scrolling when the line nearly fits, HALVE the inter-chord gaps
+  // FIRST: the gaps are runs of &nbsp; (each wrapped in .song-item__chord-space),
+  // so font-size: 0.5em on those spacers shrinks every gap to exactly half its
+  // width while leaving the chord chips at full size — the chord rhythm stays
+  // readable, just tighter. (word-spacing can't do this: browsers don't apply it
+  // to U+00A0.) The scroll (overflow-x: auto) only engages once the halved line
+  // still overflows. Defined after _glue so its overflow-x wins over the base
+  // `overflow: hidden`; the _glue vertical pull is unaffected, so chords stay
+  // positioned above their syllables.
   &__line_chords_nowrap {
     white-space: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    word-spacing: -0.25em;
-    letter-spacing: -0.02em;
-    .chord_known .el-button {
-      // already tight in the body, but make the chips flush in nowrap mode so
-      // spacing comes only from the (shrunk) gaps between chords.
-      padding-left: 0;
-      padding-right: 0;
+    .song-item__chord-space {
+      font-size: 0.5em;
     }
   }
   &__line_text {
@@ -193,14 +192,26 @@
       margin-left: auto;
       display: flex;
       align-items: center;
-      gap: 2px;
+      gap: 0;
+      // Element's compiled theme inflates these icon buttons to 15px side padding
+      // (~32px between adjacent icons); trim it so nowrap/beats/queue sit closer.
+      // !important to beat the theme (same as BeatPlayer's button overrides).
+      .el-button {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+      }
     }
   }
   .song-transpose__queue_active {
     color: #409eff;
   }
   .song-transpose__nowrap_active {
-    color: #409eff;
+    // !important + explicit fill: the compiled Element theme colors .el-button
+    // text/icon with higher precedence, and the icon is an SVG driven by `fill`.
+    color: var(--border-hover) !important;
+    svg {
+      fill: var(--border-hover);
+    }
   }
 
   &__link {
