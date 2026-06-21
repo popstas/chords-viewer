@@ -1,3 +1,28 @@
+# [5.1.0](https://github.com/popstas/chords-viewer/compare/v5.0.0...v5.1.0) (2026-06-21)
+
+
+### Bug Fixes
+
+* address codex review findings ([a748780](https://github.com/popstas/chords-viewer/commit/a7487806e5cf1c4f2ff16d301d6b71a5bd6839e5))
+* **review:** match Cyrillic/bracketed chorus markers, clear resize timer, refresh docs ([1fef7f7](https://github.com/popstas/chords-viewer/commit/1fef7f7df08863178eb1b8a3fa070ed107c1c593))
+
+
+### Features
+
+* add chord-nowrap toggle button in SongItem transpose toolbar (Task 5) ([2567703](https://github.com/popstas/chords-viewer/commit/2567703e896422a7fb8100b9ac9ef7a6039ec5e0))
+* add chorus detection helper (utils/chorus.ts) + e2e smoke ([e92944d](https://github.com/popstas/chords-viewer/commit/e92944de1f729cc30a86544c544512b6db58a45e))
+* add transient chordNowrap store state + toggle action ([4b81290](https://github.com/popstas/chords-viewer/commit/4b81290ab9f4b41651498ab9d31e3d274b8a23a8))
+* apply chord nowrap rendering + inter-chord space shrink (Task 6) ([68ff07f](https://github.com/popstas/chords-viewer/commit/68ff07f65a2b3cce8e4fea65cde4d79b1750948b))
+* default-on chord nowrap, always-visible themed toggle, tighter spacing ([109ff63](https://github.com/popstas/chords-viewer/commit/109ff632f414db724eeb7963c406618b221f1782))
+* detect chord-line overflow in SongItem (Task 4) ([fdda225](https://github.com/popstas/chords-viewer/commit/fdda225551eb57f1cfbf7bd5ebdd1be441bcc2e4))
+* render bolder hr after detected chorus blocks ([f47e6c5](https://github.com/popstas/chords-viewer/commit/f47e6c578b623bc089b732415ae9aff510d490e8))
+* update docs for chorus/nowrap patterns and check off TODO (Task 10) ([9baf188](https://github.com/popstas/chords-viewer/commit/9baf18821b4ba3649b6406852423b4e6aea90587))
+* upgrade Firebase 9→12 (Task 7) ([a659655](https://github.com/popstas/chords-viewer/commit/a65965532c0d66d6a738f13979edadb8f6cccac8))
+* upgrade Nuxt 3.13→3.21 and reconcile lint (Task 8) ([4ce2335](https://github.com/popstas/chords-viewer/commit/4ce2335c5d1c7f060588d2a4c7a9c3f2c350426c))
+* verify acceptance criteria (Task 9) ([437d543](https://github.com/popstas/chords-viewer/commit/437d543b823723731a4fa536682a9a46d7004f6c))
+
+
+
 # [5.0.0](https://github.com/popstas/chords-viewer/compare/v4.7.0...v5.0.0) (2026-06-18)
 
 
