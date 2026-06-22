@@ -189,6 +189,14 @@
       border: none;
     }
 
+    // the transpose −/+ buttons get Element's full 15px side padding; trim it so
+    // the whole row (transpose + beat/queue + font-size picker) fits one line on
+    // the narrow song column instead of wrapping the font-size picker.
+    & > .el-button:not(.is-disabled) {
+      padding-left: 6px !important;
+      padding-right: 6px !important;
+    }
+
     // the disabled middle button just shows the transpose number — Element's
     // theme pads it like a real button; trim it so the digit block is narrow.
     .el-button.is-disabled {
@@ -206,8 +214,8 @@
       // (~32px between adjacent icons); trim it so nowrap/beats/queue sit closer.
       // !important to beat the theme (same as BeatPlayer's button overrides).
       .el-button {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
       }
     }
   }
