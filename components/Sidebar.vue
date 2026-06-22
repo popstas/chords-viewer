@@ -38,6 +38,9 @@
       <el-switch v-model="showBeats" active-text="beats"></el-switch>
     </el-row>
     <el-row>
+      <el-switch v-model="qrCodeEnabled" active-text="qr codes"></el-switch>
+    </el-row>
+    <el-row>
       <el-switch v-model="noSleep" active-text="no sleep"></el-switch>
     </el-row>
 
@@ -226,6 +229,14 @@ export default {
       },
       set(val) {
         this.$store.commit("showBeats", val);
+      },
+    },
+    qrCodeEnabled: {
+      get() {
+        return this.$store.state.qrCodeEnabled;
+      },
+      set(val) {
+        this.$store.commit("qrCodeEnabled", val);
       },
     },
   },

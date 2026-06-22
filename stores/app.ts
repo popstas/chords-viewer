@@ -29,9 +29,6 @@ export const useAppStore = defineStore('app', {
     version: pjson.version,
     description: pjson.description,
     homepage: pjson.homepage,
-    // global feature flag: when false, all QR code UI (the header scanner and
-    // the per-song QR display in toolbars / song items) is hidden.
-    qrCodeEnabled: false,
 
     // app state
     activeSong: { title: '' } as any,
@@ -63,6 +60,9 @@ export const useAppStore = defineStore('app', {
     showBadges: false,
     showShows: true,
     showBeats: true,
+    // user setting (persisted, default off): show QR code UI — the header
+    // scanner and the per-song QR display in toolbars / song items.
+    qrCodeEnabled: false,
     // transient (not persisted): is the beats panel expanded for the active song.
     // Store-backed instead of SongItem-local so the mobile virtual scroller can
     // recycle/re-render the item without losing the open panel (was closing itself).
@@ -517,6 +517,7 @@ export const useAppStore = defineStore('app', {
       'showBadges',
       'showShows',
       'showBeats',
+      'qrCodeEnabled',
       'webhookShow',
       'beatCustomInstruments',
       'queue',
