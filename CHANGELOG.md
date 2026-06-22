@@ -1,3 +1,22 @@
+# [5.2.0](https://github.com/popstas/chords-viewer/compare/v5.1.0...v5.2.0) (2026-06-22)
+
+
+### Bug Fixes
+
+* **mobile:** keep header buttons clickable under chords ([ef6bc29](https://github.com/popstas/chords-viewer/commit/ef6bc299b7b8c6e91d27c2892d18947f80896b72))
+* **nowrap:** stable auto-apply and manual toggle on mobile ([a8052bb](https://github.com/popstas/chords-viewer/commit/a8052bbd8d5c1c2246bc9f42714aecd93ceebe2d))
+* **songitem:** keep chord row with its lyric across columns ([07800ac](https://github.com/popstas/chords-viewer/commit/07800ac3de87fe076c96b2a4898d8c0e7b5f612c))
+
+
+### Features
+
+* **header:** close current song from the up button ([adb2b76](https://github.com/popstas/chords-viewer/commit/adb2b769ee9ccc60ee386955eec22923d79752da))
+* **player:** close current song from the up button ([385c575](https://github.com/popstas/chords-viewer/commit/385c575b50e2ac4eaae6501981764069f49e058f))
+* **qr:** add persisted QR codes switch to the sidebar ([6839a45](https://github.com/popstas/chords-viewer/commit/6839a454cfb6217bef27ccc16fedf5c5a18a700a))
+* **qr:** disable QR codes behind a global flag ([a779f9f](https://github.com/popstas/chords-viewer/commit/a779f9f572dad2598759bcbed54f29e64b2c7b89))
+
+
+
 # [5.1.0](https://github.com/popstas/chords-viewer/compare/v5.0.0...v5.1.0) (2026-06-21)
 
 
