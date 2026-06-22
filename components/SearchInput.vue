@@ -1,18 +1,14 @@
 <template>
   <div class="search-input">
     <input v-model="q" v-shortkey.avoid/>
-    <span class="el-input__suffix">
-      <span class="el-input__suffix-inner">
-        <a
-          :class="{'search-input__amdm-search':true}"
-          v-if="q"
-          :href="'https://amdm.ru/search/?q=' + encodeURIComponent(q)"
-          target="_blank"
-        >
-          <span class="search-input__amdm-search-text">amdm.ru</span>
-        </a>
-      </span>
-    </span>
+    <a
+      :class="{'search-input__amdm-search':true}"
+      v-if="q"
+      :href="'https://amdm.ru/search/?q=' + encodeURIComponent(q)"
+      target="_blank"
+    >
+      <span class="search-input__amdm-search-text">amdm.ru</span>
+    </a>
   </div>
 </template>
 
@@ -47,10 +43,12 @@
     border: none;
     background: none;
     position: absolute;
-    right: 37px;
-    top: 0;
-    bottom: 0;
-    line-height: 40px;
+    // tuck into the right corner of the input with equal inset top / right / bottom
+    right: 6px;
+    top: 6px;
+    bottom: 6px;
+    display: flex;
+    align-items: center;
     outline: none;
     cursor: pointer;
     text-decoration: none;
