@@ -81,25 +81,27 @@
     overflow-x: auto;
 
     hr {
-      margin: 1rem 5rem 0.5rem;
+      margin: 1.5rem 0 1rem 0rem;
+      width: 2rem;
       border: none;
-      // same color as the chords in the lyrics (.chord_known .el-button)
-      border-top: 1px solid #999;
+      // subtle short separator: light gray on the light theme, dark gray on
+      // dark (set below) so it stays low-contrast against either background.
+      border-top: 1px solid #ccc;
 
-      // two blank lines in the source -> one bolder separator between large
-      // blocks (e.g. verse / chorus): thicker line, slightly bigger margin.
+      // bolder separators: .big (two blank lines between large blocks) and
+      // .big_chorus (follows a detected chorus) share one style — 2px with a
+      // mid-gray that reads on both themes, louder than a normal hr.
       // single solid top border (the default hr border-style is 3D inset,
-      // which renders as two shades), same color as the normal hr.
-      &.big {
-        margin: 1.5rem 5rem 0.75rem;
-        border-top-width: 3px;
+      // which renders as two shades).
+      &.big,
+      &.big_chorus {
+        border-top-width: 2px;
+        border-top-color: #999;
       }
 
-      // separator that follows a detected chorus block: bolder than .big so a
-      // refrain stands out at a glance. Same color as the normal hr.
-      &.big_chorus {
-        margin: 1.5rem 5rem 0.75rem;
-        border-top-width: 5px;
+      // normal hr goes dark gray on the dark theme; .big/.big_chorus keep #999.
+      .dark-mode &:not(.big):not(.big_chorus) {
+        border-top-color: #444;
       }
     }
 
