@@ -127,7 +127,7 @@
       z-index: 2;
       padding: 5px;
       box-shadow: 0 0 1px #ccc;
-      background: rgba(0, 0, 0, 0.2);
+      background: rgba(0, 0, 0, 0.6);
 
       .toolbar__up {
         display: block !important;
