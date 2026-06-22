@@ -183,10 +183,6 @@ export default {
       // (i.e. would overflow the screen). Drives the nowrap-toggle visibility
       // (Task 5). Measured client-only on song open / font-change / resize.
       chordsOverflow: false,
-      // guard so nowrap is auto-enabled at most once per song open (when chord
-      // lines overflow). After that the user's manual toggle is never overridden
-      // by a later re-measure (resize / transpose / font change).
-      nowrapAutoApplied: false,
       overflowResizeHandler: null,
       overflowResizeTimer: null,
     };
@@ -200,8 +196,8 @@ export default {
         this.chordsOverflow = false;
         return;
       }
-      // re-arm the once-per-song auto-nowrap on each fresh open
-      this.nowrapAutoApplied = false;
+      // the once-per-open auto-nowrap guard is re-armed in the store when the
+      // active song changes (changeSong / setPrev / setNext), not here
       this.$emit("active", this.$el.offsetTop);
       this.scheduleOverflowMeasure();
       setTimeout(() => {
@@ -486,27 +482,38 @@ export default {
       const lines = el && el.querySelectorAll
         ? el.querySelectorAll(".song-item__line_chords")
         : [];
+      const NOWRAP_CLASS = "song-item__line_chords_nowrap";
       let overflow = false;
       let measurable = false;
       for (const line of lines) {
         // a laid-out line has non-zero width; while the el-collapse is still
         // animating open, clientWidth can be 0 and the reading is unreliable
         if (line.clientWidth > 0) measurable = true;
+        // Measure the TRUE single-line width: force nowrap, and also drop the
+        // _nowrap class for the read so its halved inter-chord spaces
+        // (.song-item__chord-space { font-size: 0.5em }) don't shrink the line
+        // and flip the overflow verdict to false once nowrap is already on —
+        // that feedback let a second (recycled) instance auto-apply OFF after
+        // the first applied ON. Restored synchronously, before Vue re-renders.
         const prev = line.style.whiteSpace;
+        const hadNowrap = line.classList.contains(NOWRAP_CLASS);
+        if (hadNowrap) line.classList.remove(NOWRAP_CLASS);
         line.style.whiteSpace = "nowrap";
         if (line.scrollWidth > line.clientWidth + 1) overflow = true;
         line.style.whiteSpace = prev;
+        if (hadNowrap) line.classList.add(NOWRAP_CLASS);
       }
       this.chordsOverflow = overflow;
       // Default nowrap per song open: once we have a reliable (laid-out)
       // measurement, set the transient flag to match overflow — ON when chord
       // lines overflow, OFF otherwise. Guarded to a single auto-apply per open
-      // (re-armed in the `active` watcher) so a later resize/font re-measure
-      // never overrides a manual toggle. This is the sole writer on song open
-      // (the store no longer resets chordNowrap), so nothing races it.
+      // (the guard lives in the store, re-armed when the active song changes) so
+      // a later resize/font re-measure — or a virtual-scroller remount of the
+      // active SongItem after the user toggles nowrap — never overrides the
+      // manual toggle by re-running the auto-apply.
       const reliable = measurable || lines.length === 0;
-      if (reliable && !this.nowrapAutoApplied) {
-        this.nowrapAutoApplied = true;
+      if (reliable && !this.$store.state.chordNowrapAutoApplied) {
+        this.$store.commit("chordNowrapAutoApplied", true);
         this.$store.commit("chordNowrap", overflow);
       }
     }

@@ -70,6 +70,12 @@ export const useAppStore = defineStore('app', {
     // transient (not persisted, default off): switch chord lines from wrapping to
     // horizontal scroll for the active song. Resets when the active song changes.
     chordNowrap: false,
+    // guard so the per-open auto-nowrap (SongItem.measureChordsOverflow) runs at
+    // most once per song open. Store-level (not per-component) so a virtual-
+    // scroller remount of the active SongItem — e.g. triggered by the height
+    // change when the user toggles nowrap off — can't re-run it and flip nowrap
+    // back on. Reset whenever the active song changes (below).
+    chordNowrapAutoApplied: false,
     noSleep: false,
     darkMode: undefined as boolean | undefined,
 
@@ -360,9 +366,11 @@ export const useAppStore = defineStore('app', {
 
       this.activeSong = activeSong;
       this.showBeatControls = false; // collapse beats panel when switching songs
-      // chordNowrap is (re)derived per song open by SongItem.measureChordsOverflow
-      // (default ON when chord lines overflow) — not reset here, to avoid racing
-      // that auto-apply. It is transient (not persisted) and re-measured each open.
+      // chordNowrap itself is (re)derived per song open by
+      // SongItem.measureChordsOverflow (default ON when chord lines overflow) —
+      // not reset here, to avoid racing that auto-apply. But re-arm its
+      // once-per-open guard so the new song gets a fresh auto-nowrap decision.
+      this.chordNowrapAutoApplied = false;
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent + 1;
       this.playlist = [...this.playlist, activeSong];
@@ -378,6 +386,7 @@ export const useAppStore = defineStore('app', {
     setPrevSong() {
       if (this.playlistCurrent <= 0) return;
       this.activeSong = this.playlist[this.playlistCurrent - 1];
+      this.chordNowrapAutoApplied = false; // re-arm auto-nowrap for the new song
       this.updateTranspose();
       this.playlistCurrent = this.playlistCurrent - 1;
     },
@@ -394,6 +403,7 @@ export const useAppStore = defineStore('app', {
         this.playlist = [...this.playlist, randomSong];
       }
       this.playlistCurrent = this.playlistCurrent + 1;
+      this.chordNowrapAutoApplied = false; // re-arm auto-nowrap for the new song
       this.updateTranspose();
     },
 
