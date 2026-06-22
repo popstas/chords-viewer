@@ -189,6 +189,13 @@
       border: none;
     }
 
+    // the disabled middle button just shows the transpose number — Element's
+    // theme pads it like a real button; trim it so the digit block is narrow.
+    .el-button.is-disabled {
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
     // push the beat/queue buttons and font-size picker to the right
     &__right {
       margin-left: auto;
