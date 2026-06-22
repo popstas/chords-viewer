@@ -179,6 +179,15 @@ textarea {
     line-height: 42px;
     outline: none;
     cursor: pointer;
+    // mobile: the right-aligned floating chords (.chords, z-index 6) overlap
+    // these left buttons. The chords keep their higher z-index so they (and the
+    // metronome) stay visible over the header, but .chords is pointer-events:none
+    // there so clicks fall through to these buttons; lift them into their own
+    // stacking context so they win over any chord chip that reaches this far.
+    @media (max-width: 600px) {
+      position: relative;
+      z-index: 7;
+    }
   }
 
   button {

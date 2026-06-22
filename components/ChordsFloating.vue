@@ -29,6 +29,15 @@
   text-align: right;
   background: none;
   padding: 5px;
+  // The right-aligned block can extend over the header's top-left buttons (menu /
+  // clear / qr / scroll-up). Stay visually on top but let clicks pass through the
+  // transparent container to those buttons; re-enable hits on the chord chips
+  // themselves (hover popovers / tap targets) below.
+  pointer-events: none;
+
+  .chord {
+    pointer-events: auto;
+  }
 
   &_images {
     position: static;
