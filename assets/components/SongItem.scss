@@ -150,6 +150,13 @@
     // pull the lyric line a touch closer under its chord row
     // (+1px gap between the chord row and its lyric line)
     margin-bottom: calc(-2.95em + 1px);
+    // the song body is a 3-column layout; without this a column break can fall
+    // between a chord row and its lyric line, leaving the chords stranded at the
+    // bottom of one column and the text at the top of the next. Keep them
+    // together by forbidding a break right after (and inside) the chord row.
+    break-inside: avoid;
+    break-after: avoid;
+    page-break-after: avoid;
   }
 
   // chordNowrap mode (transient store flag, toggled left of the beat button):
