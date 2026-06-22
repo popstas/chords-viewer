@@ -540,6 +540,8 @@ export default {
     },
 
     toTop() {
+      // "up" closes the current song, then returns to the top of the list
+      this.$store.dispatch("changeSong", "");
       const sc = document.querySelector('.vue-recycle-scroller');
       if (sc) sc.scrollTo(0, 0);
       window.scrollTo(0, 0);
