@@ -109,14 +109,14 @@
           <a class="song-item__link" @click.prevent="copyText">
             <icon name="copy"></icon>
           </a>
-          <a class="song-item__link" @click.prevent="showQrCode = !showQrCode">
+          <a v-if="$store.state.qrCodeEnabled" class="song-item__link" @click.prevent="showQrCode = !showQrCode">
             <icon name="qrcode"></icon>
           </a>
           <a class="song-item__link" @click.prevent="showComment = !showComment">
             <icon name="pen-to-square"></icon>
           </a>
 
-          <div class="song-item__qrcode" v-if="showQrCode">
+          <div class="song-item__qrcode" v-if="$store.state.qrCodeEnabled && showQrCode">
             <qr-code :size="340" :text="song.url"></qr-code>
           </div>
 

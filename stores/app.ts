@@ -29,6 +29,9 @@ export const useAppStore = defineStore('app', {
     version: pjson.version,
     description: pjson.description,
     homepage: pjson.homepage,
+    // global feature flag: when false, all QR code UI (the header scanner and
+    // the per-song QR display in toolbars / song items) is hidden.
+    qrCodeEnabled: false,
 
     // app state
     activeSong: { title: '' } as any,

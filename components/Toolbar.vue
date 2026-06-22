@@ -13,10 +13,10 @@
         </el-button>
         <button @click="$emit('scrollToLast')">{{ $store.getters.activeSongTitle }}</button>
 
-        <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="showQrCode">
+        <div @click="showQrCode = !showQrCode" class="toolbar__qrcode" v-if="$store.state.qrCodeEnabled && showQrCode">
           <qr-code :size="340" :text="$store.state.activeSong.url"></qr-code>
         </div>
-        <a v-if="$store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link"
+        <a v-if="$store.state.qrCodeEnabled && $store.getters.activeSongTitle && !showQrCode" class="toolbar__qrcode-link"
            @click.prevent="showQrCode = !showQrCode">
           <icon name="qrcode"></icon>
         </a>

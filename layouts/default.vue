@@ -11,7 +11,7 @@
         <el-header height="42px">
           <button class="menu-toggle" @click.stop="menuOpen = !menuOpen">☰</button>
           <button class="input-clear" @click="onInputClear">&cross;</button>
-          <button class="input-clear" @click="showQrCode = !showQrCode">
+          <button v-if="$store.state.qrCodeEnabled" class="input-clear" @click="showQrCode = !showQrCode">
             <icon name="qrcode"></icon>
           </button>
           <button class="input-clear" title="В начало" @click="toTop">
@@ -20,7 +20,7 @@
           <Profile></Profile>
         </el-header>
         <el-main>
-          <div class="qrcode-wrapper" v-if="showQrCode">
+          <div class="qrcode-wrapper" v-if="$store.state.qrCodeEnabled && showQrCode">
             <qrcode-drop-zone v-if="isDesktop" @detect="onDetect">
               <div class="drop-area">
                 Drop QR code here
