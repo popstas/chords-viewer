@@ -41,4 +41,11 @@ export default defineNuxtPlugin((nuxtApp) => {
   };
 
   nuxtApp.vueApp.config.globalProperties.$store = compat;
+
+  // Flush offline-queued shows/comments back to Firebase once the network returns.
+  // (App-start-while-online with leftover pending is handled via auth restore →
+  // setUser → syncWithFirebase.)
+  if (import.meta.client) {
+    window.addEventListener('online', () => store.syncWithFirebase());
+  }
 });

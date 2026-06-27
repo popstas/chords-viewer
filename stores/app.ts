@@ -6,6 +6,7 @@ import Fuse from 'fuse.js';
 import debounce from 'lodash/debounce';
 import { ref as dbRef, get as dbGet, update as dbUpdate } from 'firebase/database';
 import { transposeMap, chordNotesMap } from '~/utils/chords';
+import { mergeShowsPreferBigger } from '~/utils/shows';
 import { db } from '~/utils/firebase';
 
 export { transposeMap, chordNotesMap };
@@ -17,6 +18,11 @@ const debouncedFilterSongs = debounce((store: any) => {
 
 let isFirstFilter = true;
 const startTime = Date.now();
+
+// Fresh online check — NOT a Pinia getter: a getter with no reactive dependency
+// caches its first value forever (navigator.onLine isn't reactive), which would
+// pin offline detection to whatever it was at load. Read it live each call.
+const isOnline = () => (typeof navigator !== 'undefined' ? navigator.onLine : true);
 
 export const useAppStore = defineStore('app', {
   state: () => ({
@@ -42,6 +48,10 @@ export const useAppStore = defineStore('app', {
     toolbarHidden: false,
     shows: {} as Record<string, number>,
     comments: {} as Record<string, any>,
+    // song keys whose local shows/comments change isn't yet confirmed-written to
+    // Firebase (queued while offline or on a failed write); flushed on reconnect/login
+    showsPending: {} as Record<string, true>,
+    commentsPending: {} as Record<string, true>,
     user: false as any,
     lastOffset: 0,
     beatFirstPlay: true,
@@ -423,41 +433,99 @@ export const useAppStore = defineStore('app', {
           email: user.email,
         };
 
-        dbGet(dbRef(db, 'users/' + this.user.uid)).then(snapshot => {
-          const val = snapshot.val();
-          const shows = (val && val.shows) || false;
-          const comments = (val && val.comments) || false;
-
-          if (shows) {
-            console.log('Update shows from firebase:', shows);
-            this.shows = shows;
-          }
-
-          if (comments) {
-            console.log('Update comments from firebase:', comments);
-            this.comments = comments;
-          }
-
-          const settings = (val && val.settings) || false;
-          if (settings) {
-            if (settings.webhookShow && this.webhookShow !== settings.webhookShow) {
-              console.log('Update webhookShow from firebase:', settings);
-              this.webhookShow = settings.webhookShow;
-            }
-          }
-        });
+        this.syncWithFirebase();
       } else {
         this.user = false;
       }
     },
 
+    // Pull remote state and push local pending changes. Used on login (setUser) and
+    // on reconnect (window 'online'). Shows merge prefer-bigger (offline increments
+    // survive); comments pull remote keys we lack and push every pending comment
+    // (last-write-wins). Pending sets are cleared once the write resolves.
+    syncWithFirebase() {
+      if (!this.user || !isOnline()) return;
+
+      dbGet(dbRef(db, 'users/' + this.user.uid)).then(snapshot => {
+        const val = snapshot.val() || {};
+
+        const { merged, toPush } = mergeShowsPreferBigger(this.shows, val.shows || {});
+        this.shows = merged;
+
+        const updates: Record<string, any> = {};
+        for (const k in toPush) updates[`shows/${k}`] = toPush[k];
+
+        // Comments can't merge by "bigger". Prefer the NON-EMPTY value so an
+        // offline-added note is never clobbered by an empty/absent remote value —
+        // the common case, since comments are usually empty and mostly *added*
+        // offline, not edited. Tie-breakers: a locally-pending edit always wins;
+        // when both sides are non-empty, remote wins so edits from other devices
+        // sync down. Any value kept from local is pushed back up.
+        const remoteComments = val.comments || {};
+        const localComments = { ...this.comments };
+        const mergedComments: Record<string, any> = { ...remoteComments };
+        let pushComments = false;
+        for (const k of new Set([...Object.keys(localComments), ...Object.keys(remoteComments)])) {
+          const localVal = localComments[k];
+          const remoteVal = remoteComments[k];
+          const keepLocal = this.commentsPending[k] || (!!localVal && !remoteVal);
+          if (keepLocal) {
+            mergedComments[k] = localVal;
+            if (localVal !== remoteVal) pushComments = true;
+          }
+        }
+        this.comments = mergedComments;
+        // comments are written back as the whole node (not deep comments/<url> paths)
+        if (pushComments) updates.comments = this.comments;
+
+        const done = () => {
+          this.showsPending = {};
+          this.commentsPending = {};
+        };
+        if (Object.keys(updates).length) {
+          console.log('sync to firebase:', updates);
+          dbUpdate(dbRef(db, 'users/' + this.user.uid), updates).then(done).catch(() => {});
+        } else {
+          done();
+        }
+
+        const settings = val.settings || false;
+        if (settings && settings.webhookShow && this.webhookShow !== settings.webhookShow) {
+          console.log('Update webhookShow from firebase:', settings);
+          this.webhookShow = settings.webhookShow;
+        }
+      });
+    },
+
+    // Write a single song's shows up to Firebase; queue it (showsPending) when
+    // logged out, offline, or the write fails — flushed later by syncWithFirebase.
+    queueShowWrite(url: string) {
+      if (!this.user || !isOnline()) {
+        this.showsPending[url] = true;
+        return;
+      }
+      dbUpdate(dbRef(db, 'users/' + this.user.uid), { [`shows/${url}`]: this.shows[url] })
+        .then(() => { delete this.showsPending[url]; })
+        .catch(() => { this.showsPending[url] = true; });
+    },
+
+    queueCommentWrite(url: string) {
+      if (!this.user || !isOnline()) {
+        this.commentsPending[url] = true;
+        return;
+      }
+      // Write the WHOLE comments object (not a deep comments/<url> child path):
+      // unlike shows/<url>, the Firebase rules reject deep child writes to
+      // comments, so the original code always wrote the full node. A successful
+      // write therefore drains the entire comments queue.
+      dbUpdate(dbRef(db, 'users/' + this.user.uid), { comments: this.comments })
+        .then(() => { this.commentsPending = {}; })
+        .catch(() => { this.commentsPending[url] = true; });
+    },
+
     setShow({ url, shows }: { url: string; shows: number }) {
       this.shows[url] = shows;
-
-      if (this.user) {
-        dbUpdate(dbRef(db, 'users/' + this.user.uid), { [`shows/${url}`]: shows });
-        console.log('update remote shows');
-      }
+      this.queueShowWrite(url);
     },
 
     addShow(url: string) {
@@ -500,20 +568,12 @@ export const useAppStore = defineStore('app', {
         });
       }
 
-      if (this.user) {
-        dbUpdate(dbRef(db, 'users/' + this.user.uid), { [`shows/${url}`]: this.shows[url] });
-        console.log('update remote shows');
-      }
+      this.queueShowWrite(url);
     },
 
     addComment({ url, comment }: { url: string; comment: any }) {
       this.comments[url] = comment;
-
-      if (this.user) {
-        console.log('state.comments: ', this.comments);
-        dbUpdate(dbRef(db, 'users/' + this.user.uid), { comments: this.comments });
-        console.log('update remote comments');
-      }
+      this.queueCommentWrite(url);
     },
   },
 
@@ -523,6 +583,8 @@ export const useAppStore = defineStore('app', {
       'filter',
       'shows',
       'comments',
+      'showsPending',
+      'commentsPending',
       'noSleep',
       'darkMode',
       'fontSize',
