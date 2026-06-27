@@ -1,3 +1,12 @@
+## [5.2.1](https://github.com/popstas/chords-viewer/compare/v5.2.0...v5.2.1) (2026-06-27)
+
+
+### Bug Fixes
+
+* **webhook:** strip URL credentials before $fetch on song view ([8f8f66d](https://github.com/popstas/chords-viewer/commit/8f8f66d8991c585325d36823cf3ba89531978127))
+
+
+
 # [5.2.0](https://github.com/popstas/chords-viewer/compare/v5.1.0...v5.2.0) (2026-06-22)
 
 
