@@ -141,6 +141,8 @@ export const useAppStore = defineStore('app', {
         .replace('Eb', 'D#')
         .replace('Fb', 'E#')
         .replace('Gb', 'F#')
+        // strip a trailing roman-numeral fret/position suffix: GmIII → Gm, AmII → Am
+        .replace(/^([A-H][#b]?m?)([IVX]+)$/, '$1')
         .replace(/[()]/g, '');
     },
 
