@@ -134,8 +134,8 @@
             >{{ genre }}
             </li>
             <li class="song-categories__item song-categories__item_shows">просмотров:
-              <el-button size="small" disabled v-html="showsStore"></el-button>
               <el-button size="small" @click="addShows(-1)">&minus;</el-button>
+              <el-button class="song-categories__shows-count" size="small" disabled v-html="showsStore"></el-button>
               <el-button size="small" @click="addShows(1)">&plus;</el-button>
             </li>
           </ul>
