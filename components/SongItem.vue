@@ -2,7 +2,7 @@
   <div :class="{'el-collapse-item': true, 'song-item': true, active: active}">
     <div role="button" :class="{'el-collapse-item__header': true, 'is-opening': opening}" @click="onHeaderClick">
       <span v-if="$store.state.filter.sortByDate" class="song-item__date">{{ song.created.replace(/T.*/, '') }}</span>
-      <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="shows || ''"></span>
+      <span v-if="$store.state.filter.sortByShows" class="song-item__shows" v-html="showsStore || ''"></span>
       {{ title }}
       <span v-if="opening" class="song-item__spinner" aria-hidden="true"></span>
 
@@ -10,7 +10,7 @@
       <icon v-if="isPiano && $store.state.showBeats&& !$store.state.readerMode" style="margin-left: 5px" name="keyboard"></icon>
 
       <span class="song-item__badges" v-if="$store.state.showShows">
-        <span class="song-item__shows" v-html="shows || ''"></span>
+        <span class="song-item__shows" v-html="showsStore || ''"></span>
       </span>
 
       <span class="song-item__badges" v-if="$store.state.showBadges">
@@ -134,7 +134,7 @@
             >{{ genre }}
             </li>
             <li class="song-categories__item song-categories__item_shows">просмотров:
-              <el-button size="small" disabled v-html="shows"></el-button>
+              <el-button size="small" disabled v-html="showsStore"></el-button>
               <el-button size="small" @click="addShows(-1)">&minus;</el-button>
               <el-button size="small" @click="addShows(1)">&plus;</el-button>
             </li>
@@ -175,7 +175,6 @@ export default {
   data() {
     return {
       isShare: false,
-      shows: 0,
       showQrCode: false,
       showComment: false,
       opening: false,
@@ -216,10 +215,6 @@ export default {
     // font-size changes shrink/grow chord chips → overflow may flip
     fontSizeStore() {
       this.scheduleOverflowMeasure();
-    },
-
-    showsStore() {
-      this.shows = this.showsStore;
     },
 
     showComment(val) {
@@ -458,8 +453,7 @@ export default {
     },
 
     addShows(count) {
-      this.shows = this.shows + count;
-      this.$store.dispatch('setShow', {url: this.safeUrl, shows: this.shows});
+      this.$store.dispatch('setShow', {url: this.safeUrl, shows: this.showsStore + count});
     },
 
     // Re-measure chord-line overflow after the DOM has settled. Client-only and
@@ -521,7 +515,6 @@ export default {
 
   mounted() {
     this.isShare = !!navigator.share;
-    this.shows = this.$store.state.shows[this.safeUrl] || 0;
 
     // re-check overflow on window resize (debounced ~150ms), client-only
     if (typeof window !== "undefined") {
