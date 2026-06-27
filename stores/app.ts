@@ -481,14 +481,21 @@ export const useAppStore = defineStore('app', {
 
         const headers: Record<string, string> = {};
 
-        // basic auth from url
+        // basic auth from url: move credentials into the Authorization header and
+        // strip them out of the URL. The Fetch API ($fetch/ofetch) throws a
+        // TypeError on URLs that embed `user:pass@host`, whereas the old axios
+        // implementation accepted them — so passing the raw URL silently broke
+        // the webhook after the Nuxt 3 migration.
         const urlObj = new URL(this.webhookShow);
         if (urlObj.username && urlObj.password) {
           headers.Authorization = 'Basic ' + btoa(`${urlObj.username}:${urlObj.password}`);
+          urlObj.username = '';
+          urlObj.password = '';
         }
+        const webhookUrl = urlObj.toString();
 
-        console.log('webhook: ', this.webhookShow, obj);
-        $fetch(this.webhookShow, { method: 'POST', body: obj, headers }).catch((e: any) => {
+        console.log('webhook: ', webhookUrl, obj);
+        $fetch(webhookUrl, { method: 'POST', body: obj, headers }).catch((e: any) => {
           console.log('webhook error: ', e);
         });
       }
