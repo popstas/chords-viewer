@@ -1,3 +1,18 @@
+# [5.3.0](https://github.com/popstas/chords-viewer/compare/v5.2.1...v5.3.0) (2026-06-27)
+
+
+### Bug Fixes
+
+* **chords:** normalize a trailing roman-numeral suffix (GmIII → Gm) ([13e903c](https://github.com/popstas/chords-viewer/commit/13e903ce5fdc7deb6ff63b38aea7e25efda1b086))
+* **songitem:** render the views count reactively from the store ([fd5bcb2](https://github.com/popstas/chords-viewer/commit/fd5bcb2e123956918f5d96f6e432fe280b55b9fb))
+
+
+### Features
+
+* **shows:** offline queue + Firebase sync for shows and comments ([f506927](https://github.com/popstas/chords-viewer/commit/f506927bc9bd1aa92516b456fb363568521d1293))
+
+
+
 ## [5.2.1](https://github.com/popstas/chords-viewer/compare/v5.2.0...v5.2.1) (2026-06-27)
 
 
