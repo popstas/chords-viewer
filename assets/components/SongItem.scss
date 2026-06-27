@@ -256,10 +256,15 @@
 .song-categories {
   list-style: none;
   padding: 0;
+  margin: 0;
+  // lay the date / artist / genre / shows items out on one line and vertically
+  // center them, so "просмотров:" + its buttons align with the text items
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
 
   &__item {
     padding: 0 5px 0 0;
-    display: inline-block;
     color: #999;
     font-size: 13px;
     min-width: 23px;
@@ -269,6 +274,9 @@
     box-sizing: border-box;
     text-align: center;
     margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &.active {
       color: #409eff;
@@ -283,19 +291,18 @@
     }
 
     &_shows {
-      // vertically center the "−"/"+"/count buttons with the "просмотров:" text
-      display: inline-flex;
-      align-items: center;
       gap: 4px;
-      vertical-align: middle;
     }
 
     &_shows .el-button {
-      border: none;
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
       padding: 0;
       margin: 0;
+      min-height: 0;
       // dark-theme.scss forces .el-button to display:block, so its small
-      // line-height sits below center in the 24px box — flex-center the glyph
+      // line-height sits below center in the box — flex-center the glyph
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -304,6 +311,12 @@
         align-items: center;
         justify-content: center;
       }
+    }
+
+    // the views count is read-only text, not a button — no frame/background
+    &_shows .song-categories__shows-count {
+      color: #999 !important;
+      cursor: default;
     }
   }
 }
