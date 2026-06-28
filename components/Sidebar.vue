@@ -82,6 +82,12 @@
     <el-divider></el-divider>
 
     <el-row style="text-align:center">
+      <Text2Json></Text2Json>
+    </el-row>
+
+    <el-divider></el-divider>
+
+    <el-row style="text-align:center">
       <a class="sidebar__link" href="https://github.com/popstas/chords-viewer/blob/master/CHANGELOG.md" target="_blank">
         <icon name="brands/github"></icon>
         {{ $store.state.name }} {{ $store.state.version }} (changelog)
@@ -145,13 +151,14 @@
 
 <script>
 import FontSize from "~/components/FontSize";
+import Text2Json from "~/components/Text2Json";
 
 import NoSleep from "nosleep.js";
 
 const nosleep = new NoSleep();
 
 export default {
-  components: {FontSize},
+  components: {FontSize, Text2Json},
 
   data() {
     return {
