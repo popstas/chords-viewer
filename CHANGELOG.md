@@ -1,3 +1,12 @@
+# [5.4.0](https://github.com/popstas/chords-viewer/compare/v5.3.0...v5.4.0) (2026-06-28)
+
+
+### Features
+
+* **text2json:** desktop sidebar tool to convert text to a JSON string ([8178e05](https://github.com/popstas/chords-viewer/commit/8178e05a59a2a3c586941d058427e06bd7694b42))
+
+
+
 # [5.3.0](https://github.com/popstas/chords-viewer/compare/v5.2.1...v5.3.0) (2026-06-27)
 
 
