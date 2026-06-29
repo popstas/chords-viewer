@@ -1,3 +1,13 @@
+## [5.4.1](https://github.com/popstas/chords-viewer/compare/v5.4.0...v5.4.1) (2026-06-29)
+
+
+### Bug Fixes
+
+* **pwa:** paint titlebar from cached theme before first paint ([b9a2623](https://github.com/popstas/chords-viewer/commit/b9a2623b11d585da8ccba1e637dd26e5bc65f3f1))
+* **text2json:** trim text before converting to JSON ([547e3a4](https://github.com/popstas/chords-viewer/commit/547e3a473e494bea74a051a5a9b4cdd95b3cdb33))
+
+
+
 # [5.4.0](https://github.com/popstas/chords-viewer/compare/v5.3.0...v5.4.0) (2026-06-28)
 
 
