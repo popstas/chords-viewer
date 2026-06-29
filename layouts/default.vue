@@ -295,10 +295,6 @@ export default {
       bodyAttrs: {
         class: store.darkMode ? 'dark-mode' : '',
       },
-      meta: [
-        // match the app header (el-header uses var(--bg)) in both themes
-        {name: "theme-color", content: store.darkMode ? '#222933' : '#ffffff'},
-      ],
       link: [
         // @vite-pwa/nuxt injects <link rel="manifest"> automatically
         {rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#5bbad5"},
@@ -322,9 +318,33 @@ export default {
     isDesktop() {
       return window.innerWidth > 768;
     },
+    darkMode() {
+      return this.$store.state.darkMode;
+    },
+  },
+
+  watch: {
+    // keep the PWA titlebar (theme-color meta) in sync on theme toggle.
+    // The meta is first created by the inline head script in nuxt.config.ts
+    // (before paint, from cache); here we update that same element.
+    darkMode() {
+      this.applyThemeColor();
+    },
   },
 
   methods: {
+    applyThemeColor() {
+      if (typeof document === 'undefined') return;
+      const color = this.darkMode ? '#222933' : '#ffffff';
+      let meta = document.querySelector('meta[name="theme-color"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'theme-color');
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', color);
+    },
+
     onPanelClick() {
       if (this.menuOpen) this.menuOpen = false;
     },
@@ -381,6 +401,9 @@ export default {
       const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       this.$store.commit('darkMode', isDark);
     }
+    // sync the titlebar with the resolved theme (the inline head script already
+    // painted it from cache; this covers the first-visit / prefers-color-scheme case)
+    this.applyThemeColor();
   },
 };
 </script>

@@ -38,6 +38,37 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
+      script: [
+        {
+          // SPA (ssr:false): index.html ships no resolved theme, so the PWA
+          // titlebar would flash the manifest color, then jump to the real
+          // theme once Vue mounts. Read the persisted darkMode (Pinia key
+          // 'vuex') synchronously here and create the theme-color meta before
+          // first paint. This script is the SOLE creator of the tag; the layout
+          // keeps the same element in sync on toggle (see applyThemeColor), so
+          // theme-color is managed manually, NOT via unhead, to avoid a second
+          // tag and unhead's head-ordering quirks.
+          tagPosition: 'head',
+          children: [
+            ';(function () {',
+            '  try {',
+            "    var dark; var raw = window.localStorage.getItem('vuex');",
+            '    if (raw) { var s = JSON.parse(raw);',
+            "      if (s && typeof s.darkMode === 'boolean') dark = s.darkMode; }",
+            "    if (typeof dark !== 'boolean') {",
+            "      dark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }",
+            "    var color = dark ? '#222933' : '#ffffff';",
+            "    var meta = document.querySelector('meta[name=\"theme-color\"]');",
+            '    if (!meta) {',
+            "      meta = document.createElement('meta');",
+            "      meta.setAttribute('name', 'theme-color');",
+            '      document.head.appendChild(meta); }',
+            "    meta.setAttribute('content', color);",
+            '  } catch (e) {}',
+            '})();',
+          ].join('\n'),
+        },
+      ],
     },
   },
 
