@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chords-viewer</title>
+<script>;(function () {
+  try {
+    var dark; var raw = window.localStorage.getItem('vuex');
+    if (raw) { var s = JSON.parse(raw);
+      if (s && typeof s.darkMode === 'boolean') dark = s.darkMode; }
+    if (typeof dark !== 'boolean') {
+      dark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); }
+    var color = dark ? '#222933' : '#ffffff';
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'theme-color');
+      document.head.appendChild(meta); }
+    meta.setAttribute('content', color);
+  } catch (e) {}
+})();</script>
+<link rel="stylesheet" href="/_nuxt/entry.BBcOcVOt.css" crossorigin>
+<link rel="modulepreload" as="script" crossorigin href="/_nuxt/Byt-gDcn.js">
+<script type="module" src="/_nuxt/Byt-gDcn.js" crossorigin></script>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<script id="unhead:payload" type="application/json">{"title":"chords-viewer"}</script></head><body><div id="__nuxt"></div><div id="teleports"></div><script>window.__NUXT__={};window.__NUXT__.config={public:{},app:{baseURL:"/",buildId:"940ca28d-a77c-43fc-8db0-ebfc867d71bb",buildAssetsDir:"/_nuxt/",cdnURL:""}}</script>
+<script type="application/json" data-nuxt-data="nuxt-app" data-ssr="false" id="__NUXT_DATA__">[{"prerenderedAt":1,"serverRendered":2},1782765620739,false]</script></body></html>
