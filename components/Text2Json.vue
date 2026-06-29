@@ -80,7 +80,7 @@ export default {
 
   methods: {
     convert() {
-      this.json = JSON.stringify(this.text);
+      this.json = JSON.stringify(this.text.trim());
     },
 
     copyJson() {
