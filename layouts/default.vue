@@ -36,8 +36,8 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
-@import "@/assets/dark-theme.scss";
+@use "@/assets/variables.scss" as *;
+@use "@/assets/dark-theme.scss" as *;
 
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",

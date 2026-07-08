@@ -65,7 +65,7 @@
 </template>
 
 <style lang="scss">
-@import "@/assets/variables.scss";
+@use "@/assets/variables.scss" as *;
 
 .toolbar {
   background: var(--bg);
