@@ -227,6 +227,44 @@ input {
   background-color: var(--bg-hover);
 }
 
+// Native scrollbars stay light-grey-on-white by default, which reads harsh
+// against the dark canvas (page scroll on desktop, .vue-recycle-scroller on
+// mobile). Theme them dark: Firefox via scrollbar-color (inherits to
+// descendants), WebKit/Blink via ::-webkit-scrollbar (self + descendants).
+// The .dark-mode class lives on <body>, but the *page* scrollbar is owned by
+// the root <html> element — Blink only propagates scrollbar styling to the
+// viewport from :root, not <body> — so reach html via :has() as well.
+// NOTE: hard-coded palette (not var(--bg)/var(--border)) because on <html> the
+// custom props resolve to the light :root values (.dark-mode sits below it).
+// $sb-track / $sb-thumb / $sb-thumb-hover mirror the .dark-mode palette.
+$sb-track: #222933; // --bg
+$sb-thumb: #4a5563; // neutral slate, sits between --bg and --border-hover
+$sb-thumb-hover: #5b6a7d;
+
+html:has(body.dark-mode),
+.dark-mode {
+  scrollbar-color: $sb-thumb $sb-track;
+}
+html:has(body.dark-mode)::-webkit-scrollbar,
+.dark-mode ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+html:has(body.dark-mode)::-webkit-scrollbar-track,
+.dark-mode ::-webkit-scrollbar-track {
+  background: $sb-track;
+}
+html:has(body.dark-mode)::-webkit-scrollbar-thumb,
+.dark-mode ::-webkit-scrollbar-thumb {
+  background-color: $sb-thumb;
+  border-radius: 6px;
+  border: 3px solid $sb-track;
+}
+html:has(body.dark-mode)::-webkit-scrollbar-thumb:hover,
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background-color: $sb-thumb-hover;
+}
+
 .dark-mode {
   .el-popover {
     background: #fff;
